@@ -1,5 +1,7 @@
-import { supabaseAdmin } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase'
 import { Quiz, Question } from '@/types/database'
+
+const supabase = createClient()
 
 export interface ManualQuizInput {
   lesson_id: string;
@@ -11,7 +13,7 @@ export const QuizService = {
   // Mentor Actions: Create Quiz and its Questions
   async createManualQuiz(input: ManualQuizInput): Promise<{ quiz: Quiz; questions: Question[] }> {
     // 1. Create the Quiz
-    const { data: quiz, error: quizError } = await supabaseAdmin
+    const { data: quiz, error: quizError } = await supabase
       .from('quizzes')
       .insert({
         lesson_id: input.lesson_id,
@@ -28,7 +30,7 @@ export const QuizService = {
       quiz_id: quiz.id
     }))
 
-    const { data: questions, error: questionsError } = await supabaseAdmin
+    const { data: questions, error: questionsError } = await supabase
       .from('questions')
       .insert(questionsToInsert)
       .select()
@@ -43,23 +45,12 @@ export const QuizService = {
     // Di sini biasanya ada logika untuk mengecek jawaban benar/salah
     // Untuk saat ini kita return input untuk validasi struktur
     
-    // Opsional: Simpan ke tabel 'quiz_submissions' jika ada
-    /*
-    const { data, error } = await supabaseAdmin
-      .from('quiz_submissions')
-      .insert({
-        student_id: studentId,
-        quiz_id: quizId,
-        answers_json: answers
-      })
-    */
-
     return { success: true, message: "Answers submitted successfully" }
   },
 
   async markLessonAsCompleted(studentId: string, lessonId: string) {
     // 1. Dapatkan Course ID dari Lesson
-    const { data: lesson, error: lessonError } = await supabaseAdmin
+    const { data: lesson, error: lessonError } = await supabase
       .from('lessons')
       .select('course_id')
       .eq('id', lessonId)
@@ -68,7 +59,7 @@ export const QuizService = {
     if (lessonError) throw lessonError
 
     // 2. Dapatkan Enrollment saat ini
-    const { data: enrollment, error: enrollError } = await supabaseAdmin
+    const { data: enrollment, error: enrollError } = await supabase
       .from('enrollments')
       .select('completed_lessons')
       .eq('student_id', studentId)
@@ -82,7 +73,7 @@ export const QuizService = {
     // 3. Update jika belum ada di list
     if (!currentCompleted.includes(lessonId)) {
       const updatedList = [...currentCompleted, lessonId]
-      const { error: updateError } = await supabaseAdmin
+      const { error: updateError } = await supabase
         .from('enrollments')
         .update({ completed_lessons: updatedList })
         .eq('student_id', studentId)

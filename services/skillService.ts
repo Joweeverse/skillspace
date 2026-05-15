@@ -1,4 +1,6 @@
-import { supabaseAdmin } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase'
+
+const supabase = createClient()
 
 export interface Skill {
   id: string;
@@ -8,7 +10,7 @@ export interface Skill {
 
 export const SkillService = {
   async getAllSkills(): Promise<Skill[]> {
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await supabase
       .from('skills')
       .select('*')
     
@@ -17,7 +19,7 @@ export const SkillService = {
   },
 
   async getSkillById(id: string): Promise<Skill> {
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await supabase
       .from('skills')
       .select('*')
       .eq('id', id)

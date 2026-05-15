@@ -5,6 +5,7 @@ import { CourseService } from '@/services/courseService'
 import { Lesson } from '@/types/database'
 import { Button } from '@/components/ui/Button'
 import { DiscussionSection } from '@/components/features/DiscussionSection'
+import { QuizModal } from '@/components/features/QuizModal'
 
 export default function LearnPage({ params }: { params: Promise<{ courseId: string }> }) {
   const { courseId } = use(params)
@@ -12,6 +13,7 @@ export default function LearnPage({ params }: { params: Promise<{ courseId: stri
   const [lessons, setLessons] = useState<Lesson[]>([])
   const [currentLesson, setCurrentLesson] = useState<Lesson | null>(null)
   const [loading, setLoading] = useState(true)
+  const [showQuiz, setShowQuiz] = useState(false)
 
   useEffect(() => {
     async function loadContent() {
@@ -45,7 +47,7 @@ export default function LearnPage({ params }: { params: Promise<{ courseId: stri
   if (!course) return <div className="p-8 text-center text-red-500">Kursus tidak ditemukan.</div>
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-[calc(100vh-64px)] bg-gray-50">
       {/* Sidebar Daftar Pelajaran */}
       <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
         <div className="p-6 border-b border-gray-200">
@@ -119,7 +121,7 @@ export default function LearnPage({ params }: { params: Promise<{ courseId: stri
                 <h4 className="font-bold text-lg">Siap untuk Menguji Pemahaman?</h4>
                 <p className="text-blue-100 text-sm">Ambil kuis untuk materi ini sekarang.</p>
               </div>
-              <Button variant="secondary" onClick={() => alert('Fitur Kuis segera hadir!')}>
+              <Button variant="secondary" onClick={() => setShowQuiz(true)}>
                 Ambil Kuis Sekarang
               </Button>
             </div>
@@ -129,6 +131,14 @@ export default function LearnPage({ params }: { params: Promise<{ courseId: stri
               lessonId={currentLesson.id} 
               userId="11111111-1111-1111-1111-111111111111" // Demo Student ID
             />
+
+            {showQuiz && (
+              <QuizModal 
+                lessonId={currentLesson.id} 
+                onClose={() => setShowQuiz(false)} 
+                onComplete={() => alert('Bagus! Anda telah menyelesaikan kuis.')}
+              />
+            )}
           </div>
         ) : (
           <div className="h-full flex items-center justify-center text-gray-500">

@@ -18,7 +18,7 @@ export const DiscussionSection = ({ lessonId, userId }: DiscussionSectionProps) 
   useEffect(() => {
     async function loadDiscussions() {
       try {
-        const data = await DiscussionService.getDiscussionsByLesson(lessonId)
+        const data = await DiscussionService.getDiscussions(lessonId)
         setMessages(data)
       } catch (err) {
         console.error(err)
