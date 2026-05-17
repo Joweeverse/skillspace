@@ -6,6 +6,7 @@ export interface Profile {
   full_name: string;
   role: UserRole;
   is_verified: boolean;
+  avatar_url?: string;
   updated_at?: string;
 }
 

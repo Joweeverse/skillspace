@@ -11,6 +11,26 @@ export interface ManualQuizInput {
 
 export const QuizService = {
   // Mentor Actions: Create Quiz and its Questions
+  async getQuizByLessonId(lessonId: string): Promise<{ quiz: Quiz; questions: Question[] } | null> {
+    const { data: quiz, error: quizError } = await supabase
+      .from('quizzes')
+      .select('*')
+      .eq('lesson_id', lessonId)
+      .maybeSingle()
+
+    if (quizError) throw quizError
+    if (!quiz) return null
+
+    const { data: questions, error: questionsError } = await supabase
+      .from('questions')
+      .select('*')
+      .eq('quiz_id', quiz.id)
+
+    if (questionsError) throw questionsError
+
+    return { quiz: quiz as Quiz, questions: questions as Question[] }
+  },
+
   async createManualQuiz(input: ManualQuizInput): Promise<{ quiz: Quiz; questions: Question[] }> {
     // 1. Create the Quiz
     const { data: quiz, error: quizError } = await supabase
@@ -38,6 +58,48 @@ export const QuizService = {
     if (questionsError) throw questionsError
 
     return { quiz: quiz as Quiz, questions: questions as Question[] }
+  },
+
+  async updateQuiz(quizId: string, title: string, questions: Omit<Question, 'id' | 'quiz_id'>[]) {
+    // 1. Update Quiz Title
+    const { error: quizError } = await supabase
+      .from('quizzes')
+      .update({ title })
+      .eq('id', quizId)
+
+    if (quizError) throw quizError
+
+    // 2. Delete existing questions
+    const { error: deleteError } = await supabase
+      .from('questions')
+      .delete()
+      .eq('quiz_id', quizId)
+
+    if (deleteError) throw deleteError
+
+    // 3. Insert new questions
+    const questionsToInsert = questions.map(q => ({
+      ...q,
+      quiz_id: quizId
+    }))
+
+    const { data: newQuestions, error: insertError } = await supabase
+      .from('questions')
+      .insert(questionsToInsert)
+      .select()
+
+    if (insertError) throw insertError
+
+    return newQuestions
+  },
+
+  async deleteQuiz(quizId: string) {
+    const { error } = await supabase
+      .from('quizzes')
+      .delete()
+      .eq('id', quizId)
+
+    if (error) throw error
   },
 
   // Student Actions: Submit Quiz Answers

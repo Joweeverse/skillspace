@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Quiz, Question } from '@/types/database'
 import { QuizService } from '@/services/quizService'
+import { AuthService } from '@/services/authService'
+import { HelpCircle } from 'lucide-react'
 
 interface QuizModalProps {
   lessonId: string
@@ -18,31 +20,25 @@ export const QuizModal = ({ lessonId, onClose, onComplete }: QuizModalProps) => 
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [score, setScore] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    // In a real app, we'd fetch the quiz for this lesson
-    // For now, let's mock some questions
-    setTimeout(() => {
-      setQuestions([
-        {
-          id: '1',
-          quiz_id: 'q1',
-          question_text: 'What is the main advantage of Next.js?',
-          options_json: ['SSR & SSG', 'Only Client Side Rendering', 'No Routing', 'Slow Performance'],
-          correct_answer: 'SSR & SSG',
-          created_at: new Date().toISOString()
-        },
-        {
-          id: '2',
-          quiz_id: 'q1',
-          question_text: 'Which hook is used for side effects in React?',
-          options_json: ['useState', 'useContext', 'useEffect', 'useReducer'],
-          correct_answer: 'useEffect',
-          created_at: new Date().toISOString()
+    async function loadQuiz() {
+      try {
+        const data = await QuizService.getQuizByLessonId(lessonId)
+        if (data && data.questions && data.questions.length > 0) {
+          setQuestions(data.questions)
+        } else {
+          setError('Materi ini belum memiliki kuis.')
         }
-      ])
-      setLoading(false)
-    }, 1000)
+      } catch (err: any) {
+        console.error('Failed to load quiz:', err)
+        setError('Gagal memuat kuis. Pastikan Anda memiliki akses.')
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadQuiz()
   }, [lessonId])
 
   const handleSelectAnswer = (questionId: string, answer: string) => {
@@ -50,6 +46,8 @@ export const QuizModal = ({ lessonId, onClose, onComplete }: QuizModalProps) => 
   }
 
   const handleSubmit = async () => {
+    if (questions.length === 0) return
+
     let correctCount = 0
     questions.forEach(q => {
       if (selectedAnswers[q.id] === q.correct_answer) {
@@ -62,9 +60,9 @@ export const QuizModal = ({ lessonId, onClose, onComplete }: QuizModalProps) => 
     setIsSubmitted(true)
 
     try {
-      // Mark lesson as completed if score is high enough (e.g. > 70)
-      if (finalScore >= 50) {
-        await QuizService.markLessonAsCompleted('11111111-1111-1111-1111-111111111111', lessonId)
+      const session = await AuthService.getSession()
+      if (session?.user && finalScore >= 50) {
+        await QuizService.markLessonAsCompleted(session.user.id, lessonId)
         onComplete()
       }
     } catch (err) {
@@ -75,6 +73,19 @@ export const QuizModal = ({ lessonId, onClose, onComplete }: QuizModalProps) => 
   if (loading) return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white p-8 rounded-xl shadow-xl">Memuat kuis...</div>
+    </div>
+  )
+
+  if (error) return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white w-full max-w-md rounded-xl shadow-xl p-8 text-center">
+        <div className="text-red-500 mb-4">
+          <HelpCircle size={48} className="mx-auto" />
+        </div>
+        <h3 className="text-xl font-bold text-gray-900 mb-2">Oops!</h3>
+        <p className="text-gray-600 mb-6">{error}</p>
+        <Button onClick={onClose} className="w-full">Tutup</Button>
+      </div>
     </div>
   )
 

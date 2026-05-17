@@ -3,17 +3,41 @@
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { useRouter } from 'next/navigation'
+import { AuthService } from '@/services/authService'
+import Link from 'next/link'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Mock login for demo purposes
-    alert('Logged in successfully (Demo Mode)')
-    router.push('/dashboard/student')
+    setLoading(true)
+    setError(null)
+    try {
+      const { user } = await AuthService.signIn(email.trim(), password)
+      
+      if (user) {
+        // Get user role from metadata or profile table
+        const role = user.user_metadata?.role || 'student'
+        
+        if (role === 'mentor') {
+          router.push('/dashboard/mentor')
+        } else if (role === 'admin') {
+          router.push('/admin/dashboard')
+        } else {
+          router.push('/dashboard/student')
+        }
+        router.refresh()
+      }
+    } catch (err: any) {
+      setError(err.message || 'Invalid email or password')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -25,12 +49,17 @@ export default function LoginPage() {
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Or{' '}
-            <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+            <Link href="/register" className="font-medium text-blue-600 hover:text-blue-500">
               create a new account
-            </a>
+            </Link>
           </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleLogin}>
+          {error && (
+            <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm">
+              {error}
+            </div>
+          )}
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="email-address" className="sr-only">Email address</label>
@@ -46,7 +75,7 @@ export default function LoginPage() {
               />
             </div>
             <div>
-              <label htmlFor="password-password" className="sr-only">Password</label>
+              <label htmlFor="password" className="sr-only">Password</label>
               <input
                 id="password"
                 name="password"
@@ -81,8 +110,12 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <Button type="submit" className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-              Sign in
+            <Button 
+              type="submit" 
+              disabled={loading}
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+            >
+              {loading ? 'Signing in...' : 'Sign in'}
             </Button>
           </div>
         </form>

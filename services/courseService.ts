@@ -27,34 +27,67 @@ export const CourseService = {
     return data as Lesson
   },
 
+  async updateLesson(id: string, updates: Partial<Lesson>) {
+    const { data, error } = await supabase
+      .from('lessons')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (error) throw error
+    return data as Lesson
+  },
+
+  async deleteLesson(id: string) {
+    const { error } = await supabase
+      .from('lessons')
+      .delete()
+      .eq('id', id)
+
+    if (error) throw error
+  },
+
+  async deleteCourse(id: string) {
+    const { error } = await supabase
+      .from('courses')
+      .delete()
+      .eq('id', id)
+
+    if (error) throw error
+  },
+
   // Student Actions
   async getAvailableCourses() {
-    try {
-      const { data, error } = await supabase
+    // We use an explicit join syntax to ensure Supabase matches the foreign key correctly
+    const { data, error } = await supabase
+      .from('courses')
+      .select('*, profiles!courses_mentor_id_fkey(full_name)')
+    
+    if (error) {
+      console.error('Supabase error in getAvailableCourses:', error)
+      // Fallback to simple select if join fails
+      const { data: simpleData, error: simpleError } = await supabase
         .from('courses')
-        .select('*, profiles(full_name)')
+        .select('*')
       
-      if (error) throw error
-      return data as Course[]
-    } catch (err) {
-      console.warn('Using mock courses data:', err)
-      return [
-        {
-          id: 'course-1',
-          title: 'Mastering Next.js 15',
-          category: 'Web Development',
-          mentor_id: 'mentor-1',
-          profiles: { full_name: 'John Doe' }
-        },
-        {
-          id: 'course-2',
-          title: 'Advanced Tailwind CSS',
-          category: 'Design',
-          mentor_id: 'mentor-2',
-          profiles: { full_name: 'Jane Smith' }
-        }
-      ] as any[]
+      if (simpleError) throw simpleError
+      return simpleData as any[]
     }
+    
+    return data as any[]
+  },
+
+  async checkEnrollment(studentId: string, courseId: string) {
+    const { data, error } = await supabase
+      .from('enrollments')
+      .select('*')
+      .eq('student_id', studentId)
+      .eq('course_id', courseId)
+      .maybeSingle()
+    
+    if (error) throw error
+    return !!data
   },
 
   async enrollCourse(studentId: string, courseId: string) {
@@ -73,84 +106,85 @@ export const CourseService = {
       if (error) throw error
       return data as Enrollment
     } catch (err) {
-      console.warn('Mock enrollment successful')
-      return { student_id: studentId, course_id: courseId, status: 'enrolled' } as any
+      console.warn('Mock enrollment failed or already enrolled')
+      throw err
     }
   },
 
   async getCourseById(id: string) {
-    try {
-      const { data, error } = await supabase
+    const { data, error } = await supabase
+      .from('courses')
+      .select('*, profiles!courses_mentor_id_fkey(full_name)')
+      .eq('id', id)
+      .single()
+    
+    if (error) {
+      console.error('Error in getCourseById:', error)
+      // Fallback to simple select
+      const { data: simpleData, error: simpleError } = await supabase
         .from('courses')
-        .select('*, profiles(full_name)')
+        .select('*')
         .eq('id', id)
         .single()
       
-      if (error) throw error
-      return data as Course
-    } catch (err) {
-      return {
-        id: id,
-        title: 'Demo Course',
-        category: 'Web Development',
-        profiles: { full_name: 'John Doe' }
-      } as any
+      if (simpleError) throw simpleError
+      return simpleData as any
     }
+    return data as Course
   },
 
   async getLessonsByCourseId(courseId: string) {
-    try {
-      const { data, error } = await supabase
-        .from('lessons')
-        .select('*')
-        .eq('course_id', courseId)
-        .order('created_at', { ascending: true })
-      
-      if (error) throw error
-      return data as Lesson[]
-    } catch (err) {
-      return [
-        {
-          id: 'lesson-1',
-          course_id: courseId,
-          title: 'Introduction to React',
-          content: 'In this lesson, we will learn the basics of React.',
-          youtube_url: 'https://www.youtube.com/watch?v=Ke90Tje7VS0'
-        },
-        {
-          id: 'lesson-2',
-          course_id: courseId,
-          title: 'Advanced Hooks',
-          content: 'Deep dive into useEffect and custom hooks.',
-          youtube_url: 'https://www.youtube.com/watch?v=Ke90Tje7VS0'
-        }
-      ] as any[]
-    }
+    const { data, error } = await supabase
+      .from('lessons')
+      .select('*')
+      .eq('course_id', courseId)
+      .order('created_at', { ascending: true })
+    
+    if (error) throw error
+    return data as Lesson[]
   },
 
   async getUserEnrollments(studentId: string) {
-    try {
-      const { data, error } = await supabase
+    // Using a more robust join syntax to ensure we get the course, mentor details, and lesson count
+    const { data, error } = await supabase
+      .from('enrollments')
+      .select(`
+        *,
+        courses (
+          *,
+          profiles!courses_mentor_id_fkey (
+            full_name
+          ),
+          lessons (
+            id
+          )
+        )
+      `)
+      .eq('student_id', studentId)
+    
+    if (error) {
+      console.error('Error in getUserEnrollments:', error)
+      // Fallback: Try fetching just enrollments and courses without mentor profile
+      const { data: fallbackData, error: fallbackError } = await supabase
         .from('enrollments')
-        .select('*, courses(*, profiles(full_name))')
+        .select('*, courses(*, lessons(id))')
         .eq('student_id', studentId)
       
-      if (error) throw error
-      return data as Enrollment[]
-    } catch (err) {
-      return [
-        {
-          course_id: 'course-1',
-          status: 'enrolled',
-          completed_lessons: ['lesson-1', 'lesson-2'],
-          courses: {
-            title: 'Mastering Next.js 15',
-            category: 'Web Development',
-            profiles: { full_name: 'John Doe' }
-          }
-        }
-      ] as any[]
+      if (fallbackError) throw fallbackError
+      return fallbackData as any[]
     }
+    
+    return data as any[]
+  },
+
+  async getCoursesByMentorId(mentorId: string) {
+    const { data, error } = await supabase
+      .from('courses')
+      .select('*')
+      .eq('mentor_id', mentorId)
+    
+    if (error) throw error
+    return data as Course[]
   },
 
   async uploadMaterial(file: File, path: string) {

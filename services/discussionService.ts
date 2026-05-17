@@ -23,7 +23,7 @@ export const DiscussionService = {
         user_id: userId,
         message: message
       })
-      .select()
+      .select('*, profiles(full_name, role, is_verified)')
       .single()
 
     if (error) throw error

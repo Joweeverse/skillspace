@@ -6,6 +6,7 @@ import { Lesson } from '@/types/database'
 import { Button } from '@/components/ui/Button'
 import { DiscussionSection } from '@/components/features/DiscussionSection'
 import { QuizModal } from '@/components/features/QuizModal'
+import { AuthService } from '@/services/authService'
 
 export default function LearnPage({ params }: { params: Promise<{ courseId: string }> }) {
   const { courseId } = use(params)
@@ -14,6 +15,15 @@ export default function LearnPage({ params }: { params: Promise<{ courseId: stri
   const [currentLesson, setCurrentLesson] = useState<Lesson | null>(null)
   const [loading, setLoading] = useState(true)
   const [showQuiz, setShowQuiz] = useState(false)
+  const [user, setUser] = useState<any>(null)
+
+  useEffect(() => {
+    async function getUser() {
+      const session = await AuthService.getSession()
+      setUser(session?.user)
+    }
+    getUser()
+  }, [])
 
   useEffect(() => {
     async function loadContent() {
@@ -127,10 +137,12 @@ export default function LearnPage({ params }: { params: Promise<{ courseId: stri
             </div>
 
             {/* Bagian Diskusi */}
-            <DiscussionSection 
-              lessonId={currentLesson.id} 
-              userId="11111111-1111-1111-1111-111111111111" // Demo Student ID
-            />
+            {user && (
+              <DiscussionSection 
+                lessonId={currentLesson.id} 
+                userId={user.id} 
+              />
+            )}
 
             {showQuiz && (
               <QuizModal 
