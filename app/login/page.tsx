@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button'
 import { useRouter } from 'next/navigation'
 import { AuthService } from '@/services/authService'
 import Link from 'next/link'
+import { Mail, Lock, LogIn, ArrowRight, Sparkles } from 'lucide-react'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -21,7 +22,6 @@ export default function LoginPage() {
       const { user } = await AuthService.signIn(email.trim(), password)
       
       if (user) {
-        // Get user role from metadata or profile table
         const role = user.user_metadata?.role || 'student'
         
         if (role === 'mentor') {
@@ -34,89 +34,117 @@ export default function LoginPage() {
         router.refresh()
       }
     } catch (err: any) {
-      setError(err.message || 'Invalid email or password')
+      setError(err.message || 'Email atau password tidak valid')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-md border border-gray-200">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to SkillSpace
+    <div className="min-h-[90vh] flex items-center justify-center bg-gray-50/50 py-16 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-10 bg-white p-12 rounded-[2.5rem] shadow-2xl shadow-blue-500/5 border border-gray-100 relative overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-50 rounded-full blur-3xl opacity-50" />
+        <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-indigo-50 rounded-full blur-3xl opacity-50" />
+
+        <div className="text-center relative z-10">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-[2rem] mb-8 shadow-xl shadow-blue-500/30">
+            <LogIn size={40} />
+          </div>
+          <h2 className="text-4xl font-black text-gray-900 tracking-tight mb-3">
+            Selamat Datang!
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Or{' '}
-            <Link href="/register" className="font-medium text-blue-600 hover:text-blue-500">
-              create a new account
-            </Link>
+          <p className="text-gray-500 font-medium text-lg leading-relaxed">
+            Masuk ke akun SkillSpace Anda dan mulai kembangkan keahlian baru.
           </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleLogin}>
+        
+        <form className="mt-8 space-y-8 relative z-10" onSubmit={handleLogin}>
           {error && (
-            <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm">
+            <div className="bg-red-50 text-red-500 p-5 rounded-2xl text-sm font-semibold border border-red-100 animate-in fade-in slide-in-from-top-2 duration-300">
               {error}
             </div>
           )}
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="email-address" className="sr-only">Email address</label>
-              <input
-                id="email-address"
-                name="email"
-                type="email"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+          
+          <div className="space-y-5">
+            <div className="space-y-1.5">
+              <label htmlFor="email-address" className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Alamat Email</label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
+                  <Mail size={20} />
+                </div>
+                <input
+                  id="email-address"
+                  name="email"
+                  type="email"
+                  required
+                  className="block w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-[1.5rem] text-sm font-medium transition-all duration-300 focus:bg-white focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none placeholder:text-gray-400"
+                  placeholder="name@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
             </div>
-            <div>
-              <label htmlFor="password" className="sr-only">Password</label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+
+            <div className="space-y-1.5">
+              <div className="flex justify-between items-center ml-1">
+                <label htmlFor="password" className="text-xs font-black text-gray-400 uppercase tracking-[0.2em]">Password</label>
+                <a href="#" className="text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors">Lupa Password?</a>
+              </div>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
+                  <Lock size={20} />
+                </div>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  required
+                  className="block w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-[1.5rem] text-sm font-medium transition-all duration-300 focus:bg-white focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none placeholder:text-gray-400"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
+          <div className="flex items-center justify-between px-1">
+            <label className="flex items-center group cursor-pointer">
               <input
                 id="remember-me"
                 name="remember-me"
                 type="checkbox"
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                className="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-200 rounded-lg transition-all cursor-pointer"
               />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                Remember me
-              </label>
-            </div>
-
-            <div className="text-sm">
-              <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
-                Forgot your password?
-              </a>
+              <span className="ml-3 text-sm text-gray-500 font-bold group-hover:text-gray-700 transition-colors">
+                Ingat saya
+              </span>
+            </label>
+            <div className="flex items-center text-blue-600 gap-1 animate-pulse">
+              <Sparkles size={14} />
+              <span className="text-[10px] font-black uppercase tracking-wider">Fast Login</span>
             </div>
           </div>
 
-          <div>
+          <div className="pt-2">
             <Button 
               type="submit" 
-              disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+              isLoading={loading}
+              className="w-full py-5 text-lg font-bold rounded-[1.5rem] shadow-xl shadow-blue-500/25 transition-transform active:scale-95"
+              rightIcon={<ArrowRight size={22} />}
             >
-              {loading ? 'Signing in...' : 'Sign in'}
+              Masuk Sekarang
             </Button>
+          </div>
+
+          <div className="text-center pt-2">
+            <p className="text-gray-500 font-medium">
+              Belum memiliki akun?{' '}
+              <Link href="/register" className="font-bold text-blue-600 hover:text-blue-700 underline underline-offset-8 transition-all">
+                Daftar Gratis
+              </Link>
+            </p>
           </div>
         </form>
       </div>

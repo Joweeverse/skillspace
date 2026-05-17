@@ -7,6 +7,7 @@ import { AuthService } from '@/services/authService'
 import Link from 'next/link'
 import jsPDF from 'jspdf'
 import { useRouter } from 'next/navigation'
+import { BookOpen, Trophy, Clock, ChevronRight, Award, GraduationCap, Sparkles } from 'lucide-react'
 
 export default function StudentDashboard() {
   const [enrollments, setEnrollments] = useState<any[]>([])
@@ -41,54 +42,95 @@ export default function StudentDashboard() {
       format: 'a4'
     })
 
-    // Desain Sertifikat Sederhana
+    // Desain Sertifikat Modern
+    doc.setFillColor(249, 250, 251) // gray-50
+    doc.rect(0, 0, 297, 210, 'F')
+    
+    doc.setDrawColor(37, 99, 235) // blue-600
+    doc.setLineWidth(2)
     doc.rect(10, 10, 277, 190, 'S')
-    doc.setFontSize(40)
+    
+    doc.setFontSize(48)
+    doc.setTextColor(17, 24, 39) // gray-900
+    doc.setFont('helvetica', 'bold')
     doc.text('SERTIFIKAT KELULUSAN', 148, 60, { align: 'center' })
     
-    doc.setFontSize(20)
-    doc.text('Diberikan kepada:', 148, 90, { align: 'center' })
+    doc.setFontSize(18)
+    doc.setTextColor(107, 114, 128) // gray-500
+    doc.setFont('helvetica', 'normal')
+    doc.text('Dengan bangga diberikan kepada:', 148, 85, { align: 'center' })
     
-    doc.setFontSize(30)
-    doc.setTextColor(37, 99, 235) // Blue-600
+    doc.setFontSize(36)
+    doc.setTextColor(37, 99, 235) // blue-600
+    doc.setFont('helvetica', 'bold')
     doc.text(studentName.toUpperCase(), 148, 110, { align: 'center' })
     
     doc.setFontSize(16)
-    doc.setTextColor(0, 0, 0)
-    doc.text(`Atas keberhasilannya menyelesaikan kursus:`, 148, 130, { align: 'center' })
+    doc.setTextColor(75, 85, 99) // gray-600
+    doc.setFont('helvetica', 'normal')
+    doc.text('Atas keberhasilan luar biasa dalam menyelesaikan kursus:', 148, 130, { align: 'center' })
     
-    doc.setFontSize(22)
+    doc.setFontSize(24)
+    doc.setTextColor(17, 24, 39)
     doc.setFont('helvetica', 'bold')
-    doc.text(courseTitle, 148, 150, { align: 'center' })
+    doc.text(`"${courseTitle}"`, 148, 150, { align: 'center' })
     
     doc.setFontSize(12)
+    doc.setTextColor(156, 163, 175)
     doc.setFont('helvetica', 'normal')
-    doc.text(`Tanggal: ${new Date().toLocaleDateString()}`, 148, 180, { align: 'center' })
-    doc.text(`SkillSpace Learning Platform`, 148, 187, { align: 'center' })
+    doc.text(`Diterbitkan pada: ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}`, 148, 180, { align: 'center' })
+    doc.text('SkillSpace Learning Platform • Elevate Your Skills', 148, 188, { align: 'center' })
 
     doc.save(`Sertifikat_${courseTitle.replace(/\s+/g, '_')}.pdf`)
   }
 
-  if (loading) return <div className="p-8 text-center">Memuat dashboard...</div>
+  if (loading) return (
+    <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+      <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+      <p className="font-bold text-gray-500 animate-pulse uppercase tracking-widest text-xs">Memuat Dashboard Anda...</p>
+    </div>
+  )
 
   return (
-    <div className="max-w-6xl mx-auto p-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard Belajar Saya</h1>
-        <div className="text-sm text-gray-500">{enrollments.length} Kursus diikuti</div>
+    <div className="max-w-7xl mx-auto p-8 md:p-12 animate-in fade-in duration-500">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="bg-blue-600 text-white text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-widest shadow-lg shadow-blue-500/20">
+              Siswa
+            </span>
+            <div className="flex items-center text-blue-600 gap-1 animate-pulse">
+              <Sparkles size={14} />
+              <span className="text-[10px] font-black uppercase tracking-wider">Teruslah Belajar</span>
+            </div>
+          </div>
+          <h1 className="text-4xl font-black text-gray-900 tracking-tight">Dashboard Belajar</h1>
+          <p className="text-gray-500 font-medium mt-1">Selamat datang kembali, mari lanjutkan progres Anda hari ini.</p>
+        </div>
+        <div className="bg-white px-6 py-4 rounded-[1.5rem] border border-gray-100 shadow-xl shadow-gray-200/20 flex items-center gap-6">
+          <div className="text-center">
+            <div className="text-2xl font-black text-blue-600">{enrollments.length}</div>
+            <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Kursus Aktif</div>
+          </div>
+          <div className="w-px h-8 bg-gray-100" />
+          <div className="text-center">
+            <div className="text-2xl font-black text-emerald-600">
+              {enrollments.filter(e => e.completed_lessons?.length >= (e.courses?.lessons?.length || 1)).length}
+            </div>
+            <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Selesai</div>
+          </div>
+        </div>
       </div>
       
-      <div className="grid gap-6">
+      <div className="grid grid-cols-1 gap-8">
         {enrollments.map((enroll) => {
           const course = enroll.courses
           if (!course) return null
 
-          // Using dynamic lesson count from database
           const lessons = course.lessons || []
           const totalLessons = lessons.length
           const completedCount = enroll.completed_lessons?.length || 0
           
-          // Avoid division by zero
           const progress = totalLessons > 0 
             ? Math.min(Math.round((completedCount / totalLessons) * 100), 100) 
             : 0
@@ -96,52 +138,91 @@ export default function StudentDashboard() {
           const isFinished = totalLessons > 0 && completedCount >= totalLessons
 
           return (
-            <div key={enroll.course_id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:shadow-md transition-shadow">
-              <div className="flex-1">
-                <span className="text-xs font-semibold text-blue-600 uppercase tracking-widest">{course.category || 'Umum'}</span>
-                <h3 className="text-xl font-bold mt-1 text-gray-900">{course.title}</h3>
-                <p className="text-sm text-gray-500 mb-4">Mentor: {course.profiles?.full_name || 'Anonymous'}</p>
-                
-                <div className="w-full bg-gray-100 rounded-full h-2.5 max-w-md overflow-hidden">
-                  <div 
-                    className="bg-blue-600 h-2.5 rounded-full transition-all duration-700 ease-out" 
-                    style={{ width: `${progress}%` }}
-                  ></div>
+            <div 
+              key={enroll.course_id} 
+              className="group bg-white rounded-[2.5rem] shadow-xl shadow-gray-200/20 border border-gray-100 p-2 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/5 hover:-translate-y-1"
+            >
+              <div className="p-8 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+                <div className="flex items-start gap-6">
+                  <div className="w-20 h-20 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-[1.5rem] flex items-center justify-center text-blue-600 flex-shrink-0 group-hover:scale-110 transition-transform duration-500 border border-blue-100/50">
+                    <BookOpen size={32} />
+                  </div>
+                  <div className="flex-1 space-y-1">
+                    <span className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em]">{course.category || 'Umum'}</span>
+                    <h3 className="text-2xl font-black text-gray-900 tracking-tight leading-tight group-hover:text-blue-600 transition-colors">{course.title}</h3>
+                    <div className="flex items-center gap-4 pt-1">
+                      <p className="text-sm font-bold text-gray-400 flex items-center gap-1.5">
+                        <GraduationCap size={16} className="text-gray-300" />
+                        {course.profiles?.full_name || 'Anonymous'}
+                      </p>
+                      <div className="w-1 h-1 bg-gray-200 rounded-full" />
+                      <p className="text-sm font-bold text-gray-400 flex items-center gap-1.5">
+                        <Clock size={16} className="text-gray-300" />
+                        {totalLessons} Materi
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 mt-2">
-                   <span className="text-xs font-bold text-blue-700">{progress}% Selesai</span>
-                   <span className="text-xs text-gray-400">({completedCount}/{totalLessons} Materi)</span>
-                </div>
-              </div>
 
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Link href={`/learn/${enroll.course_id}`}>
-                  <Button variant="secondary" className="w-full sm:w-auto font-medium">
-                    {isFinished ? 'Review Materi' : 'Lanjut Belajar'}
-                  </Button>
-                </Link>
-                {isFinished && (
-                  <Button 
-                    onClick={() => generateCertificate(course.title, user?.user_metadata?.full_name || 'Siswa')} 
-                    className="bg-green-600 hover:bg-green-700 w-full sm:w-auto font-medium shadow-sm shadow-green-100"
-                  >
-                    Unduh Sertifikat
-                  </Button>
-                )}
+                <div className="flex-1 max-w-md w-full">
+                  <div className="flex justify-between items-end mb-3">
+                    <span className={`text-xs font-black uppercase tracking-widest ${isFinished ? 'text-emerald-600' : 'text-blue-600'}`}>
+                      {isFinished ? 'Selesai Sempurna' : 'Progres Belajar'}
+                    </span>
+                    <span className={`text-sm font-black ${isFinished ? 'text-emerald-600' : 'text-blue-600'}`}>
+                      {progress}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden border border-gray-50">
+                    <div 
+                      className={`h-full rounded-full transition-all duration-1000 ease-out ${isFinished ? 'bg-emerald-500 shadow-lg shadow-emerald-500/30' : 'bg-blue-600 shadow-lg shadow-blue-500/30'}`} 
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                  <div className="flex items-center gap-2 mt-3">
+                    <div className={`w-1.5 h-1.5 rounded-full ${isFinished ? 'bg-emerald-500' : 'bg-blue-600'} animate-pulse`} />
+                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                      {completedCount} dari {totalLessons} materi telah dikuasai
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-3">
+                  <Link href={`/learn/${enroll.course_id}`} className="w-full">
+                    <Button 
+                      variant={isFinished ? 'outline' : 'primary'} 
+                      className={`w-full py-4 text-sm font-black rounded-2xl ${!isFinished && 'shadow-lg shadow-blue-500/25'}`}
+                      rightIcon={!isFinished && <ChevronRight size={18} />}
+                    >
+                      {isFinished ? 'Review Materi' : 'Lanjut Belajar'}
+                    </Button>
+                  </Link>
+                  {isFinished && (
+                    <Button 
+                      onClick={() => generateCertificate(course.title, user?.user_metadata?.full_name || 'Siswa')} 
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white w-full py-4 text-sm font-black rounded-2xl shadow-lg shadow-emerald-500/25"
+                      leftIcon={<Award size={18} />}
+                    >
+                      Sertifikat
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           )
         })}
 
         {enrollments.length === 0 && (
-          <div className="text-center py-24 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
-            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
-               <BookOpen className="text-gray-300" size={32} />
+          <div className="text-center py-24 bg-white rounded-[3rem] border-2 border-dashed border-gray-100 shadow-2xl shadow-gray-200/10">
+            <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner ring-8 ring-gray-50/50">
+               <BookOpen className="text-gray-300" size={40} />
             </div>
-            <h3 className="text-lg font-bold text-gray-900">Belum ada aktivitas belajar</h3>
-            <p className="text-gray-500 mb-6 max-w-xs mx-auto">Anda belum mendaftar di kursus apa pun. Ayo mulai belajar hal baru hari ini!</p>
+            <h3 className="text-3xl font-black text-gray-900 tracking-tight mb-3">Belum Ada Aktivitas Belajar</h3>
+            <p className="text-gray-500 mb-10 max-w-xs mx-auto font-medium leading-relaxed">Anda belum mendaftar di kursus apa pun. Ayo mulai belajar hal baru hari ini!</p>
             <Link href="/courses">
-              <Button className="px-8">Jelajahi Katalog Kursus</Button>
+              <Button size="lg" className="px-12 py-5 rounded-[2rem] font-black shadow-2xl shadow-blue-500/25">
+                Jelajahi Katalog Kursus
+              </Button>
             </Link>
           </div>
         )}
@@ -149,22 +230,3 @@ export default function StudentDashboard() {
     </div>
   )
 }
-
-// Simple BookOpen icon placeholder
-const BookOpen = ({ className, size }: { className?: string, size?: number }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width={size} 
-    height={size} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
-    className={className}
-  >
-    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-  </svg>
-)

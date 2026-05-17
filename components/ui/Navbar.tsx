@@ -4,7 +4,8 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { AuthService } from '@/services/authService'
-import { User, LogOut, Settings } from 'lucide-react'
+import { User, LogOut, Settings, LayoutDashboard, GraduationCap, Home } from 'lucide-react'
+import { Button } from '@/components/ui/Button'
 
 export const Navbar = () => {
   const pathname = usePathname()
@@ -33,89 +34,108 @@ export const Navbar = () => {
   }
 
   const baseLinks = [
-    { name: 'Home', href: '/' },
+    { name: 'Home', href: '/', icon: <Home size={18} /> },
   ]
 
   // Add Courses link only if NOT a mentor
   if (!profile || profile.role !== 'mentor') {
-    baseLinks.push({ name: 'Courses', href: '/courses' })
+    baseLinks.push({ name: 'Courses', href: '/courses', icon: <GraduationCap size={18} /> })
   }
 
   const roleLinks = []
   if (session && profile) {
     if (profile.role === 'mentor') {
-      roleLinks.push({ name: 'Mentor Dashboard', href: '/dashboard/mentor' })
+      roleLinks.push({ name: 'Mentor Dashboard', href: '/dashboard/mentor', icon: <LayoutDashboard size={18} /> })
     } else if (profile.role === 'admin') {
-      roleLinks.push({ name: 'Admin', href: '/admin/dashboard' })
+      roleLinks.push({ name: 'Admin', href: '/admin/dashboard', icon: <Settings size={18} /> })
     } else {
-      roleLinks.push({ name: 'My Learning', href: '/dashboard/student' })
+      roleLinks.push({ name: 'My Learning', href: '/dashboard/student', icon: <LayoutDashboard size={18} /> })
     }
   }
 
   const navLinks = [...baseLinks, ...roleLinks]
 
   return (
-    <nav className="bg-white border-b border-gray-200 sticky top-0 z-40">
+    <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-40 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex">
+          <div className="flex items-center">
             <div className="flex-shrink-0 flex items-center">
-              <Link href="/" className="text-2xl font-bold text-blue-600">
-                SkillSpace
+              <Link href="/" className="group flex items-center gap-2">
+                <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform duration-300">
+                  <GraduationCap size={24} />
+                </div>
+                <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  SkillSpace
+                </span>
               </Link>
             </div>
-            <div className="hidden sm:-my-px sm:ml-8 sm:flex sm:space-x-8">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${
-                    pathname === link.href
-                      ? 'border-blue-500 text-gray-900'
-                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                  }`}
-                >
-                  {link.name}
-                </Link>
-              ))}
+            <div className="hidden sm:ml-10 sm:flex sm:space-x-4">
+              {navLinks.map((link) => {
+                const isActive = pathname === link.href
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 gap-2 group ${
+                      isActive
+                        ? 'bg-blue-50 text-blue-700 shadow-sm'
+                        : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
+                    }`}
+                  >
+                    <span className={`${isActive ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600'} transition-colors`}>
+                      {link.icon}
+                    </span>
+                    {link.name}
+                  </Link>
+                )
+              })}
             </div>
           </div>
-          <div className="hidden sm:ml-6 sm:flex sm:items-center space-x-6">
+          <div className="hidden sm:ml-6 sm:flex sm:items-center space-x-4">
             {session ? (
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center gap-3 bg-gray-50 p-1.5 pl-3 rounded-full border border-gray-100">
+                <span className="text-xs font-bold text-gray-500 hidden lg:block">
+                  Hi, {profile?.full_name?.split(' ')[0] || 'User'}
+                </span>
                 <Link 
                   href="/profile" 
-                  className={`flex items-center gap-2 p-1 rounded-full border-2 transition-all ${
-                    pathname === '/profile' ? 'border-blue-500' : 'border-transparent hover:border-gray-200'
-                  }`}
+                  className={`relative group ${
+                    pathname === '/profile' ? 'ring-2 ring-blue-500 ring-offset-2' : ''
+                  } rounded-full transition-all duration-300 hover:scale-105`}
                 >
                   {profile?.avatar_url ? (
                     <img 
                       src={profile.avatar_url} 
                       alt="Avatar" 
-                      className="w-8 h-8 rounded-full object-cover"
+                      className="w-8 h-8 rounded-full object-cover ring-1 ring-gray-200"
                     />
                   ) : (
-                    <div className="w-8 h-8 bg-blue-50 rounded-full flex items-center justify-center text-blue-600">
+                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 ring-1 ring-blue-200">
                       <User size={18} />
                     </div>
                   )}
                 </Link>
                 
+                <div className="w-px h-4 bg-gray-200 mx-1" />
+
                 <button 
                   onClick={handleLogout}
-                  className="text-gray-400 hover:text-red-500 transition-colors"
+                  className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all duration-200"
                   title="Keluar"
                 >
-                  <LogOut size={20} />
+                  <LogOut size={18} />
                 </button>
               </div>
             ) : (
-              <Link href="/login">
-                <button className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm">
-                  Sign In
-                </button>
-              </Link>
+              <div className="flex items-center gap-2">
+                <Link href="/login">
+                  <Button variant="ghost" size="sm">Sign In</Button>
+                </Link>
+                <Link href="/register">
+                  <Button variant="primary" size="sm" className="shadow-blue-500/20">Get Started</Button>
+                </Link>
+              </div>
             )}
           </div>
         </div>
