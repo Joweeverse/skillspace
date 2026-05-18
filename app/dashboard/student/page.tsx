@@ -7,7 +7,7 @@ import { AuthService } from '@/services/authService'
 import Link from 'next/link'
 import jsPDF from 'jspdf'
 import { useRouter } from 'next/navigation'
-import { BookOpen, Trophy, Clock, ChevronRight, Award, GraduationCap, Sparkles } from 'lucide-react'
+import { BookOpen, Trophy, Clock, ChevronRight, Award, GraduationCap, Sparkles, User } from 'lucide-react'
 
 export default function StudentDashboard() {
   const [enrollments, setEnrollments] = useState<any[]>([])
@@ -107,7 +107,8 @@ export default function StudentDashboard() {
           <h1 className="text-4xl font-black text-gray-900 tracking-tight">Dashboard Belajar</h1>
           <p className="text-gray-500 font-medium mt-1">Selamat datang kembali, mari lanjutkan progres Anda hari ini.</p>
         </div>
-        <div className="bg-white px-6 py-4 rounded-[1.5rem] border border-gray-100 shadow-xl shadow-gray-200/20 flex items-center gap-6">
+        
+        <div className="flex items-center gap-6 bg-white px-8 py-4 rounded-[1.5rem] border border-gray-100 shadow-xl shadow-gray-200/20">
           <div className="text-center">
             <div className="text-2xl font-black text-blue-600">{enrollments.length}</div>
             <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Kursus Aktif</div>
@@ -122,7 +123,12 @@ export default function StudentDashboard() {
         </div>
       </div>
       
-      <div className="grid grid-cols-1 gap-8">
+      <div className="grid grid-cols-1 gap-8 animate-in slide-in-from-bottom-4 duration-500">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
+          <h2 className="text-2xl font-black text-gray-900 tracking-tight">Materi Belajar Saya</h2>
+        </div>
+
         {enrollments.map((enroll) => {
           const course = enroll.courses
           if (!course) return null

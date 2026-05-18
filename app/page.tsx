@@ -18,9 +18,6 @@ export default function Home() {
             <Link href="/courses">
               <Button className="px-8 py-3 text-lg">Explore Courses</Button>
             </Link>
-            <Link href="/login" className="text-sm font-semibold leading-6 text-gray-900">
-              Become a Mentor <span aria-hidden="true">→</span>
-            </Link>
           </div>
         </div>
       </div>

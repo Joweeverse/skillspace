@@ -76,14 +76,26 @@ export const AuthService = {
     return data
   },
 
+  async updatePassword(newPassword: string) {
+    const { data, error } = await supabase.auth.updateUser({
+      password: newPassword
+    })
+
+    if (error) throw error
+    return data
+  },
+
   async uploadAvatar(userId: string, file: File) {
     const fileExt = file.name.split('.').pop()
-    const fileName = `${userId}-${Math.random()}.${fileExt}`
-    const filePath = `avatars/${fileName}`
+    const fileName = `${userId}-${Date.now()}.${fileExt}`
+    const filePath = `avatars/${userId}/${fileName}`
 
+    // Ensure we are using the 'profiles' bucket
     const { error: uploadError } = await supabase.storage
-      .from('profiles') // Assume bucket name is 'profiles'
-      .upload(filePath, file)
+      .from('profiles')
+      .upload(filePath, file, {
+        upsert: true
+      })
 
     if (uploadError) throw uploadError
 

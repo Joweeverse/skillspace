@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button'
 import { DiscussionSection } from '@/components/features/DiscussionSection'
 import { QuizModal } from '@/components/features/QuizModal'
 import { AuthService } from '@/services/authService'
-import { ChevronRight, CheckCircle2, PlayCircle, FileText, Lock, ArrowLeft, MoreVertical, BookOpen } from 'lucide-react'
+import { ChevronRight, CheckCircle2, PlayCircle, FileText, Lock, ArrowLeft, MoreVertical, BookOpen, User } from 'lucide-react'
 import Link from 'next/link'
 
 export default function LearnPage({ params }: { params: Promise<{ courseId: string }> }) {
@@ -121,12 +121,18 @@ export default function LearnPage({ params }: { params: Promise<{ courseId: stri
           </div>
           
           <h2 className="text-2xl font-black text-gray-900 tracking-tight leading-tight mb-2">{course.title}</h2>
-          <div className="flex items-center gap-2 mb-6">
-            <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
-              <BookOpen size={12} />
+          <Link 
+            href={`/mentors/${course.mentor_id}`} 
+            className="flex items-center gap-2 mb-6 group/mentor hover:opacity-80 transition-all"
+          >
+            <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 group-hover/mentor:bg-blue-600 group-hover/mentor:text-white transition-colors">
+              <User size={12} />
             </div>
-            <p className="text-sm font-bold text-gray-400">{course.profiles?.full_name}</p>
-          </div>
+            <p className="text-sm font-bold text-gray-400 group-hover/mentor:text-blue-600 transition-colors">
+              {course.profiles?.full_name}
+              <span className="text-[8px] ml-2 bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 uppercase tracking-tighter">Profil</span>
+            </p>
+          </Link>
 
           <div className="space-y-2">
             <div className="flex justify-between items-end mb-1">

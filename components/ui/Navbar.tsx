@@ -35,6 +35,7 @@ export const Navbar = () => {
 
   const baseLinks = [
     { name: 'Home', href: '/', icon: <Home size={18} /> },
+    { name: 'Direktori Mentor', href: '/mentors', icon: <User size={18} /> },
   ]
 
   // Add Courses link only if NOT a mentor

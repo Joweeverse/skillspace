@@ -7,7 +7,18 @@ export interface Profile {
   role: UserRole;
   is_verified: boolean;
   avatar_url?: string;
+  bio?: string;
   updated_at?: string;
+}
+
+export interface Portfolio {
+  id: string;
+  mentor_id: string;
+  title: string;
+  description?: string;
+  url?: string;
+  image_url?: string;
+  created_at?: string;
 }
 
 export interface Course {
