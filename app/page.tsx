@@ -1,8 +1,30 @@
-import React from 'react'
+'use client'
+
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
+import { AuthService } from '@/services/authService'
 
 export default function Home() {
+  const [userRole, setUserRole] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function checkRole() {
+      try {
+        const profile = await AuthService.getCurrentUserProfile()
+        if (profile) {
+          setUserRole(profile.role)
+        }
+      } catch (err) {
+        console.error('Error fetching profile:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    checkRole()
+  }, [])
+
   return (
     <div className="bg-white">
       {/* Hero Section */}
@@ -15,9 +37,15 @@ export default function Home() {
             Learn from industry experts, master new skills, and advance your career with our comprehensive e-learning platform.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
-            <Link href="/courses">
-              <Button className="px-8 py-3 text-lg">Explore Courses</Button>
-            </Link>
+            {!loading && userRole === 'mentor' ? (
+              <Link href="/dashboard/mentor">
+                <Button className="px-8 py-3 text-lg">Go to Dashboard</Button>
+              </Link>
+            ) : (
+              <Link href="/courses">
+                <Button className="px-8 py-3 text-lg">Explore Courses</Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>

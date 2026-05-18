@@ -185,23 +185,5 @@ export const CourseService = {
     
     if (error) throw error
     return data as Course[]
-  },
-
-  async uploadMaterial(file: File, path: string) {
-    const { data, error } = await supabase.storage
-      .from('course-materials')
-      .upload(path, file, {
-        cacheControl: '3600',
-        upsert: false
-      })
-
-    if (error) throw error
-    
-    // Dapatkan Public URL
-    const { data: { publicUrl } } = supabase.storage
-      .from('course-materials')
-      .getPublicUrl(data.path)
-
-    return publicUrl
   }
 }

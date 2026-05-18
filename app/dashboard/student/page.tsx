@@ -13,6 +13,7 @@ export default function StudentDashboard() {
   const [enrollments, setEnrollments] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
+  const [profile, setProfile] = useState<any>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -24,8 +25,14 @@ export default function StudentDashboard() {
           return
         }
         setUser(session.user)
-        const data = await CourseService.getUserEnrollments(session.user.id)
-        setEnrollments(data || [])
+        
+        const [enrollmentData, profileData] = await Promise.all([
+          CourseService.getUserEnrollments(session.user.id),
+          AuthService.getUserProfile(session.user.id)
+        ])
+        
+        setEnrollments(enrollmentData || [])
+        setProfile(profileData)
       } catch (err) {
         console.error(err)
       } finally {
@@ -205,13 +212,14 @@ export default function StudentDashboard() {
                   </Link>
                   {isFinished && (
                     <Button 
-                      onClick={() => generateCertificate(course.title, user?.user_metadata?.full_name || 'Siswa')} 
+                      onClick={() => generateCertificate(course.title, profile?.full_name || 'Siswa')} 
                       className="bg-emerald-600 hover:bg-emerald-700 text-white w-full py-4 text-sm font-black rounded-2xl shadow-lg shadow-emerald-500/25"
                       leftIcon={<Award size={18} />}
                     >
                       Sertifikat
                     </Button>
                   )}
+
                 </div>
               </div>
             </div>

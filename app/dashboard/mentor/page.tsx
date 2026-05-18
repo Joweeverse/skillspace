@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { CourseService } from '@/services/courseService'
 import { QuizService, ManualQuizInput } from '@/services/quizService'
 import { MentorService } from '@/services/mentorService'
@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/Button'
 import { AuthService } from '@/services/authService'
 import { useRouter } from 'next/navigation'
 import { Course, Lesson, Portfolio } from '@/types/database'
-import { Plus, Edit, BookOpen, HelpCircle, X, ChevronRight, Trash2, Eye, MessageSquare, LayoutDashboard, Settings, MoreVertical, Play, FileText, Sparkles, CheckCircle2, Briefcase, ExternalLink, User } from 'lucide-react'
+import { Plus, Edit, BookOpen, HelpCircle, X, ChevronRight, Trash2, Eye, MessageSquare, LayoutDashboard, Settings, MoreVertical, Play, Sparkles, CheckCircle2, Briefcase, ExternalLink, User } from 'lucide-react'
 import { DiscussionSection } from '@/components/features/DiscussionSection'
 
 export default function MentorDashboard() {
@@ -39,7 +39,7 @@ export default function MentorDashboard() {
   // Form States
   const [newCourse, setNewCourse] = useState({ title: '', category: '' })
   const [portfolioForm, setPortfolioForm] = useState({ title: '', description: '', url: '', image_url: '' })
-  const [materialForm, setMaterialForm] = useState({ title: '', content: '', youtube_url: '', pdf_url: '' })
+  const [materialForm, setMaterialForm] = useState({ title: '', content: '', youtube_url: '' })
   const [quizTitle, setQuizTitle] = useState('')
   const [questions, setQuestions] = useState<ManualQuizInput['questions']>([
     { question_text: '', options_json: ['', '', '', ''], correct_answer: '' }
@@ -182,17 +182,23 @@ export default function MentorDashboard() {
     e.preventDefault()
     if (!selectedCourse) return
     try {
+      const materialData = {
+        title: materialForm.title,
+        content: materialForm.content,
+        youtube_url: materialForm.youtube_url
+      }
+
       if (editingLesson) {
-        await CourseService.updateLesson(editingLesson.id, materialForm)
+        await CourseService.updateLesson(editingLesson.id, materialData)
         alert('Materi berhasil diperbarui!')
       } else {
-        await CourseService.addLesson({ ...materialForm, course_id: selectedCourse.id })
+        await CourseService.addLesson({ ...materialData, course_id: selectedCourse.id })
         alert('Materi berhasil ditambahkan!')
       }
       await refreshLessons(selectedCourse.id)
       setShowMaterialModal(false)
       setEditingLesson(null)
-      setMaterialForm({ title: '', content: '', youtube_url: '', pdf_url: '' })
+      setMaterialForm({ title: '', content: '', youtube_url: '' })
     } catch (err: any) {
       alert(`Gagal: ${err.message}`)
     }
@@ -204,12 +210,11 @@ export default function MentorDashboard() {
       setMaterialForm({
         title: lesson.title,
         content: lesson.content || '',
-        youtube_url: lesson.youtube_url || '',
-        pdf_url: lesson.pdf_url || ''
+        youtube_url: lesson.youtube_url || ''
       })
     } else {
       setEditingLesson(null)
-      setMaterialForm({ title: '', content: '', youtube_url: '', pdf_url: '' })
+      setMaterialForm({ title: '', content: '', youtube_url: '' })
     }
     setShowMaterialModal(true)
   }
@@ -431,11 +436,6 @@ export default function MentorDashboard() {
                                {lesson.youtube_url && (
                                  <span className="flex items-center gap-1.5 text-[10px] font-black text-red-500 uppercase tracking-widest bg-red-50 px-2 py-0.5 rounded-full">
                                    <Play size={10} fill="currentColor" /> Video
-                                 </span>
-                               )}
-                               {lesson.pdf_url && (
-                                 <span className="flex items-center gap-1.5 text-[10px] font-black text-blue-500 uppercase tracking-widest bg-blue-50 px-2 py-0.5 rounded-full">
-                                   <FileText size={10} /> PDF
                                  </span>
                                )}
                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-1.5 ml-2">
@@ -711,7 +711,7 @@ export default function MentorDashboard() {
                   onChange={e => setMaterialForm({...materialForm, content: e.target.value})}
                 />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6">
                 <div className="space-y-2">
                   <label className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Link YouTube</label>
                   <div className="relative group">
@@ -724,21 +724,6 @@ export default function MentorDashboard() {
                       value={materialForm.youtube_url}
                       placeholder="https://youtube.com/watch?v=..."
                       onChange={e => setMaterialForm({...materialForm, youtube_url: e.target.value})}
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Link Materi PDF</label>
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-blue-400">
-                      <FileText size={18} />
-                    </div>
-                    <input 
-                      type="text" 
-                      className="block w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-[1.5rem] text-sm font-medium transition-all duration-300 focus:bg-white focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none" 
-                      value={materialForm.pdf_url}
-                      placeholder="https://example.com/file.pdf"
-                      onChange={e => setMaterialForm({...materialForm, pdf_url: e.target.value})}
                     />
                   </div>
                 </div>

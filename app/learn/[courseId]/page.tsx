@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button'
 import { DiscussionSection } from '@/components/features/DiscussionSection'
 import { QuizModal } from '@/components/features/QuizModal'
 import { AuthService } from '@/services/authService'
-import { ChevronRight, CheckCircle2, PlayCircle, FileText, Lock, ArrowLeft, MoreVertical, BookOpen, User } from 'lucide-react'
+import { ChevronRight, CheckCircle2, PlayCircle, Lock, ArrowLeft, MoreVertical, BookOpen, User } from 'lucide-react'
 import Link from 'next/link'
 
 export default function LearnPage({ params }: { params: Promise<{ courseId: string }> }) {
@@ -221,48 +221,26 @@ export default function LearnPage({ params }: { params: Promise<{ courseId: stri
               </div>
             </div>
             
-            {/* Video & PDF Grid */}
-            <div className={`grid gap-8 ${currentLesson.pdf_url ? 'grid-cols-1 xl:grid-cols-2' : 'grid-cols-1'}`}>
-              {/* Video Player */}
-              {currentLesson.youtube_url && (
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2 text-xs font-black text-gray-400 uppercase tracking-widest ml-1">
-                    <PlayCircle size={14} className="text-red-500" />
-                    Video Pembelajaran
-                  </div>
-                  <div className="aspect-video bg-black rounded-[2rem] overflow-hidden shadow-2xl shadow-blue-900/10 ring-1 ring-gray-200 border-4 border-white">
-                    <iframe
-                      width="100%"
-                      height="100%"
-                      src={`https://www.youtube.com/embed/${getYoutubeId(currentLesson.youtube_url)}?modestbranding=1&rel=0`}
-                      title={currentLesson.title}
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-                  </div>
+            {/* Video Content */}
+            {currentLesson.youtube_url && (
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-xs font-black text-gray-400 uppercase tracking-widest ml-1">
+                  <PlayCircle size={14} className="text-red-500" />
+                  Video Pembelajaran
                 </div>
-              )}
-
-              {/* PDF Viewer */}
-              {currentLesson.pdf_url && (
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2 text-xs font-black text-gray-400 uppercase tracking-widest ml-1">
-                    <FileText size={14} className="text-blue-500" />
-                    Bahan Bacaan (PDF)
-                  </div>
-                  <div className="aspect-video xl:aspect-auto bg-gray-100 rounded-[2rem] overflow-hidden shadow-2xl shadow-blue-900/10 ring-1 ring-gray-200 border-4 border-white">
-                    <iframe
-                      src={`${currentLesson.pdf_url}#toolbar=0`}
-                      width="100%"
-                      height="100%"
-                      className="min-h-[400px]"
-                      title="Materi PDF"
-                    ></iframe>
-                  </div>
+                <div className="aspect-video bg-black rounded-[2rem] overflow-hidden shadow-2xl shadow-blue-900/10 ring-1 ring-gray-200 border-4 border-white">
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src={`https://www.youtube.com/embed/${getYoutubeId(currentLesson.youtube_url)}?modestbranding=1&rel=0`}
+                    title={currentLesson.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Konten Teks & Tombol Aksi */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
