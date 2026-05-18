@@ -62,9 +62,12 @@ export interface Discussion {
   user_id: string;
   message: string;
   created_at: string;
+  is_private?: boolean;
+  recipient_id?: string;
   profiles?: {
     full_name: string;
     role: UserRole;
     is_verified: boolean;
+    avatar_url?: string;
   };
 }

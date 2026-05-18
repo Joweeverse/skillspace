@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useEffect, useState, use } from 'react'
 import { CourseService } from '@/services/courseService'
 import { Lesson } from '@/types/database'
@@ -17,6 +19,14 @@ export default function LearnPage({ params }: { params: Promise<{ courseId: stri
   const [showQuiz, setShowQuiz] = useState(false)
   const [user, setUser] = useState<any>(null)
   const [completedLessonIds, setCompletedLessonIds] = useState<string[]>([])
+  const [discussionTab, setDiscussionTab] = useState<'public' | 'private'>('public')
+
+  const discussionRef = React.useRef<HTMLDivElement>(null)
+
+  const scrollToDiscussion = (tab: 'public' | 'private') => {
+    setDiscussionTab(tab)
+    discussionRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
 
   useEffect(() => {
     async function getUserAndProgress() {
@@ -268,10 +278,13 @@ export default function LearnPage({ params }: { params: Promise<{ courseId: stri
 
                 {/* Bagian Diskusi */}
                 {user && (
-                  <DiscussionSection 
-                    lessonId={currentLesson.id} 
-                    userId={user.id} 
-                  />
+                  <div ref={discussionRef}>
+                    <DiscussionSection 
+                      lessonId={currentLesson.id} 
+                      userId={user.id} 
+                      initialTab={discussionTab}
+                    />
+                  </div>
                 )}
               </div>
 
@@ -299,7 +312,10 @@ export default function LearnPage({ params }: { params: Promise<{ courseId: stri
                 <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-xl shadow-gray-200/20">
                   <h4 className="font-black text-gray-900 mb-6 tracking-tight">Butuh Bantuan?</h4>
                   <div className="space-y-4">
-                    <button className="w-full flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-transparent hover:border-blue-200 hover:bg-blue-50 transition-all duration-300 group">
+                    <button 
+                      onClick={() => scrollToDiscussion('private')}
+                      className="w-full flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-transparent hover:border-blue-200 hover:bg-blue-50 transition-all duration-300 group"
+                    >
                       <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
                         <MessageSquare size={20} />
                       </div>

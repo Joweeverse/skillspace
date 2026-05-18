@@ -47,6 +47,12 @@ export const AuthService = {
     return session
   },
 
+  async getCurrentUserProfile() {
+    const session = await this.getSession()
+    if (!session?.user) return null
+    return this.getUserProfile(session.user.id)
+  },
+
   async getUserProfile(userId: string) {
     const { data, error } = await supabase
       .from('profiles')
