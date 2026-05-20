@@ -83,3 +83,15 @@ export interface Discussion {
     avatar_url?: string;
   };
 }
+
+export interface Certificate {
+  id: string;
+  course_id: string;
+  mentor_id: string;
+  template_url?: string;
+  title_text: string;
+  description_text: string;
+  signature_name?: string;
+  primary_color: string;
+  created_at: string;
+}

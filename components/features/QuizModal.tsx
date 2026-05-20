@@ -65,8 +65,14 @@ export const QuizModal = ({ lessonId, onClose, onComplete }: QuizModalProps) => 
         await QuizService.markLessonAsCompleted(session.user.id, lessonId)
         onComplete()
       }
-    } catch (err) {
-      console.error('Failed to mark lesson as completed:', err)
+    } catch (err: any) {
+      console.error('Failed to mark lesson as completed:', {
+        message: err?.message || 'No message',
+        details: err?.details || 'No details',
+        hint: err?.hint || 'No hint',
+        code: err?.code || 'No code',
+        fullError: err
+      })
     }
   }
 

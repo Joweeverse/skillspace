@@ -2,42 +2,82 @@
 
 import React, { useEffect, useState, use } from 'react'
 import { CourseService } from '@/services/courseService'
-import { Lesson } from '@/types/database'
+import { Lesson, Certificate } from '@/types/database'
 import { Button } from '@/components/ui/Button'
 import { DiscussionSection } from '@/components/features/DiscussionSection'
 import { QuizModal } from '@/components/features/QuizModal'
 import { AuthService } from '@/services/authService'
-import { ChevronRight, CheckCircle2, PlayCircle, Lock, ArrowLeft, MoreVertical, BookOpen, User, Download, FileText } from 'lucide-react'
+import { QuizService } from '@/services/quizService'
+import { CertificateService } from '@/services/certificateService'
+import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { ChevronRight, CheckCircle2, PlayCircle, Lock, ArrowLeft, MoreVertical, BookOpen, User, Download, FileText, Award, Sparkles, Share2 } from 'lucide-react'
 
-export default function LearnPage({ params }: { params: Promise<{ courseId: string }> }) {
-  const { courseId } = use(params)
+export default function LearnPage() {
+  const params = useParams()
+  const courseId = params.courseId as string
   const [course, setCourse] = useState<any>(null)
   const [lessons, setLessons] = useState<Lesson[]>([])
   const [currentLesson, setCurrentLesson] = useState<Lesson | null>(null)
   const [loading, setLoading] = useState(true)
+  const [downloading, setDownloading] = useState(false)
   const [showQuiz, setShowQuiz] = useState(false)
   const [user, setUser] = useState<any>(null)
+  const [studentName, setStudentName] = useState('')
+  const [certificate, setCertificate] = useState<Certificate | null>(null)
   const [completedLessonIds, setCompletedLessonIds] = useState<string[]>([])
+  const [enrollmentStatus, setEnrollmentStatus] = useState<string>('enrolled')
   const [discussionTab, setDiscussionTab] = useState<'public' | 'private'>('public')
+  const [currentLessonHasQuiz, setCurrentLessonHasQuiz] = useState(false)
+  const [checkingQuiz, setCheckingQuiz] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
+  const router = useRouter()
+  const certificateRef = React.useRef<HTMLDivElement>(null)
   const discussionRef = React.useRef<HTMLDivElement>(null)
 
-  const scrollToDiscussion = (tab: 'public' | 'private') => {
-    setDiscussionTab(tab)
-    discussionRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
+  // 1. Fetch User and Progress
   useEffect(() => {
     async function getUserAndProgress() {
       const session = await AuthService.getSession()
       if (session?.user) {
         setUser(session.user)
         try {
-          const enrollments = await CourseService.getUserEnrollments(session.user.id)
+          const [enrollments, profile] = await Promise.all([
+            CourseService.getUserEnrollments(session.user.id),
+            AuthService.getUserProfile(session.user.id)
+          ])
+          
+          if (profile.role === 'mentor') {
+            console.log('Mentors are restricted from the learn page, redirecting...')
+            router.push('/courses')
+            return
+          }
+
+          setStudentName(profile.full_name)
           const currentEnrollment = enrollments.find(e => e.course_id === courseId)
           if (currentEnrollment) {
             setCompletedLessonIds(currentEnrollment.completed_lessons || [])
+            setEnrollmentStatus(currentEnrollment.status)
+
+            if (currentEnrollment.status === 'completed') {
+              const certData = await CertificateService.getCertificateByCourseId(courseId)
+              setCertificate(certData)
+            }
+          } else if (profile.role === 'student') {
+            // Auto-enroll student if they land on the learn page but aren't enrolled yet
+            console.log('Student not enrolled, auto-enrolling...')
+            try {
+              await CourseService.enrollCourse(session.user.id, courseId)
+              setCompletedLessonIds([])
+              setEnrollmentStatus('enrolled')
+            } catch (enrollErr) {
+              console.error('Auto-enrollment failed:', enrollErr)
+            }
           }
         } catch (err) {
           console.error('Error fetching progress:', err)
@@ -47,6 +87,7 @@ export default function LearnPage({ params }: { params: Promise<{ courseId: stri
     getUserAndProgress()
   }, [courseId])
 
+  // 2. Fetch Course Content
   useEffect(() => {
     async function loadContent() {
       try {
@@ -68,10 +109,109 @@ export default function LearnPage({ params }: { params: Promise<{ courseId: stri
     loadContent()
   }, [courseId])
 
-  const handleQuizComplete = () => {
-    if (currentLesson && !completedLessonIds.includes(currentLesson.id)) {
-      setCompletedLessonIds(prev => [...prev, currentLesson.id])
+  // 3. Check Quiz existence
+  useEffect(() => {
+    async function checkQuiz() {
+      if (!currentLesson) return
+      setCheckingQuiz(true)
+      setCurrentLessonHasQuiz(false) // Reset state before checking new lesson
+      try {
+        const quizData = await QuizService.getQuizByLessonId(currentLesson.id)
+        setCurrentLessonHasQuiz(!!(quizData && quizData.questions && quizData.questions.length > 0))
+      } catch (err) {
+        console.error('Error checking quiz:', err)
+        setCurrentLessonHasQuiz(false)
+      } finally {
+        setCheckingQuiz(false)
+      }
     }
+    checkQuiz()
+  }, [currentLesson])
+
+  const handleDownload = async () => {
+    if (!certificateRef.current) return
+    setDownloading(true)
+    
+    try {
+      const certData = certificate
+      await CertificateService.downloadCertificatePDF(
+        certData,
+        course.title,
+        studentName,
+        courseId
+      )
+    } catch (err) {
+      console.error('Download failed:', err)
+      alert('Gagal mengunduh PDF. Silakan coba lagi.')
+    } finally {
+      setDownloading(false)
+    }
+  }
+
+  const handleShare = async () => {
+    const shareData = {
+      title: `Sertifikat Kelulusan - ${course.title}`,
+      text: `Saya baru saja lulus dari kursus "${course.title}" di SkillSpace!`,
+      url: window.location.href,
+    }
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData)
+      } else {
+        await navigator.clipboard.writeText(window.location.href)
+        alert('Link kursus telah disalin ke clipboard!')
+      }
+    } catch (err) {
+      console.error('Share failed:', err)
+    }
+  }
+
+  const handleMarkAsCompleted = async () => {
+    if (!user || !currentLesson) return
+    try {
+      await QuizService.markLessonAsCompleted(user.id, currentLesson.id)
+      handleQuizComplete()
+    } catch (err: any) {
+      console.error('Error marking as completed:', {
+        message: err?.message || 'No message',
+        details: err?.details || 'No details',
+        hint: err?.hint || 'No hint',
+        code: err?.code || 'No code',
+        fullError: err
+      })
+      alert(`Gagal menandai materi sebagai selesai: ${err?.message || 'Unknown error'}`)
+    }
+  }
+
+  const scrollToDiscussion = (tab: 'public' | 'private') => {
+    setDiscussionTab(tab)
+    // Small delay to ensure tab state is updated if needed
+    setTimeout(() => {
+      discussionRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }, 100)
+  }
+
+  const handleQuizComplete = async () => {
+    if (!currentLesson) return
+    
+    // 1. Update local progress immediately
+    let newCompletedIds = completedLessonIds
+    if (!completedLessonIds.includes(currentLesson.id)) {
+      newCompletedIds = [...completedLessonIds, currentLesson.id]
+      setCompletedLessonIds(newCompletedIds)
+    }
+
+    // 2. Check if whole course is now finished
+    if (lessons.length > 0 && newCompletedIds.length >= lessons.length) {
+      setEnrollmentStatus('completed')
+      // Fetch certificate design if not already fetched
+      if (!certificate) {
+        const certData = await CertificateService.getCertificateByCourseId(courseId)
+        setCertificate(certData)
+      }
+    }
+
     setShowQuiz(false)
   }
 
@@ -114,7 +254,7 @@ export default function LearnPage({ params }: { params: Promise<{ courseId: stri
       <div className="w-96 bg-gray-50/50 border-r border-gray-100 flex flex-col shadow-xl shadow-gray-200/20 z-10 relative">
         <div className="p-8 border-b border-gray-100 bg-white">
           <div className="flex items-center gap-3 mb-6">
-            <Link href="/dashboard/student" className="p-2 bg-gray-100 text-gray-500 rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-all duration-300">
+            <Link href={user?.role === 'mentor' ? "/dashboard/mentor" : "/dashboard/student"} className="p-2 bg-gray-100 text-gray-500 rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-all duration-300">
               <ArrowLeft size={18} />
             </Link>
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Kembali ke Dashboard</span>
@@ -128,10 +268,10 @@ export default function LearnPage({ params }: { params: Promise<{ courseId: stri
             <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 group-hover/mentor:bg-blue-600 group-hover/mentor:text-white transition-colors">
               <User size={12} />
             </div>
-            <p className="text-sm font-bold text-gray-400 group-hover/mentor:text-blue-600 transition-colors">
+            <div className="text-sm font-bold text-gray-400 group-hover/mentor:text-blue-600 transition-colors">
               {course.profiles?.full_name}
               <span className="text-[8px] ml-2 bg-gray-100 px-1.5 py-0.5 rounded text-gray-400 uppercase tracking-tighter">Profil</span>
-            </p>
+            </div>
           </Link>
 
           <div className="space-y-2">
@@ -198,8 +338,122 @@ export default function LearnPage({ params }: { params: Promise<{ courseId: stri
 
       {/* Konten Utama (Video & Materi) */}
       <div className="flex-1 overflow-y-auto bg-gray-50/30">
-        {currentLesson ? (
+        {user?.role === 'mentor' ? (
+          <div className="h-full flex flex-col items-center justify-center p-12 text-center">
+            <div className="w-24 h-24 bg-blue-50 text-blue-600 rounded-[2rem] flex items-center justify-center mb-8 shadow-xl shadow-blue-500/10">
+              <Lock size={48} />
+            </div>
+            <h3 className="text-3xl font-black text-gray-900 tracking-tight mb-4">Materi Khusus Siswa</h3>
+            <p className="text-gray-500 max-w-md mx-auto leading-relaxed font-medium">
+              Maaf, sebagai Mentor Anda hanya dapat melihat struktur kurikulum. 
+              Materi video, dokumen, dan kuis hanya dapat diakses oleh akun Siswa.
+            </p>
+            <div className="mt-10 flex gap-4">
+              <Link href="/courses">
+                <Button variant="outline" className="rounded-2xl px-8">Kembali ke Katalog</Button>
+              </Link>
+              <Link href="/dashboard/mentor">
+                <Button className="rounded-2xl px-8 shadow-lg shadow-blue-500/20">Dashboard Mentor</Button>
+              </Link>
+            </div>
+          </div>
+        ) : currentLesson ? (
           <div className="max-w-5xl mx-auto p-12 space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {/* Certificate Section for Completed Students */}
+            {enrollmentStatus === 'completed' && (
+              <div className="space-y-6 animate-in zoom-in duration-700">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-amber-50 text-amber-600 rounded-xl">
+                    <Award size={20} />
+                  </div>
+                  <h3 className="text-xl font-black text-gray-900 tracking-tight">Sertifikat Kelulusan</h3>
+                </div>
+
+                <div className="bg-white p-2 rounded-[2.5rem] shadow-2xl shadow-blue-500/10 border border-gray-100 overflow-hidden relative group/cert-container">
+                  <div ref={certificateRef} className="aspect-[1.414/1] w-full rounded-[2rem] overflow-hidden relative bg-gray-50">
+                    {/* Dynamic Certificate Template */}
+                    {certificate && certificate.template_url ? (
+                      <div className="absolute inset-0 w-full h-full">
+                        <img 
+                          src={mounted ? `${certificate.template_url}?t=${new Date(certificate.created_at).getTime()}` : certificate.template_url} 
+                          className="w-full h-full object-cover"
+                          alt="Certificate Background"
+                        />
+                        {/* Semi-transparent overlay to ensure text readability if needed */}
+                        <div className="absolute inset-0 bg-white/10" />
+                      </div>
+                    ) : (
+                      <div className="absolute inset-0 bg-white border-[20px]" style={{ borderColor: (certificate?.primary_color || '#2563eb') + '15' }}>
+                         <div className="absolute inset-[15px] border-2 border-dashed" style={{ borderColor: (certificate?.primary_color || '#2563eb') + '30' }} />
+                      </div>
+                    )}
+
+                    <div className="relative h-full flex flex-col items-center justify-center p-8 md:p-16 text-center z-10">
+                       <div className="mb-6" style={{ color: certificate?.primary_color || '#2563eb' }}>
+                          <Award size={64} strokeWidth={1.5} />
+                       </div>
+                       
+                       <h2 className="text-2xl md:text-4xl font-black mb-4 tracking-tighter uppercase" style={{ color: certificate?.primary_color || '#2563eb' }}>
+                          {certificate?.title_text || 'Sertifikat Kelulusan'}
+                       </h2>
+
+                       <p className="text-gray-400 font-bold uppercase tracking-[0.2em] text-[8px] md:text-[10px] mb-6 md:mb-10">
+                          {certificate?.description_text || 'Dengan ini menyatakan bahwa'}
+                       </p>
+
+                       <div className="w-full max-w-md border-b-2 border-gray-200 pb-2 mb-4">
+                          <span className="text-3xl md:text-5xl font-serif italic text-gray-900">{studentName || 'Siswa SkillSpace'}</span>
+                       </div>
+
+                       <div className="text-gray-500 text-xs md:text-sm font-medium mb-8 md:mb-12 max-w-sm leading-relaxed">
+                          Telah berhasil menyelesaikan seluruh kurikulum dan evaluasi pada kursus
+                          <span className="block font-black text-gray-800 mt-1">"{course.title}"</span>
+                       </div>
+
+                       <div className="mt-auto flex justify-between w-full items-end px-4 md:px-12">
+                          <div className="text-left space-y-1">
+                             <div className="h-px w-24 md:w-32 bg-gray-200" />
+                             <p className="text-[6px] md:text-[8px] font-black text-gray-400 uppercase tracking-widest">ID: SS-{courseId.slice(0,8).toUpperCase()}</p>
+                             <p className="text-[6px] md:text-[8px] font-black text-gray-400 uppercase tracking-widest" suppressHydrationWarning>Tgl: {mounted ? new Date().toLocaleDateString('id-ID') : ''}</p>
+                          </div>
+                          
+                          <div className="text-right">
+                             <p className="font-serif italic text-lg md:text-xl text-gray-900 mb-1">{certificate?.signature_name || course.profiles?.full_name}</p>
+                             <div className="h-px w-32 md:w-48 bg-gray-300 ml-auto mb-2" />
+                             <p className="text-[8px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest">Mentor Pengajar</p>
+                          </div>
+                       </div>
+                    </div>
+                  </div>
+
+                  <div className="p-6 flex flex-col md:flex-row gap-4 items-center justify-between bg-gray-50/50 rounded-b-[2rem]">
+                    <div className="flex items-center gap-2">
+                       <div className="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center">
+                          <Sparkles size={16} />
+                       </div>
+                       <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">Selamat! Anda telah lulus kursus ini.</p>
+                    </div>
+                    <div className="flex gap-3 w-full md:w-auto">
+                       <Button 
+                        variant="outline" 
+                        onClick={handleShare}
+                        className="flex-1 md:flex-none gap-2 rounded-xl text-xs font-black uppercase tracking-widest"
+                       >
+                          <Share2 size={14} /> Bagikan
+                       </Button>
+                       <Button 
+                        onClick={handleDownload}
+                        isLoading={downloading}
+                        className="flex-1 md:flex-none gap-2 rounded-xl text-xs font-black uppercase tracking-widest shadow-lg shadow-blue-500/20"
+                       >
+                          <Download size={14} /> Download PDF
+                       </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="flex justify-between items-start gap-8">
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
@@ -301,19 +555,35 @@ export default function LearnPage({ params }: { params: Promise<{ courseId: stri
                   <div className="absolute -top-12 -right-12 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
                   <div className="relative z-10">
                     <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-md border border-white/20">
-                      <CheckCircle2 size={24} />
+                      {completedLessonIds.includes(currentLesson.id) ? <CheckCircle2 size={24} className="text-emerald-400" /> : <CheckCircle2 size={24} />}
                     </div>
                     <h4 className="font-black text-2xl tracking-tight mb-2">Evaluasi Belajar</h4>
                     <p className="text-blue-100 text-sm font-medium mb-8 leading-relaxed">
-                      Selesaikan kuis untuk memverifikasi pemahaman Anda dan tandai materi ini sebagai selesai.
+                      {completedLessonIds.includes(currentLesson.id) 
+                        ? 'Anda telah menyelesaikan materi ini. Anda dapat mengulangi kuis kapan saja.'
+                        : currentLessonHasQuiz 
+                          ? 'Selesaikan kuis untuk memverifikasi pemahaman Anda dan tandai materi ini sebagai selesai.'
+                          : 'Tandai materi ini sebagai selesai untuk melanjutkan progres belajar Anda.'}
                     </p>
-                    <Button 
-                      variant="secondary" 
-                      onClick={() => setShowQuiz(true)}
-                      className="w-full py-4 rounded-2xl shadow-xl shadow-blue-900/20 font-black text-blue-700"
-                    >
-                      Mulai Kuis Sekarang
-                    </Button>
+                    
+                    {currentLessonHasQuiz ? (
+                      <Button 
+                        variant="secondary" 
+                        onClick={() => setShowQuiz(true)}
+                        className="w-full py-4 rounded-2xl shadow-xl shadow-blue-900/20 font-black text-blue-700"
+                      >
+                        {completedLessonIds.includes(currentLesson.id) ? 'Ulangi Kuis' : 'Mulai Kuis Sekarang'}
+                      </Button>
+                    ) : (
+                      <Button 
+                        variant={completedLessonIds.includes(currentLesson.id) ? 'outline' : 'secondary'}
+                        onClick={handleMarkAsCompleted}
+                        disabled={completedLessonIds.includes(currentLesson.id) || checkingQuiz}
+                        className={`w-full py-4 rounded-2xl font-black ${completedLessonIds.includes(currentLesson.id) ? 'bg-white/10 border-white/20 text-white hover:bg-white/20' : 'bg-white text-blue-700 shadow-xl'}`}
+                      >
+                        {checkingQuiz ? 'Memeriksa...' : completedLessonIds.includes(currentLesson.id) ? 'Selesai ✓' : 'Tandai Selesai'}
+                      </Button>
+                    )}
                   </div>
                 </div>
 

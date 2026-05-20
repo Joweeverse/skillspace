@@ -8,8 +8,9 @@ import { Button } from '@/components/ui/Button'
 import { AuthService } from '@/services/authService'
 import { useRouter } from 'next/navigation'
 import { Course, Lesson, Portfolio } from '@/types/database'
-import { Plus, Edit, BookOpen, HelpCircle, X, ChevronRight, Trash2, Eye, MessageSquare, LayoutDashboard, Settings, MoreVertical, Play, Sparkles, CheckCircle2, Briefcase, ExternalLink, User, FileText, Upload, Download } from 'lucide-react'
+import { Plus, Edit, BookOpen, HelpCircle, X, ChevronRight, Trash2, Eye, MessageSquare, LayoutDashboard, Settings, MoreVertical, Play, Sparkles, CheckCircle2, Briefcase, ExternalLink, User, FileText, Upload, Download, Award, Palette, Type } from 'lucide-react'
 import { DiscussionSection } from '@/components/features/DiscussionSection'
+import { CertificateService } from '@/services/certificateService'
 
 export default function MentorDashboard() {
   const [mentorId, setMentorId] = useState<string | null>(null)
@@ -28,12 +29,14 @@ export default function MentorDashboard() {
   const [showMaterialModal, setShowMaterialModal] = useState(false)
   const [showQuizModal, setShowQuizModal] = useState(false)
   const [showDiscussionModal, setShowDiscussionModal] = useState(false)
+  const [showCertificateModal, setShowCertificateModal] = useState(false)
   
   // Edit States
   const [editingLesson, setEditingLesson] = useState<Lesson | null>(null)
   const [editingPortfolio, setEditingPortfolio] = useState<Portfolio | null>(null)
   const [editingQuiz, setEditingQuiz] = useState<{id: string, title: string} | null>(null)
   const [activeLessonId, setActiveLessonId] = useState<string | null>(null)
+  const [mounted, setMounted] = useState(false)
 
   const router = useRouter()
 
@@ -47,6 +50,21 @@ export default function MentorDashboard() {
   const [questions, setQuestions] = useState<ManualQuizInput['questions']>([
     { question_text: '', options_json: ['', '', '', ''], correct_answer: '' }
   ])
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Certificate Form States
+  const [certForm, setCertForm] = useState({
+    title_text: 'Sertifikat Kelulusan',
+    description_text: 'Dengan ini menyatakan bahwa',
+    signature_name: '',
+    primary_color: '#2563eb',
+    template_url: ''
+  })
+  const [selectedCertFile, setSelectedCertFile] = useState<File | null>(null)
+  const [uploadingCert, setUploadingCert] = useState(false)
 
   useEffect(() => {
     async function loadInitialData() {
@@ -300,6 +318,62 @@ export default function MentorDashboard() {
     }
   }
 
+  const handleOpenCertificateModal = async () => {
+    if (!selectedCourse) return
+    try {
+      const cert = await CertificateService.getCertificateByCourseId(selectedCourse.id)
+      if (cert) {
+        setCertForm({
+          title_text: cert.title_text,
+          description_text: cert.description_text,
+          signature_name: cert.signature_name || '',
+          primary_color: cert.primary_color,
+          template_url: cert.template_url || ''
+        })
+      } else {
+        setCertForm({
+          title_text: 'Sertifikat Kelulusan',
+          description_text: 'Dengan ini menyatakan bahwa',
+          signature_name: '',
+          primary_color: '#2563eb',
+          template_url: ''
+        })
+      }
+      setShowCertificateModal(true)
+    } catch (err) {
+      console.error('Error loading certificate:', err)
+    }
+  }
+
+  const handleSaveCertificate = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!selectedCourse || !mentorId) return
+    setLoading(true)
+    try {
+      let finalTemplateUrl = certForm.template_url
+
+      if (selectedCertFile) {
+        setUploadingCert(true)
+        finalTemplateUrl = await CertificateService.uploadTemplate(selectedCourse.id, selectedCertFile)
+        setUploadingCert(false)
+      }
+
+      await CertificateService.saveCertificate({
+        ...certForm,
+        course_id: selectedCourse.id,
+        mentor_id: mentorId,
+        template_url: finalTemplateUrl
+      })
+      alert('Pengaturan sertifikat berhasil disimpan!')
+      setSelectedCertFile(null) // Clear local file preview
+      setShowCertificateModal(false)
+    } catch (err: any) {
+      alert(`Gagal: ${err.message}`)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   if (loading) return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
       <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
@@ -473,6 +547,15 @@ export default function MentorDashboard() {
                           </div>
                         </div>
                         <div className="flex items-center gap-3 pt-4 xl:pt-0 border-t xl:border-0 border-gray-100">
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => handleOpenCertificateModal()}
+                            className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest bg-amber-50 text-amber-600 rounded-xl shadow-sm border border-amber-100 px-4 hover:bg-amber-100"
+                            leftIcon={<Award size={16} />}
+                          >
+                            Sertifikat
+                          </Button>
                           <Button 
                             variant="ghost" 
                             size="sm" 
@@ -950,24 +1033,199 @@ export default function MentorDashboard() {
         </div>
       )}
 
-      {/* DISCUSSION MODAL */}
-      {showDiscussionModal && activeLessonId && (
+      {/* CERTIFICATE MODAL */}
+      {showCertificateModal && (
         <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-300">
-          <div className="bg-white rounded-[3rem] w-full max-w-4xl shadow-2xl overflow-hidden border border-white/20">
-            <div className="p-8 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
-              <h3 className="text-2xl font-black text-gray-900 tracking-tight">Diskusi dengan Siswa</h3>
+          <div className="bg-white rounded-[3rem] w-full max-w-5xl shadow-2xl max-h-[95vh] overflow-y-auto border border-white/20">
+            <div className="p-8 md:p-10 border-b border-gray-50 flex justify-between items-center sticky top-0 bg-white/80 backdrop-blur-md z-10">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-amber-50 text-amber-600 rounded-2xl">
+                  <Award size={28} />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-black text-gray-900 tracking-tight">Desain Sertifikat Kursus</h3>
+                  <p className="text-sm text-gray-400 font-bold uppercase tracking-widest">Kustomisasi sertifikat untuk siswa Anda</p>
+                </div>
+              </div>
               <button 
-                onClick={() => setShowDiscussionModal(false)}
+                onClick={() => setShowCertificateModal(false)}
                 className="p-2 text-gray-400 hover:text-gray-900 transition-colors"
               >
                 <X />
               </button>
             </div>
-            <div className="p-10 overflow-y-auto max-h-[70vh] custom-scrollbar">
-               <DiscussionSection 
-                 lessonId={activeLessonId} 
-                 userId={mentorId || ''} 
-               />
+
+            <div className="p-8 md:p-12 grid grid-cols-1 lg:grid-cols-2 gap-12">
+              {/* Settings Form */}
+              <form onSubmit={handleSaveCertificate} className="space-y-10">
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
+                      <Type size={12} /> Judul Utama
+                    </label>
+                    <input 
+                      type="text" 
+                      className="w-full bg-gray-50 border border-gray-100 px-6 py-4 rounded-[1.5rem] text-sm font-bold focus:bg-white focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all" 
+                      value={certForm.title_text}
+                      onChange={e => setCertForm({...certForm, title_text: e.target.value})}
+                      placeholder="Contoh: Sertifikat Kelulusan"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Teks Pernyataan</label>
+                    <textarea 
+                      className="w-full bg-gray-50 border border-gray-100 px-6 py-4 rounded-[1.5rem] text-sm font-medium h-24 focus:bg-white focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all resize-none" 
+                      value={certForm.description_text}
+                      onChange={e => setCertForm({...certForm, description_text: e.target.value})}
+                      placeholder="Contoh: Dengan ini menyatakan bahwa"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Warna Utama</label>
+                      <div className="flex items-center gap-3">
+                        <input 
+                          type="color" 
+                          className="w-12 h-12 rounded-xl cursor-pointer border-none bg-transparent" 
+                          value={certForm.primary_color}
+                          onChange={e => setCertForm({...certForm, primary_color: e.target.value})}
+                        />
+                        <div className="flex-1 bg-gray-50 border border-gray-100 px-4 py-3 rounded-xl text-xs font-mono font-bold text-gray-500">
+                          {certForm.primary_color.toUpperCase()}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Nama Penanda Tangan</label>
+                      <input 
+                        type="text" 
+                        className="w-full bg-gray-50 border border-gray-100 px-6 py-4 rounded-[1.5rem] text-sm font-bold focus:bg-white focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all" 
+                        value={certForm.signature_name}
+                        onChange={e => setCertForm({...certForm, signature_name: e.target.value})}
+                        placeholder="Contoh: Nama Lengkap Anda"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
+                      <Palette size={12} /> Template Background (Optional)
+                    </label>
+                    <div className="relative">
+                      <input 
+                        type="file" 
+                        accept="image/*"
+                        id="cert-bg-upload"
+                        className="hidden"
+                        onChange={(e) => setSelectedCertFile(e.target.files?.[0] || null)}
+                      />
+                      <label 
+                        htmlFor="cert-bg-upload"
+                        className={`flex items-center gap-4 w-full px-8 py-6 bg-gray-50 border border-dashed border-gray-200 rounded-[2rem] cursor-pointer hover:bg-amber-50 hover:border-amber-300 transition-all ${selectedCertFile ? 'border-amber-500 bg-amber-50' : ''}`}
+                      >
+                        <div className={`p-3 rounded-2xl ${selectedCertFile ? 'bg-amber-500 text-white' : 'bg-white text-gray-400 shadow-sm'}`}>
+                          <Upload size={24} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-black text-gray-900 truncate">
+                            {selectedCertFile ? selectedCertFile.name : (certForm.template_url ? 'Ganti Template Gambar' : 'Upload Template Gambar')}
+                          </p>
+                          <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">Rekomendasi: 2000x1414px (A4 Landscape)</p>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <Button 
+                    type="submit" 
+                    isLoading={loading || uploadingCert}
+                    className="flex-1 py-5 rounded-[1.5rem] font-black text-lg shadow-2xl shadow-blue-500/20"
+                  >
+                    Simpan Desain Sertifikat
+                  </Button>
+                </div>
+              </form>
+
+              {/* Preview Area */}
+              <div className="space-y-6">
+                <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
+                  <Eye size={12} /> Live Preview (Tampilan Siswa)
+                </label>
+                
+                <div className="sticky top-32">
+                  <div className="aspect-[1.414/1] bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden relative group/cert">
+                    {/* Background Template */}
+                    {selectedCertFile || certForm.template_url ? (
+                      <img 
+                        src={selectedCertFile ? URL.createObjectURL(selectedCertFile) : (mounted ? `${certForm.template_url}?t=${Date.now()}` : certForm.template_url)} 
+                        className="absolute inset-0 w-full h-full object-cover opacity-100"
+                        alt="Background"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 border-[20px]" style={{ borderColor: certForm.primary_color + '20' }}>
+                        <div className="absolute inset-[15px] border-2 border-dashed" style={{ borderColor: certForm.primary_color + '40' }} />
+                      </div>
+                    )}
+
+                    {/* Content Layers */}
+                    <div className="relative h-full flex flex-col items-center justify-center p-12 text-center">
+                      <div className="mb-8" style={{ color: certForm.primary_color }}>
+                        <Award size={80} strokeWidth={1.5} />
+                      </div>
+                      
+                      <h2 className="text-3xl font-black mb-4 tracking-tighter uppercase" style={{ color: certForm.primary_color }}>
+                        {certForm.title_text}
+                      </h2>
+                      
+                      <p className="text-gray-400 font-bold uppercase tracking-[0.3em] text-[10px] mb-8">
+                        {certForm.description_text}
+                      </p>
+                      
+                      <div className="w-full max-w-md border-b-2 border-gray-200 pb-2 mb-4">
+                        <span className="text-4xl font-serif italic text-gray-900">Nama Siswa</span>
+                      </div>
+                      
+                      <div className="text-gray-500 text-sm font-medium mb-12 max-w-sm leading-relaxed">
+                        Telah berhasil menyelesaikan seluruh kurikulum dan evaluasi pada kursus
+                        <span className="block font-black text-gray-800 mt-1">"{selectedCourse?.title}"</span>
+                      </div>
+                      
+                      <div className="mt-auto flex justify-between w-full items-end px-12">
+                        <div className="text-left space-y-1">
+                          <div className="h-px w-32 bg-gray-200" />
+                          <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">ID: SS-CERT-888</p>
+                          <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest" suppressHydrationWarning>Tgl: {mounted ? new Date().toLocaleDateString('id-ID') : ''}</p>
+                        </div>
+                        
+                        <div className="text-right">
+                          <p className="font-serif italic text-xl text-gray-900 mb-1">{certForm.signature_name || 'Mentor Kami'}</p>
+                          <div className="h-px w-48 bg-gray-300 ml-auto mb-2" />
+                          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Mentor Pengajar</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Overlays for watermark/visual polish */}
+                    <div className="absolute top-8 right-8 opacity-10 grayscale">
+                       <h1 className="text-4xl font-black rotate-12">SkillSpace</h1>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6 p-4 bg-gray-50 rounded-2xl flex items-start gap-3">
+                    <div className="p-2 bg-white text-gray-400 rounded-xl">
+                      <Settings size={18} />
+                    </div>
+                    <p className="text-[10px] text-gray-400 font-bold leading-relaxed uppercase tracking-wide">
+                      Catatan: Siswa dapat mengunduh sertifikat ini dalam format PDF secara otomatis setelah menyelesaikan semua materi kursus.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

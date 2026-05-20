@@ -35,13 +35,9 @@ export const Navbar = () => {
 
   const baseLinks = [
     { name: 'Home', href: '/', icon: <Home size={18} /> },
+    { name: 'Courses', href: '/courses', icon: <GraduationCap size={18} /> },
     { name: 'Direktori Mentor', href: '/mentors', icon: <User size={18} /> },
   ]
-
-  // Add Courses link only if NOT a mentor
-  if (!profile || profile.role !== 'mentor') {
-    baseLinks.push({ name: 'Courses', href: '/courses', icon: <GraduationCap size={18} /> })
-  }
 
   const roleLinks = []
   if (session && profile) {

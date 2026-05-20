@@ -111,6 +111,8 @@ export const QuizService = {
   },
 
   async markLessonAsCompleted(studentId: string, lessonId: string) {
+    console.log(`Marking lesson ${lessonId} as completed for student ${studentId}`)
+    
     // 1. Dapatkan Course ID dari Lesson
     const { data: lesson, error: lessonError } = await supabase
       .from('lessons')
@@ -118,7 +120,10 @@ export const QuizService = {
       .eq('id', lessonId)
       .single()
 
-    if (lessonError) throw lessonError
+    if (lessonError) {
+      console.error('Error fetching lesson:', lessonError)
+      throw lessonError
+    }
 
     // 2. Dapatkan Enrollment saat ini
     const { data: enrollment, error: enrollError } = await supabase
@@ -126,9 +131,44 @@ export const QuizService = {
       .select('completed_lessons')
       .eq('student_id', studentId)
       .eq('course_id', lesson.course_id)
-      .single()
+      .maybeSingle()
 
-    if (enrollError) throw enrollError
+    if (enrollError) {
+      console.error('Error fetching enrollment:', enrollError)
+      throw enrollError
+    }
+
+    // Jika belum ada enrollment (misal mentor yang sedang testing atau student yang belum klik enroll)
+    if (!enrollment) {
+      console.log('No enrollment found, checking user role...')
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', studentId)
+        .single()
+
+      if (profile?.role === 'mentor') {
+        console.log('User is a mentor, skipping DB progress update.')
+        return { success: true, message: 'Mentors do not have enrollment records' }
+      }
+
+      // Jika student, auto-enroll
+      console.log('User is a student, auto-enrolling...')
+      const { error: enrollInsertError } = await supabase
+        .from('enrollments')
+        .insert({
+          student_id: studentId,
+          course_id: lesson.course_id,
+          status: 'enrolled',
+          completed_lessons: [lessonId]
+        })
+      
+      if (enrollInsertError) {
+        console.error('Auto-enrollment failed:', enrollInsertError)
+        throw enrollInsertError
+      }
+      return { success: true }
+    }
 
     const currentCompleted = enrollment.completed_lessons || []
     
@@ -142,7 +182,10 @@ export const QuizService = {
         .select('*', { count: 'exact', head: true })
         .eq('course_id', lesson.course_id)
       
-      if (countError) throw countError
+      if (countError) {
+        console.error('Error counting lessons:', countError)
+        throw countError
+      }
 
       // 5. Tentukan status (jika semua lesson selesai, status jadi completed)
       const isFinished = totalLessons !== null && updatedList.length >= totalLessons
@@ -156,7 +199,10 @@ export const QuizService = {
         .eq('student_id', studentId)
         .eq('course_id', lesson.course_id)
 
-      if (updateError) throw updateError
+      if (updateError) {
+        console.error('Error updating enrollment:', updateError)
+        throw updateError
+      }
     }
 
     return { success: true }

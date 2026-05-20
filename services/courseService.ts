@@ -78,6 +78,21 @@ export const CourseService = {
     return data as any[]
   },
 
+  async getCoursePreviewData(courseId: string) {
+    const { data, error } = await supabase
+      .from('courses')
+      .select(`
+        *,
+        profiles!courses_mentor_id_fkey(full_name, points, bio, avatar_url),
+        lessons(id, title)
+      `)
+      .eq('id', courseId)
+      .single()
+    
+    if (error) throw error
+    return data as any
+  },
+
   async checkEnrollment(studentId: string, courseId: string) {
     const { data, error } = await supabase
       .from('enrollments')

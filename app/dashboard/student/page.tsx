@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react'
 import { CourseService } from '@/services/courseService'
 import { Button } from '@/components/ui/Button'
 import { AuthService } from '@/services/authService'
+import { CertificateService } from '@/services/certificateService'
 import Link from 'next/link'
-import jsPDF from 'jspdf'
 import { useRouter } from 'next/navigation'
 import { BookOpen, Trophy, Clock, ChevronRight, Award, GraduationCap, Sparkles, User } from 'lucide-react'
 
@@ -14,6 +14,7 @@ export default function StudentDashboard() {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
   const [profile, setProfile] = useState<any>(null)
+  const [certificates, setCertificates] = useState<Record<string, any>>({})
   const router = useRouter()
 
   useEffect(() => {
@@ -33,6 +34,18 @@ export default function StudentDashboard() {
         
         setEnrollments(enrollmentData || [])
         setProfile(profileData)
+
+        // Fetch certificate designs for completed courses
+        const completed = enrollmentData.filter(e => e.status === 'completed')
+        const certPromises = completed.map(e => CertificateService.getCertificateByCourseId(e.course_id))
+        const certResults = await Promise.all(certPromises)
+        
+        const certMap: Record<string, any> = {}
+        certResults.forEach((c, idx) => {
+          if (c) certMap[completed[idx].course_id] = c
+        })
+        setCertificates(certMap)
+
       } catch (err) {
         console.error(err)
       } finally {
@@ -42,53 +55,14 @@ export default function StudentDashboard() {
     loadDashboard()
   }, [router])
 
-  const generateCertificate = (courseTitle: string, studentName: string) => {
-    const doc = new jsPDF({
-      orientation: 'landscape',
-      unit: 'mm',
-      format: 'a4'
-    })
-
-    // Desain Sertifikat Modern
-    doc.setFillColor(249, 250, 251) // gray-50
-    doc.rect(0, 0, 297, 210, 'F')
-    
-    doc.setDrawColor(37, 99, 235) // blue-600
-    doc.setLineWidth(2)
-    doc.rect(10, 10, 277, 190, 'S')
-    
-    doc.setFontSize(48)
-    doc.setTextColor(17, 24, 39) // gray-900
-    doc.setFont('helvetica', 'bold')
-    doc.text('SERTIFIKAT KELULUSAN', 148, 60, { align: 'center' })
-    
-    doc.setFontSize(18)
-    doc.setTextColor(107, 114, 128) // gray-500
-    doc.setFont('helvetica', 'normal')
-    doc.text('Dengan bangga diberikan kepada:', 148, 85, { align: 'center' })
-    
-    doc.setFontSize(36)
-    doc.setTextColor(37, 99, 235) // blue-600
-    doc.setFont('helvetica', 'bold')
-    doc.text(studentName.toUpperCase(), 148, 110, { align: 'center' })
-    
-    doc.setFontSize(16)
-    doc.setTextColor(75, 85, 99) // gray-600
-    doc.setFont('helvetica', 'normal')
-    doc.text('Atas keberhasilan luar biasa dalam menyelesaikan kursus:', 148, 130, { align: 'center' })
-    
-    doc.setFontSize(24)
-    doc.setTextColor(17, 24, 39)
-    doc.setFont('helvetica', 'bold')
-    doc.text(`"${courseTitle}"`, 148, 150, { align: 'center' })
-    
-    doc.setFontSize(12)
-    doc.setTextColor(156, 163, 175)
-    doc.setFont('helvetica', 'normal')
-    doc.text(`Diterbitkan pada: ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}`, 148, 180, { align: 'center' })
-    doc.text('SkillSpace Learning Platform • Elevate Your Skills', 148, 188, { align: 'center' })
-
-    doc.save(`Sertifikat_${courseTitle.replace(/\s+/g, '_')}.pdf`)
+  const handleDownloadCert = async (courseId: string, courseTitle: string) => {
+    const cert = certificates[courseId] || null
+    await CertificateService.downloadCertificatePDF(
+      cert,
+      courseTitle,
+      profile?.full_name || 'Siswa SkillSpace',
+      courseId
+    )
   }
 
   if (loading) return (
@@ -212,7 +186,7 @@ export default function StudentDashboard() {
                   </Link>
                   {isFinished && (
                     <Button 
-                      onClick={() => generateCertificate(course.title, profile?.full_name || 'Siswa')} 
+                      onClick={() => handleDownloadCert(enroll.course_id, course.title)} 
                       className="bg-emerald-600 hover:bg-emerald-700 text-white w-full py-4 text-sm font-black rounded-2xl shadow-lg shadow-emerald-500/25"
                       leftIcon={<Award size={18} />}
                     >
