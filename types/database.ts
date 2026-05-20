@@ -8,6 +8,7 @@ export interface Profile {
   is_verified: boolean;
   avatar_url?: string;
   bio?: string;
+  points?: number;
   updated_at?: string;
 }
 

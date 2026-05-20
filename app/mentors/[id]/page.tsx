@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { MentorService } from '@/services/mentorService'
 import { CourseService } from '@/services/courseService'
 import { Profile, Portfolio, Course } from '@/types/database'
-import { User, Mail, ShieldCheck, ArrowLeft, BookOpen, ExternalLink, Briefcase, Award, Star } from 'lucide-react'
+import { User, Mail, ShieldCheck, ArrowLeft, BookOpen, ExternalLink, Briefcase, Award, Star, Sparkles } from 'lucide-react'
 
 export default function MentorPublicProfile() {
   const { id } = useParams()
@@ -100,14 +100,21 @@ export default function MentorPublicProfile() {
                 </p>
               )}
 
-              <div className="w-full pt-6 border-t border-gray-50 grid grid-cols-2 gap-4">
+              <div className="w-full pt-6 border-t border-gray-50 grid grid-cols-3 gap-2">
                 <div className="text-center">
-                  <div className="text-2xl font-black text-blue-600">{courses.length}</div>
-                  <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Kursus</div>
+                  <div className="text-xl font-black text-blue-600">{courses.length}</div>
+                  <div className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Kursus</div>
+                </div>
+                <div className="text-center border-x border-gray-50">
+                  <div className="text-xl font-black text-indigo-600">{portfolios.length}</div>
+                  <div className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Portofolio</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-black text-indigo-600">{portfolios.length}</div>
-                  <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Portofolio</div>
+                  <div className="text-xl font-black text-amber-500 flex items-center justify-center gap-1">
+                    <Sparkles size={16} />
+                    {profile.points || 0}
+                  </div>
+                  <div className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Poin</div>
                 </div>
               </div>
             </div>

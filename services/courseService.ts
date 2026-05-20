@@ -62,7 +62,7 @@ export const CourseService = {
     // We use an explicit join syntax to ensure Supabase matches the foreign key correctly
     const { data, error } = await supabase
       .from('courses')
-      .select('*, profiles!courses_mentor_id_fkey(full_name)')
+      .select('*, profiles!courses_mentor_id_fkey(full_name, points)')
     
     if (error) {
       console.error('Supabase error in getAvailableCourses:', error)
@@ -114,7 +114,7 @@ export const CourseService = {
   async getCourseById(id: string) {
     const { data, error } = await supabase
       .from('courses')
-      .select('*, profiles!courses_mentor_id_fkey(full_name)')
+      .select('*, profiles!courses_mentor_id_fkey(full_name, points)')
       .eq('id', id)
       .single()
     
@@ -153,7 +153,8 @@ export const CourseService = {
         courses (
           *,
           profiles!courses_mentor_id_fkey (
-            full_name
+            full_name,
+            points
           ),
           lessons (
             id
@@ -185,5 +186,25 @@ export const CourseService = {
     
     if (error) throw error
     return data as Course[]
+  },
+
+  async uploadMaterial(courseId: string, lessonId: string, file: File) {
+    const fileExt = file.name.split('.').pop()
+    const fileName = `${lessonId}-${Date.now()}.${fileExt}`
+    const filePath = `${courseId}/${fileName}`
+
+    const { error: uploadError } = await supabase.storage
+      .from('materials')
+      .upload(filePath, file, {
+        upsert: true
+      })
+
+    if (uploadError) throw uploadError
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('materials')
+      .getPublicUrl(filePath)
+
+    return publicUrl
   }
 }

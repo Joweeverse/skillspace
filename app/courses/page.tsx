@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { AuthService } from '@/services/authService'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { BookOpen, GraduationCap, ChevronRight, Sparkles, Search, Play } from 'lucide-react'
+import { BookOpen, GraduationCap, ChevronRight, Sparkles, Search, Play, User } from 'lucide-react'
 
 export default function CourseCatalog() {
   const [courses, setCourses] = useState<any[]>([])
@@ -150,13 +150,21 @@ export default function CourseCatalog() {
                     {course.title}
                   </h3>
                   
-                  <div className="flex items-center gap-3 mb-8">
-                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-400">
-                      <GraduationCap size={16} />
+                  <div className="flex items-center justify-between mb-8">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-400">
+                        <User size={16} />
+                      </div>
+                      <p className="text-sm font-bold text-gray-400">
+                        {course.profiles?.full_name || 'Anonymous'}
+                      </p>
                     </div>
-                    <p className="text-sm font-bold text-gray-400">
-                      {course.profiles?.full_name || 'Anonymous'}
-                    </p>
+                    <div className="flex items-center gap-1.5 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-100 shadow-sm">
+                      <Sparkles size={12} className="text-amber-500" />
+                      <span className="text-[10px] font-black text-amber-700 uppercase tracking-widest">
+                        {course.profiles?.points || 0} Poin
+                      </span>
+                    </div>
                   </div>
                   
                   <div className="mt-auto pt-6 border-t border-gray-50">

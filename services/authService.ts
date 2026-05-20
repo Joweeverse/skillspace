@@ -26,6 +26,27 @@ export const AuthService = {
     return data
   },
 
+  async verifySignUp(email: string, token: string) {
+    const { data, error } = await supabase.auth.verifyOtp({
+      email,
+      token,
+      type: 'signup',
+    })
+
+    if (error) throw error
+    return data
+  },
+
+  async resendVerificationCode(email: string) {
+    const { data, error } = await supabase.auth.resend({
+      type: 'signup',
+      email: email,
+    })
+
+    if (error) throw error
+    return data
+  },
+
   async signIn(email: string, password: string) {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,

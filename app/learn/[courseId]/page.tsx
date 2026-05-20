@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button'
 import { DiscussionSection } from '@/components/features/DiscussionSection'
 import { QuizModal } from '@/components/features/QuizModal'
 import { AuthService } from '@/services/authService'
-import { ChevronRight, CheckCircle2, PlayCircle, Lock, ArrowLeft, MoreVertical, BookOpen, User } from 'lucide-react'
+import { ChevronRight, CheckCircle2, PlayCircle, Lock, ArrowLeft, MoreVertical, BookOpen, User, Download, FileText } from 'lucide-react'
 import Link from 'next/link'
 
 export default function LearnPage({ params }: { params: Promise<{ courseId: string }> }) {
@@ -257,6 +257,30 @@ export default function LearnPage({ params }: { params: Promise<{ courseId: stri
                     <div className="prose prose-blue max-w-none text-gray-600 font-medium leading-relaxed whitespace-pre-wrap">
                       {currentLesson.content}
                     </div>
+
+                    {currentLesson.pdf_url && (
+                      <div className="mt-10 p-6 bg-blue-50/50 rounded-[2rem] border border-blue-100 flex flex-col md:flex-row items-center justify-between gap-6 group/pdf">
+                        <div className="flex items-center gap-4">
+                          <div className="w-14 h-14 bg-blue-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover/pdf:rotate-6 transition-transform">
+                            <FileText size={28} />
+                          </div>
+                          <div>
+                            <h4 className="font-black text-gray-900 tracking-tight">Materi Pendukung (PDF)</h4>
+                            <p className="text-xs font-bold text-blue-600 uppercase tracking-widest">Dokumen Pembelajaran</p>
+                          </div>
+                        </div>
+                        <a 
+                          href={currentLesson.pdf_url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          download
+                          className="flex items-center gap-3 px-8 py-4 bg-white text-blue-600 rounded-2xl font-black text-sm shadow-sm border border-blue-100 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all duration-300 group/btn"
+                        >
+                          <Download size={18} className="group-hover/btn:translate-y-0.5 transition-transform" />
+                          Download PDF
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </div>
 

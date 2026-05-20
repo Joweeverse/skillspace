@@ -8,11 +8,12 @@ import { Button } from '@/components/ui/Button'
 import { AuthService } from '@/services/authService'
 import { useRouter } from 'next/navigation'
 import { Course, Lesson, Portfolio } from '@/types/database'
-import { Plus, Edit, BookOpen, HelpCircle, X, ChevronRight, Trash2, Eye, MessageSquare, LayoutDashboard, Settings, MoreVertical, Play, Sparkles, CheckCircle2, Briefcase, ExternalLink, User } from 'lucide-react'
+import { Plus, Edit, BookOpen, HelpCircle, X, ChevronRight, Trash2, Eye, MessageSquare, LayoutDashboard, Settings, MoreVertical, Play, Sparkles, CheckCircle2, Briefcase, ExternalLink, User, FileText, Upload, Download } from 'lucide-react'
 import { DiscussionSection } from '@/components/features/DiscussionSection'
 
 export default function MentorDashboard() {
   const [mentorId, setMentorId] = useState<string | null>(null)
+  const [mentorPoints, setMentorPoints] = useState(0)
   const [activeTab, setActiveTab] = useState<'courses' | 'portfolio'>('courses')
   const [myCourses, setMyCourses] = useState<Course[]>([])
   const [myPortfolios, setMyPortfolios] = useState<Portfolio[]>([])
@@ -39,7 +40,9 @@ export default function MentorDashboard() {
   // Form States
   const [newCourse, setNewCourse] = useState({ title: '', category: '' })
   const [portfolioForm, setPortfolioForm] = useState({ title: '', description: '', url: '', image_url: '' })
-  const [materialForm, setMaterialForm] = useState({ title: '', content: '', youtube_url: '' })
+  const [materialForm, setMaterialForm] = useState({ title: '', content: '', youtube_url: '', pdf_url: '' })
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [uploadingFile, setUploadingFile] = useState(false)
   const [quizTitle, setQuizTitle] = useState('')
   const [questions, setQuestions] = useState<ManualQuizInput['questions']>([
     { question_text: '', options_json: ['', '', '', ''], correct_answer: '' }
@@ -56,6 +59,7 @@ export default function MentorDashboard() {
         ])
         const profile = await AuthService.getUserProfile(session.user.id)
         setMentorBio(profile.bio || '')
+        setMentorPoints(profile.points || 0)
       } else {
         router.push('/login')
       }
@@ -181,11 +185,24 @@ export default function MentorDashboard() {
   const handleSaveMaterial = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!selectedCourse) return
+    setLoading(true)
     try {
+      let finalPdfUrl = materialForm.pdf_url
+
+      // Handle PDF Upload if file selected
+      if (selectedFile) {
+        setUploadingFile(true)
+        // We need a temporary lesson ID for new lessons or use the existing one
+        const tempId = editingLesson?.id || crypto.randomUUID()
+        finalPdfUrl = await CourseService.uploadMaterial(selectedCourse.id, tempId, selectedFile)
+        setUploadingFile(false)
+      }
+
       const materialData = {
         title: materialForm.title,
         content: materialForm.content,
-        youtube_url: materialForm.youtube_url
+        youtube_url: materialForm.youtube_url,
+        pdf_url: finalPdfUrl
       }
 
       if (editingLesson) {
@@ -198,9 +215,12 @@ export default function MentorDashboard() {
       await refreshLessons(selectedCourse.id)
       setShowMaterialModal(false)
       setEditingLesson(null)
-      setMaterialForm({ title: '', content: '', youtube_url: '' })
+      setSelectedFile(null)
+      setMaterialForm({ title: '', content: '', youtube_url: '', pdf_url: '' })
     } catch (err: any) {
       alert(`Gagal: ${err.message}`)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -210,12 +230,14 @@ export default function MentorDashboard() {
       setMaterialForm({
         title: lesson.title,
         content: lesson.content || '',
-        youtube_url: lesson.youtube_url || ''
+        youtube_url: lesson.youtube_url || '',
+        pdf_url: lesson.pdf_url || ''
       })
     } else {
       setEditingLesson(null)
-      setMaterialForm({ title: '', content: '', youtube_url: '' })
+      setMaterialForm({ title: '', content: '', youtube_url: '', pdf_url: '' })
     }
+    setSelectedFile(null)
     setShowMaterialModal(true)
   }
 
@@ -293,6 +315,12 @@ export default function MentorDashboard() {
             <span className="bg-indigo-600 text-white text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-widest shadow-lg shadow-indigo-500/20">
               Mentor
             </span>
+            <div className="flex items-center gap-1.5 bg-amber-50 px-3 py-1 rounded-full border border-amber-100 shadow-sm">
+              <Sparkles size={12} className="text-amber-500" />
+              <span className="text-[10px] font-black text-amber-700 uppercase tracking-widest">
+                {mentorPoints} Poin
+              </span>
+            </div>
             <div className="flex items-center text-indigo-600 gap-1 animate-pulse">
               <Sparkles size={14} />
               <span className="text-[10px] font-black uppercase tracking-wider">Kelola Ilmu Anda</span>
@@ -711,7 +739,7 @@ export default function MentorDashboard() {
                   onChange={e => setMaterialForm({...materialForm, content: e.target.value})}
                 />
               </div>
-              <div className="grid grid-cols-1 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
                   <label className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Link YouTube</label>
                   <div className="relative group">
@@ -727,26 +755,78 @@ export default function MentorDashboard() {
                     />
                   </div>
                 </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Materi PDF (Optional)</label>
+                  <div className="relative">
+                    <input 
+                      type="file" 
+                      accept=".pdf"
+                      id="pdf-upload"
+                      className="hidden"
+                      onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+                    />
+                    <label 
+                      htmlFor="pdf-upload"
+                      className={`flex items-center gap-3 w-full px-6 py-4 bg-gray-50 border border-dashed border-gray-200 rounded-[1.5rem] cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition-all ${selectedFile ? 'border-blue-500 bg-blue-50' : ''}`}
+                    >
+                      <div className={`p-2 rounded-xl ${selectedFile ? 'bg-blue-600 text-white' : 'bg-white text-gray-400'}`}>
+                        <Upload size={18} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-bold text-gray-900 truncate">
+                          {selectedFile ? selectedFile.name : (materialForm.pdf_url ? 'Ganti File PDF' : 'Upload File PDF')}
+                        </p>
+                        <p className="text-[10px] text-gray-400 font-medium">Maksimal 10MB</p>
+                      </div>
+                    </label>
+                  </div>
+                  {materialForm.pdf_url && !selectedFile && (
+                    <p className="text-[10px] font-bold text-emerald-600 flex items-center gap-1 mt-1 ml-1">
+                      <CheckCircle2 size={10} /> File PDF sudah terunggah
+                    </p>
+                  )}
+                </div>
               </div>
 
               {/* LIVE PREVIEW SECTION */}
-              {editingLesson && (
+              {(editingLesson || materialForm.title) && (
                 <div className="mt-12 pt-12 border-t border-gray-100">
                    <div className="flex items-center gap-3 mb-6">
                     <div className="w-1.5 h-6 bg-emerald-500 rounded-full" />
                     <h4 className="text-sm font-black text-gray-400 uppercase tracking-widest">Live Preview Tampilan Siswa</h4>
                    </div>
                    <div className="bg-white p-10 rounded-[2.5rem] border border-gray-100 shadow-xl shadow-blue-500/5">
-                      <h1 className="text-2xl font-black text-gray-900 tracking-tight mb-4">{materialForm.title}</h1>
-                      <div className="prose prose-blue max-w-none text-gray-600 font-medium whitespace-pre-wrap leading-relaxed text-sm">
-                        {materialForm.content}
+                      <h1 className="text-2xl font-black text-gray-900 tracking-tight mb-4">{materialForm.title || 'Judul Materi'}</h1>
+                      <div className="prose prose-blue max-w-none text-gray-600 font-medium whitespace-pre-wrap leading-relaxed text-sm mb-8">
+                        {materialForm.content || 'Isi konten materi akan muncul di sini...'}
                       </div>
+                      {(selectedFile || materialForm.pdf_url) && (
+                        <div className="p-4 bg-blue-50 rounded-2xl flex items-center justify-between border border-blue-100">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-blue-600 text-white rounded-xl">
+                              <FileText size={20} />
+                            </div>
+                            <div>
+                              <p className="text-xs font-black text-blue-900">Materi Tambahan (PDF)</p>
+                              <p className="text-[10px] text-blue-600 font-bold uppercase tracking-widest">Siap Diunduh oleh Siswa</p>
+                            </div>
+                          </div>
+                          <div className="p-2 bg-white text-blue-600 rounded-xl shadow-sm">
+                            <Download size={18} />
+                          </div>
+                        </div>
+                      )}
                    </div>
                 </div>
               )}
 
-              <Button type="submit" className="w-full py-5 rounded-[1.5rem] font-black shadow-xl shadow-blue-500/20 text-lg">
-                {editingLesson ? 'Simpan Perubahan Materi' : 'Publikasikan Materi'}
+              <Button 
+                type="submit" 
+                isLoading={uploadingFile || loading}
+                className="w-full py-5 rounded-[1.5rem] font-black shadow-xl shadow-blue-500/20 text-lg"
+              >
+                {uploadingFile ? 'Mengunggah PDF...' : (editingLesson ? 'Simpan Perubahan Materi' : 'Publikasikan Materi')}
               </Button>
             </form>
           </div>

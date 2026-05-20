@@ -135,9 +135,24 @@ export const QuizService = {
     // 3. Update jika belum ada di list
     if (!currentCompleted.includes(lessonId)) {
       const updatedList = [...currentCompleted, lessonId]
+      
+      // 4. Hitung total lesson di course ini
+      const { count: totalLessons, error: countError } = await supabase
+        .from('lessons')
+        .select('*', { count: 'exact', head: true })
+        .eq('course_id', lesson.course_id)
+      
+      if (countError) throw countError
+
+      // 5. Tentukan status (jika semua lesson selesai, status jadi completed)
+      const isFinished = totalLessons !== null && updatedList.length >= totalLessons
+      
       const { error: updateError } = await supabase
         .from('enrollments')
-        .update({ completed_lessons: updatedList })
+        .update({ 
+          completed_lessons: updatedList,
+          status: isFinished ? 'completed' : 'enrolled'
+        })
         .eq('student_id', studentId)
         .eq('course_id', lesson.course_id)
 
