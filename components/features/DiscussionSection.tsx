@@ -22,6 +22,11 @@ export const DiscussionSection = ({ lessonId, userId, initialTab = 'public' }: D
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [userRole, setUserRole] = useState<string>('student')
   const [recipientId, setRecipientId] = useState<string | undefined>(undefined)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     async function getRole() {
@@ -205,7 +210,7 @@ export const DiscussionSection = ({ lessonId, userId, initialTab = 'public' }: D
                         )}
                       </div>
                       <span className="text-[10px] font-medium text-gray-400 tabular-nums">
-                        {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {mounted ? new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
                       </span>
                     </div>
                     <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{msg.message}</p>

@@ -239,7 +239,7 @@ export default function LearnPage() {
         <p className="text-gray-500 max-w-xs mx-auto">Kursus tidak ditemukan atau Anda tidak memiliki akses ke materi ini.</p>
       </div>
       <Link href="/courses">
-        <Button variant="outline">Kembali ke Katalog</Button>
+        <Button as="div" variant="outline">Kembali ke Katalog</Button>
       </Link>
     </div>
   )
@@ -350,10 +350,10 @@ export default function LearnPage() {
             </p>
             <div className="mt-10 flex gap-4">
               <Link href="/courses">
-                <Button variant="outline" className="rounded-2xl px-8">Kembali ke Katalog</Button>
+                <Button as="div" variant="outline" className="rounded-2xl px-8">Kembali ke Katalog</Button>
               </Link>
               <Link href="/dashboard/mentor">
-                <Button className="rounded-2xl px-8 shadow-lg shadow-blue-500/20">Dashboard Mentor</Button>
+                <Button as="div" className="rounded-2xl px-8 shadow-lg shadow-blue-500/20">Dashboard Mentor</Button>
               </Link>
             </div>
           </div>

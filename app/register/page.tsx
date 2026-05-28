@@ -34,11 +34,48 @@ export default function RegisterPage() {
     }
 
     try {
-      await AuthService.signUp(email.trim(), password, fullName, role)
+      const data = await AuthService.signUp(email, password, fullName, role)
+      
+      // Jika auto-confirm aktif di Supabase, session akan langsung ada
+      if (data.session) {
+        alert('Pendaftaran berhasil! Akun Anda sudah aktif.')
+        router.push('/login')
+        return
+      }
+
       setStep(2)
       setSuccess('Kode verifikasi telah dikirim ke email Anda.')
     } catch (err: any) {
-      setError(err.message || 'Gagal mendaftar. Silakan coba lagi.')
+      console.error('Registration error details:', {
+        name: err.name,
+        message: err.message,
+        status: err.status,
+        err: err
+      })
+      
+      let errorMessage = 'Gagal mendaftar. Silakan coba lagi.'
+      
+      if (err.name === 'AuthRetryableFetchError' || err.message?.includes('fetch')) {
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        errorMessage = `Kesalahan Koneksi: Tidak dapat menjangkau server Supabase (${supabaseUrl || 'URL KOSONG'}). Pastikan internet Anda stabil, matikan Ad-Blocker/VPN, dan pastikan Anda sudah ME-RESTART server (npm run dev) setelah mengisi .env.local.`
+      } else if (err.message) {
+        errorMessage = err.message
+      } else if (err.error_description) {
+        errorMessage = err.error_description
+      } else if (typeof err === 'string') {
+        errorMessage = err
+      } else {
+        // Fallback for objects that stringify to {}
+        errorMessage = `Error (${err.name || 'Unknown'}): Mohon periksa konsol browser (F12) untuk detail teknis.`
+      }
+
+      // Jika user sudah terdaftar tapi belum konfirmasi, izinkan lanjut ke Step 2
+      if (errorMessage.toLowerCase().includes('already registered')) {
+        setStep(2)
+        setSuccess('Email ini sudah terdaftar. Silakan masukkan kode verifikasi yang telah dikirim ke email Anda, atau klik "Kirim Ulang Kode".')
+      } else {
+        setError(errorMessage)
+      }
     } finally {
       setLoading(false)
     }

@@ -127,10 +127,10 @@ export const Navbar = () => {
             ) : (
               <div className="flex items-center gap-2">
                 <Link href="/login">
-                  <Button variant="ghost" size="sm">Sign In</Button>
+                  <Button as="div" variant="ghost" size="sm">Sign In</Button>
                 </Link>
                 <Link href="/register">
-                  <Button variant="primary" size="sm" className="shadow-blue-500/20">Get Started</Button>
+                  <Button as="div" variant="primary" size="sm" className="shadow-blue-500/20">Get Started</Button>
                 </Link>
               </div>
             )}

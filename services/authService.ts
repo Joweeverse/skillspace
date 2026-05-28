@@ -1,12 +1,16 @@
 import { createClient } from '@/lib/supabase'
 import { UserRole } from '@/types/database'
 
-const supabase = createClient()
-
 export const AuthService = {
+  // Initialize client dynamically
+  getClient() {
+    return createClient()
+  },
+
   async signUp(email: string, password: string, fullName: string, role: UserRole) {
-    const { data, error } = await supabase.auth.signUp({
-      email,
+    const normalizedEmail = email.trim().toLowerCase()
+    const { data, error } = await this.getClient().auth.signUp({
+      email: normalizedEmail,
       password,
       options: {
         data: {
@@ -17,18 +21,13 @@ export const AuthService = {
     })
 
     if (error) throw error
-    
-    // In many Supabase setups, we use a trigger to create the profile entry.
-    // However, we can also do it manually if the trigger isn't set up.
-    // For this implementation, we'll assume the profile is created via metadata
-    // or we'll add a manual insert if needed later.
-    
     return data
   },
 
   async verifySignUp(email: string, token: string) {
-    const { data, error } = await supabase.auth.verifyOtp({
-      email,
+    const normalizedEmail = email.trim().toLowerCase()
+    const { data, error } = await this.getClient().auth.verifyOtp({
+      email: normalizedEmail,
       token,
       type: 'signup',
     })
@@ -38,9 +37,10 @@ export const AuthService = {
   },
 
   async resendVerificationCode(email: string) {
-    const { data, error } = await supabase.auth.resend({
+    const normalizedEmail = email.trim().toLowerCase()
+    const { data, error } = await this.getClient().auth.resend({
       type: 'signup',
-      email: email,
+      email: normalizedEmail,
     })
 
     if (error) throw error
@@ -48,7 +48,7 @@ export const AuthService = {
   },
 
   async signIn(email: string, password: string) {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await this.getClient().auth.signInWithPassword({
       email,
       password,
     })
@@ -58,12 +58,12 @@ export const AuthService = {
   },
 
   async signOut() {
-    const { error } = await supabase.auth.signOut()
+    const { error } = await this.getClient().auth.signOut()
     if (error) throw error
   },
 
   async getSession() {
-    const { data: { session }, error } = await supabase.auth.getSession()
+    const { data: { session }, error } = await this.getClient().auth.getSession()
     if (error) throw error
     return session
   },
@@ -75,7 +75,7 @@ export const AuthService = {
   },
 
   async getUserProfile(userId: string) {
-    const { data, error } = await supabase
+    const { data, error } = await this.getClient()
       .from('profiles')
       .select('*')
       .eq('id', userId)
@@ -86,7 +86,7 @@ export const AuthService = {
   },
 
   async updateProfile(userId: string, updates: { full_name?: string; avatar_url?: string }) {
-    const { data, error } = await supabase
+    const { data, error } = await this.getClient()
       .from('profiles')
       .update({ ...updates, updated_at: new Date().toISOString() })
       .eq('id', userId)
@@ -98,7 +98,7 @@ export const AuthService = {
   },
 
   async updatePassword(newPassword: string) {
-    const { data, error } = await supabase.auth.updateUser({
+    const { data, error } = await this.getClient().auth.updateUser({
       password: newPassword
     })
 
@@ -112,7 +112,7 @@ export const AuthService = {
     const filePath = `avatars/${userId}/${fileName}`
 
     // Ensure we are using the 'profiles' bucket
-    const { error: uploadError } = await supabase.storage
+    const { error: uploadError } = await this.getClient().storage
       .from('profiles')
       .upload(filePath, file, {
         upsert: true
@@ -120,7 +120,7 @@ export const AuthService = {
 
     if (uploadError) throw uploadError
 
-    const { data: { publicUrl } } = supabase.storage
+    const { data: { publicUrl } } = this.getClient().storage
       .from('profiles')
       .getPublicUrl(filePath)
 

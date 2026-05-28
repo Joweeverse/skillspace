@@ -39,11 +39,11 @@ export default function Home() {
           <div className="mt-10 flex items-center justify-center gap-x-6">
             {!loading && userRole === 'mentor' ? (
               <Link href="/dashboard/mentor">
-                <Button className="px-8 py-3 text-lg">Go to Dashboard</Button>
+                <Button as="div" className="px-8 py-3 text-lg">Go to Dashboard</Button>
               </Link>
             ) : (
               <Link href="/courses">
-                <Button className="px-8 py-3 text-lg">Explore Courses</Button>
+                <Button as="div" className="px-8 py-3 text-lg">Explore Courses</Button>
               </Link>
             )}
           </div>

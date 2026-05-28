@@ -7,6 +7,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean
   leftIcon?: React.ReactNode
   rightIcon?: React.ReactNode
+  as?: 'button' | 'div' | 'span'
 }
 
 export const Button = ({ 
@@ -18,6 +19,7 @@ export const Button = ({
   rightIcon,
   className = '',
   disabled,
+  as = 'button',
   ...props 
 }: ButtonProps) => {
   const baseStyles = 'inline-flex items-center justify-center rounded-lg font-semibold transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none disabled:active:scale-100'
@@ -37,8 +39,10 @@ export const Button = ({
     success: 'bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white hover:shadow-lg hover:shadow-emerald-500/30'
   }
 
+  const Component = as as any
+
   return (
-    <button 
+    <Component 
       className={`${baseStyles} ${sizes[size]} ${variants[variant]} ${className}`}
       disabled={isLoading || disabled}
       {...props}
@@ -47,6 +51,6 @@ export const Button = ({
       {!isLoading && leftIcon && <span className="flex-shrink-0">{leftIcon}</span>}
       {children}
       {!isLoading && rightIcon && <span className="flex-shrink-0">{rightIcon}</span>}
-    </button>
+    </Component>
   )
 }

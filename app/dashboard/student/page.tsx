@@ -177,6 +177,7 @@ export default function StudentDashboard() {
                 <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-3">
                   <Link href={`/learn/${enroll.course_id}`} className="w-full">
                     <Button 
+                      as="div"
                       variant={isFinished ? 'outline' : 'primary'} 
                       className={`w-full py-4 text-sm font-black rounded-2xl ${!isFinished && 'shadow-lg shadow-blue-500/25'}`}
                       rightIcon={!isFinished && <ChevronRight size={18} />}
@@ -208,7 +209,7 @@ export default function StudentDashboard() {
             <h3 className="text-3xl font-black text-gray-900 tracking-tight mb-3">Belum Ada Aktivitas Belajar</h3>
             <p className="text-gray-500 mb-10 max-w-xs mx-auto font-medium leading-relaxed">Anda belum mendaftar di kursus apa pun. Ayo mulai belajar hal baru hari ini!</p>
             <Link href="/courses">
-              <Button size="lg" className="px-12 py-5 rounded-[2rem] font-black shadow-2xl shadow-blue-500/25">
+              <Button as="div" size="lg" className="px-12 py-5 rounded-[2rem] font-black shadow-2xl shadow-blue-500/25">
                 Jelajahi Katalog Kursus
               </Button>
             </Link>

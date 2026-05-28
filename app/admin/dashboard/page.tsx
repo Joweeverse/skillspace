@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button'
 export default function AdminDashboard() {
   const [mentors, setMentors] = useState<Profile[]>([])
   const [loading, setLoading] = useState(true)
+  const [mounted, setMounted] = useState(false)
 
   const loadMentors = async () => {
     try {
@@ -22,6 +23,7 @@ export default function AdminDashboard() {
   }
 
   useEffect(() => {
+    setMounted(true)
     loadMentors()
   }, [])
 
@@ -65,7 +67,9 @@ export default function AdminDashboard() {
                 <tr key={mentor.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="font-medium text-gray-900">{mentor.full_name}</div>
-                    <div className="text-xs text-gray-500">Mendaftar pada: {new Date(mentor.updated_at || '').toLocaleDateString()}</div>
+                    <div className="text-xs text-gray-500">
+                      Mendaftar pada: {mounted ? new Date(mentor.updated_at || '').toLocaleDateString() : ''}
+                    </div>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500 font-mono">
                     {mentor.id.substring(0, 8)}...

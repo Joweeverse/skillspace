@@ -193,6 +193,7 @@ export default function CourseCatalog() {
                     {isEnrolled && userRole === 'student' ? (
                       <Link href={`/learn/${course.id}`} className="flex-1">
                         <Button 
+                          as="div"
                           variant="secondary" 
                           className="w-full py-4 text-sm font-black rounded-2xl bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white transition-all duration-300 group/btn"
                           rightIcon={<Play size={16} className="group-hover/btn:translate-x-1 transition-transform" />}
