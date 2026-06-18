@@ -16,14 +16,17 @@ DROP POLICY IF EXISTS "Courses are viewable by everyone" ON public.courses;
 CREATE POLICY "Courses visibility based on role" ON public.courses
   FOR SELECT
   USING (
-    -- If user is a student, they can see all courses
+    -- If user is a student or admin, they can see all courses
     EXISTS (
       SELECT 1 FROM public.profiles 
-      WHERE id = auth.uid() AND role = 'student'
+      WHERE id = auth.uid() AND role IN ('student', 'admin')
     )
     OR
-    -- If user is a mentor, they can only see their own courses
-    (mentor_id = auth.uid())
+    -- Mentors can see all courses in the catalog
+    EXISTS (
+      SELECT 1 FROM public.profiles 
+      WHERE id = auth.uid() AND role = 'mentor'
+    )
     OR
     -- If not logged in, allow viewing (public catalog)
     (auth.uid() IS NULL)

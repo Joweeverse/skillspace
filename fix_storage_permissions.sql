@@ -9,7 +9,8 @@ DROP POLICY IF EXISTS "Allow users to upload their own avatars" ON storage.objec
 DROP POLICY IF EXISTS "Allow users to update their own avatars" ON storage.objects;
 
 -- 3. Policy: Allow anyone to SEE profile pictures (Public Read)
-CREATE POLICY "Public Access" ON storage.objects
+DROP POLICY IF EXISTS "Public Access" ON storage.objects;
+CREATE POLICY "Public Access Profiles" ON storage.objects
   FOR SELECT USING (bucket_id = 'profiles');
 
 -- 4. Policy: Allow logged-in users to UPLOAD pictures

@@ -7,7 +7,7 @@ import { AuthService } from '@/services/authService'
 import { CertificateService } from '@/services/certificateService'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { BookOpen, Trophy, Clock, ChevronRight, Award, GraduationCap, Sparkles, User } from 'lucide-react'
+import { BookOpen, Trophy, Clock, ChevronRight, Award, GraduationCap, Sparkles, User, ArrowRight } from 'lucide-react'
 
 export default function StudentDashboard() {
   const [enrollments, setEnrollments] = useState<any[]>([])
@@ -54,6 +54,21 @@ export default function StudentDashboard() {
     }
     loadDashboard()
   }, [router])
+
+  const handleUpgradeToMentor = async () => {
+    if (!user || !confirm('Apakah Anda yakin ingin mendaftar sebagai Mentor? Anda akan memiliki akses untuk membuat dan mengelola kursus.')) return
+    
+    try {
+      setLoading(true)
+      await AuthService.upgradeToMentor(user.id)
+      alert('Selamat! Anda sekarang adalah seorang Mentor. Silakan mulai berbagi ilmu.')
+      router.push('/dashboard/mentor')
+      router.refresh()
+    } catch (err: any) {
+      alert('Gagal upgrade role: ' + err.message)
+      setLoading(false)
+    }
+  }
 
   const handleDownloadCert = async (courseId: string, courseTitle: string) => {
     const cert = certificates[courseId] || null
@@ -215,6 +230,34 @@ export default function StudentDashboard() {
             </Link>
           </div>
         )}
+      </div>
+
+      {/* Upgrade CTA */}
+      <div className="mt-16 bg-gradient-to-r from-blue-600 to-indigo-700 rounded-[3rem] p-10 md:p-16 text-white relative overflow-hidden shadow-2xl shadow-blue-500/30">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-400/20 rounded-full -ml-32 -mb-32 blur-3xl" />
+        
+        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
+          <div className="text-center md:text-left space-y-4">
+            <div className="inline-flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full backdrop-blur-md border border-white/10">
+              <Sparkles size={16} />
+              <span className="text-xs font-black uppercase tracking-widest">Wujudkan Potensi Anda</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">Punya Keahlian Untuk Dibagikan?</h2>
+            <p className="text-blue-100 text-lg font-medium max-w-xl">
+              Daftar sebagai Mentor di SkillSpace dan mulai buat kursus Anda sendiri. Bantu orang lain tumbuh sambil membangun personal brand Anda.
+            </p>
+          </div>
+          <Button 
+            onClick={handleUpgradeToMentor}
+            variant="secondary" 
+            size="lg" 
+            className="bg-white text-blue-700 hover:bg-blue-50 px-10 py-6 rounded-[2rem] font-black shadow-2xl transition-all hover:scale-105 active:scale-95"
+            rightIcon={<ArrowRight size={22} />}
+          >
+            Daftar Sebagai Mentor
+          </Button>
+        </div>
       </div>
     </div>
   )

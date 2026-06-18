@@ -1,41 +1,22 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Button } from '@/components/ui/Button'
 import { useRouter } from 'next/navigation'
 import { AuthService } from '@/services/authService'
 import Link from 'next/link'
-import { Mail, Lock, LogIn, ArrowRight, Sparkles } from 'lucide-react'
+import { LogIn } from 'lucide-react'
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
+  const handleGoogleLogin = async () => {
     try {
-      const { user } = await AuthService.signIn(email.trim(), password)
-      
-      if (user) {
-        const role = user.user_metadata?.role || 'student'
-        
-        if (role === 'mentor') {
-          router.push('/dashboard/mentor')
-        } else if (role === 'admin') {
-          router.push('/admin/dashboard')
-        } else {
-          router.push('/dashboard/student')
-        }
-        router.refresh()
-      }
+      setLoading(true)
+      await AuthService.signInWithGoogle('student', 'login')
     } catch (err: any) {
-      setError(err.message || 'Email atau password tidak valid')
-    } finally {
+      setError(err.message || 'Gagal login dengan Google')
       setLoading(false)
     }
   }
@@ -58,95 +39,36 @@ export default function LoginPage() {
             Masuk ke akun SkillSpace Anda dan mulai kembangkan keahlian baru.
           </p>
         </div>
-        
-        <form className="mt-8 space-y-8 relative z-10" onSubmit={handleLogin}>
+
+        <div className="mt-8 space-y-6 relative z-10 text-center">
+          <button
+            onClick={handleGoogleLogin}
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-4 py-5 px-8 bg-white border-2 border-gray-100 rounded-[2rem] text-lg font-bold text-gray-700 hover:bg-gray-50 hover:border-blue-200 hover:text-blue-600 transition-all duration-300 shadow-xl shadow-gray-200/20 group"
+          >
+            {loading ? (
+              <div className="w-6 h-6 border-3 border-blue-600 border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-6 h-6 group-hover:scale-110 transition-transform" />
+            )}
+            Lanjutkan dengan Google
+          </button>
+
           {error && (
             <div className="bg-red-50 text-red-500 p-5 rounded-2xl text-sm font-semibold border border-red-100 animate-in fade-in slide-in-from-top-2 duration-300">
               {error}
             </div>
           )}
-          
-          <div className="space-y-5">
-            <div className="space-y-1.5">
-              <label htmlFor="email-address" className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Alamat Email</label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
-                  <Mail size={20} />
-                </div>
-                <input
-                  id="email-address"
-                  name="email"
-                  type="email"
-                  required
-                  className="block w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-[1.5rem] text-sm font-medium transition-all duration-300 focus:bg-white focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none placeholder:text-gray-400"
-                  placeholder="name@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-            </div>
 
-            <div className="space-y-1.5">
-              <div className="flex justify-between items-center ml-1">
-                <label htmlFor="password" className="text-xs font-black text-gray-400 uppercase tracking-[0.2em]">Password</label>
-                <a href="#" className="text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors">Lupa Password?</a>
-              </div>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
-                  <Lock size={20} />
-                </div>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  required
-                  className="block w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-[1.5rem] text-sm font-medium transition-all duration-300 focus:bg-white focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none placeholder:text-gray-400"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between px-1">
-            <label className="flex items-center group cursor-pointer">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-200 rounded-lg transition-all cursor-pointer"
-              />
-              <span className="ml-3 text-sm text-gray-500 font-bold group-hover:text-gray-700 transition-colors">
-                Ingat saya
-              </span>
-            </label>
-            <div className="flex items-center text-blue-600 gap-1 animate-pulse">
-              <Sparkles size={14} />
-              <span className="text-[10px] font-black uppercase tracking-wider">Fast Login</span>
-            </div>
-          </div>
-
-          <div className="pt-2">
-            <Button 
-              type="submit" 
-              isLoading={loading}
-              className="w-full py-5 text-lg font-bold rounded-[1.5rem] shadow-xl shadow-blue-500/25 transition-transform active:scale-95"
-              rightIcon={<ArrowRight size={22} />}
-            >
-              Masuk Sekarang
-            </Button>
-          </div>
-
-          <div className="text-center pt-2">
+          <div className="pt-4">
             <p className="text-gray-500 font-medium">
               Belum memiliki akun?{' '}
               <Link href="/register" className="font-bold text-blue-600 hover:text-blue-700 underline underline-offset-8 transition-all">
-                Daftar Gratis
+                Daftar Sekarang
               </Link>
             </p>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   )

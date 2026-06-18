@@ -66,13 +66,7 @@ export const CourseService = {
     
     if (error) {
       console.error('Supabase error in getAvailableCourses:', error)
-      // Fallback to simple select if join fails
-      const { data: simpleData, error: simpleError } = await supabase
-        .from('courses')
-        .select('*')
-      
-      if (simpleError) throw simpleError
-      return simpleData as any[]
+      throw error
     }
     
     return data as any[]
@@ -135,15 +129,7 @@ export const CourseService = {
     
     if (error) {
       console.error('Error in getCourseById:', error)
-      // Fallback to simple select
-      const { data: simpleData, error: simpleError } = await supabase
-        .from('courses')
-        .select('*')
-        .eq('id', id)
-        .single()
-      
-      if (simpleError) throw simpleError
-      return simpleData as any
+      throw error
     }
     return data as Course
   },
@@ -180,14 +166,7 @@ export const CourseService = {
     
     if (error) {
       console.error('Error in getUserEnrollments:', error)
-      // Fallback: Try fetching just enrollments and courses without mentor profile
-      const { data: fallbackData, error: fallbackError } = await supabase
-        .from('enrollments')
-        .select('*, courses(*, lessons(id))')
-        .eq('student_id', studentId)
-      
-      if (fallbackError) throw fallbackError
-      return fallbackData as any[]
+      throw error
     }
     
     return data as any[]

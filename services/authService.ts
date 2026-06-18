@@ -48,9 +48,26 @@ export const AuthService = {
   },
 
   async signIn(email: string, password: string) {
+    const normalizedEmail = email.trim().toLowerCase()
     const { data, error } = await this.getClient().auth.signInWithPassword({
-      email,
+      email: normalizedEmail,
       password,
+    })
+
+    if (error) throw error
+    return data
+  },
+
+  async signInWithGoogle(role: UserRole = 'student', mode: 'login' | 'register' = 'register') {
+    const { data, error } = await this.getClient().auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback?role=${role}&mode=${mode}`,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'select_account',
+        },
+      },
     })
 
     if (error) throw error
@@ -103,6 +120,35 @@ export const AuthService = {
     })
 
     if (error) throw error
+    return data
+  },
+
+  async resetPasswordForEmail(email: string) {
+    const normalizedEmail = email.trim().toLowerCase()
+    const { data, error } = await this.getClient().auth.resetPasswordForEmail(normalizedEmail, {
+      redirectTo: `${window.location.origin}/auth/update-password`,
+    })
+
+    if (error) throw error
+    return data
+  },
+
+  async upgradeToMentor(userId: string) {
+    // 1. Update metadata di auth.users agar session berubah
+    const { error: authError } = await this.getClient().auth.updateUser({
+      data: { role: 'mentor' }
+    })
+    if (authError) throw authError
+
+    // 2. Update role di tabel public.profiles
+    const { data, error: profileError } = await this.getClient()
+      .from('profiles')
+      .update({ role: 'mentor' })
+      .eq('id', userId)
+      .select()
+      .single()
+
+    if (profileError) throw profileError
     return data
   },
 

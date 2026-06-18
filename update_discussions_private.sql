@@ -34,13 +34,17 @@ CREATE POLICY "Public discussions are viewable by everyone"
   ON public.discussions FOR SELECT 
   USING (NOT is_private);
 
--- 2. Private discussions are viewable by sender, recipient, or course mentor
+-- 2. Private discussions are viewable by sender, recipient, course mentor, or admin
 CREATE POLICY "Private discussions are viewable by authorized parties" 
   ON public.discussions FOR SELECT 
   USING (
     is_private AND (
       auth.uid() = user_id OR 
       auth.uid() = recipient_id OR
+      EXISTS (
+        SELECT 1 FROM public.profiles
+        WHERE id = auth.uid() AND role = 'admin'
+      ) OR
       EXISTS (
         SELECT 1 FROM public.courses c
         JOIN public.lessons l ON l.course_id = c.id

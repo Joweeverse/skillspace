@@ -6,7 +6,7 @@ import { CourseService } from '@/services/courseService'
 import { Profile } from '@/types/database'
 import { Button } from '@/components/ui/Button'
 import { useRouter } from 'next/navigation'
-import { User, Camera, Mail, Shield, Save, ArrowLeft, Loader2, Sparkles, ShieldCheck, BookOpen, CheckCircle2, X, Lock } from 'lucide-react'
+import { User, Camera, Mail, Shield, Save, ArrowLeft, Sparkles, ShieldCheck, BookOpen, CheckCircle2, ExternalLink } from 'lucide-react'
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -16,9 +16,6 @@ export default function ProfilePage() {
   const [fullName, setFullName] = useState('')
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
   const [stats, setStats] = useState({ completedLessons: 0, passedQuizzes: 0 })
-  const [showPasswordModal, setShowPasswordModal] = useState(false)
-  const [newPassword, setNewPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
 
@@ -47,7 +44,7 @@ export default function ProfilePage() {
         )
         setStats({ 
           completedLessons: totalCompleted, 
-          passedQuizzes: totalCompleted // Since passing quiz marks lesson as completed
+          passedQuizzes: totalCompleted 
         })
 
       } catch (err) {
@@ -78,6 +75,21 @@ export default function ProfilePage() {
     }
   }
 
+  const handleUpgradeToMentor = async () => {
+    if (!profile || !confirm('Apakah Anda yakin ingin mendaftar sebagai Mentor? Anda akan memiliki akses untuk membuat dan mengelola kursus.')) return
+    
+    setSaving(true)
+    try {
+      await AuthService.upgradeToMentor(profile.id)
+      alert('Selamat! Anda sekarang adalah seorang Mentor. Silakan mulai berbagi ilmu.')
+      router.push('/dashboard/mentor')
+      router.refresh()
+    } catch (err: any) {
+      alert('Gagal upgrade role: ' + err.message)
+      setSaving(false)
+    }
+  }
+
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file || !profile) return
@@ -86,36 +98,10 @@ export default function ProfilePage() {
     try {
       const publicUrl = await AuthService.uploadAvatar(profile.id, file)
       setAvatarUrl(publicUrl)
-      // Automatically update profile with new avatar URL
       await AuthService.updateProfile(profile.id, { avatar_url: publicUrl })
       alert('Foto profil berhasil diperbarui!')
     } catch (err: any) {
       alert(`Gagal mengunggah foto: ${err.message}`)
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  const handlePasswordUpdate = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (newPassword !== confirmPassword) {
-      alert('Password baru tidak cocok!')
-      return
-    }
-    if (newPassword.length < 6) {
-      alert('Password minimal 6 karakter!')
-      return
-    }
-
-    setSaving(true)
-    try {
-      await AuthService.updatePassword(newPassword)
-      alert('Password berhasil diperbarui!')
-      setShowPasswordModal(false)
-      setNewPassword('')
-      setConfirmPassword('')
-    } catch (err: any) {
-      alert(`Gagal memperbarui password: ${err.message}`)
     } finally {
       setSaving(false)
     }
@@ -137,11 +123,10 @@ export default function ProfilePage() {
         <div className="p-2 bg-gray-100 rounded-lg mr-3 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
           <ArrowLeft size={16} />
         </div>
-        Kembali ke Beranda
+        Kembali
       </button>
 
       <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-blue-500/5 border border-gray-100 overflow-hidden">
-        {/* Header/Cover Placeholder */}
         <div className="h-48 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 relative overflow-hidden">
           <div className="absolute inset-0 bg-white/10 backdrop-blur-[2px]" />
           <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
@@ -240,7 +225,6 @@ export default function ProfilePage() {
                         className="block w-full pl-14 pr-6 py-4 bg-gray-100 border border-gray-100 rounded-[1.5rem] text-sm font-medium cursor-not-allowed"
                       />
                     </div>
-                    <p className="text-[10px] text-gray-400 font-bold uppercase ml-1 tracking-tighter">* Email tidak dapat diubah</p>
                   </div>
                 </div>
 
@@ -268,16 +252,17 @@ export default function ProfilePage() {
                   Keamanan Akun
                 </h4>
                 <p className="text-sm text-blue-700/70 font-medium mb-6 leading-relaxed">
-                  Pastikan akun Anda tetap aman dengan menggunakan password yang kuat dan unik.
+                  Akun Anda terhubung dengan Google. Untuk mengubah password atau setelan keamanan, silakan kunjungi akun Google Anda.
                 </p>
-                <Button 
-                  onClick={() => setShowPasswordModal(true)}
-                  variant="outline" 
-                  size="sm" 
-                  className="w-full bg-white border-blue-200 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300"
+                <a 
+                  href="https://myaccount.google.com/security" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center w-full px-6 py-4 bg-white border-2 border-gray-100 text-gray-700 rounded-2xl text-sm font-bold hover:bg-gray-50 hover:border-blue-200 hover:text-blue-600 transition-all duration-300 gap-3 shadow-sm group"
                 >
-                  Ubah Password
-                </Button>
+                  <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                  Kelola Akun Google
+                </a>
               </div>
 
               {profile?.role === 'student' && (
@@ -310,51 +295,24 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {/* Password Change Modal */}
-      {showPasswordModal && (
-        <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-300">
-          <div className="bg-white rounded-[2.5rem] w-full max-w-md shadow-2xl overflow-hidden border border-white/20">
-            <div className="p-8 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-50 text-blue-600 rounded-xl">
-                  <Lock size={20} />
-                </div>
-                <h3 className="text-2xl font-black text-gray-900 tracking-tight">Ubah Password</h3>
-              </div>
-              <button 
-                onClick={() => setShowPasswordModal(false)}
-                className="p-2 text-gray-400 hover:text-gray-900 transition-colors"
-              >
-                <X />
-              </button>
+      {profile?.role === 'student' && (
+        <div className="mt-12 bg-gradient-to-r from-blue-600 to-indigo-700 rounded-[2.5rem] p-10 text-white relative overflow-hidden shadow-2xl shadow-blue-500/20 animate-in slide-in-from-bottom-4 duration-700">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl" />
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="text-center md:text-left space-y-3">
+              <h2 className="text-3xl font-black tracking-tight">Ingin Berbagi Ilmu?</h2>
+              <p className="text-blue-100 font-medium max-w-md">
+                Upgrade akun Anda menjadi Mentor dan mulai buat kursus pertama Anda hari ini.
+              </p>
             </div>
-            <form onSubmit={handlePasswordUpdate} className="p-8 space-y-6">
-              <div className="space-y-2">
-                <label className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Password Baru</label>
-                <input 
-                  type="password" 
-                  className="block w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-[1.5rem] text-sm font-medium transition-all duration-300 focus:bg-white focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none" 
-                  required 
-                  placeholder="Minimal 6 karakter"
-                  value={newPassword}
-                  onChange={e => setNewPassword(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Konfirmasi Password</label>
-                <input 
-                  type="password" 
-                  className="block w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-[1.5rem] text-sm font-medium transition-all duration-300 focus:bg-white focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none" 
-                  required 
-                  placeholder="Ulangi password baru"
-                  value={confirmPassword}
-                  onChange={e => setConfirmPassword(e.target.value)}
-                />
-              </div>
-              <Button type="submit" isLoading={saving} className="w-full py-5 rounded-[1.5rem] font-black shadow-xl shadow-blue-500/20">
-                Perbarui Password
-              </Button>
-            </form>
+            <Button 
+              onClick={handleUpgradeToMentor}
+              isLoading={saving}
+              variant="secondary" 
+              className="bg-white text-blue-700 hover:bg-blue-50 px-8 py-4 rounded-2xl font-black shadow-xl transition-all hover:scale-105 active:scale-95"
+            >
+              Daftar Sebagai Mentor
+            </Button>
           </div>
         </div>
       )}

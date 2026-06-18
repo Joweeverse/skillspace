@@ -21,6 +21,13 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState<string | null>(null)
   const router = useRouter()
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('error') === 'account_not_found') {
+      setError('Akun Google Anda belum terdaftar. Silakan pilih peran dan daftar terlebih dahulu.')
+    }
+  }, [])
+
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -36,43 +43,36 @@ export default function RegisterPage() {
     try {
       const data = await AuthService.signUp(email, password, fullName, role)
       
-      // Jika auto-confirm aktif di Supabase, session akan langsung ada
-      if (data.session) {
+      // Jika email auto-confirm AKTIF di Supabase, session akan langsung ada
+      if (data.user) {
         alert('Pendaftaran berhasil! Akun Anda sudah aktif.')
         router.push('/login')
         return
       }
 
+      // Fallback jika verifikasi masih aktif di Supabase
       setStep(2)
       setSuccess('Kode verifikasi telah dikirim ke email Anda.')
     } catch (err: any) {
-      console.error('Registration error details:', {
-        name: err.name,
-        message: err.message,
-        status: err.status,
-        err: err
-      })
+      console.error('Registration error details:', err)
       
       let errorMessage = 'Gagal mendaftar. Silakan coba lagi.'
       
-      if (err.name === 'AuthRetryableFetchError' || err.message?.includes('fetch')) {
+      if (err.status === 429) {
+        errorMessage = 'Terlalu banyak permintaan (Rate Limit). Supabase membatasi pengiriman email (maksimal 3 per jam untuk provider gratis). Silakan tunggu beberapa saat atau gunakan email lain.'
+      } else if (err.name === 'AuthRetryableFetchError' || err.message?.includes('fetch')) {
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-        errorMessage = `Kesalahan Koneksi: Tidak dapat menjangkau server Supabase (${supabaseUrl || 'URL KOSONG'}). Pastikan internet Anda stabil, matikan Ad-Blocker/VPN, dan pastikan Anda sudah ME-RESTART server (npm run dev) setelah mengisi .env.local.`
+        errorMessage = `Kesalahan Koneksi: Tidak dapat menjangkau server Supabase (${supabaseUrl || 'URL KOSONG'}). Pastikan internet Anda stabil, matikan Ad-Blocker, dan pastikan server sudah di-restart (npm run dev).`
+      } else if (err.message === 'Database error saving new user') {
+        errorMessage = 'Terjadi kesalahan pada Database (Trigger). Pastikan Anda sudah menjalankan SQL setup (database_setup.sql) di Dashboard Supabase.'
       } else if (err.message) {
         errorMessage = err.message
-      } else if (err.error_description) {
-        errorMessage = err.error_description
-      } else if (typeof err === 'string') {
-        errorMessage = err
-      } else {
-        // Fallback for objects that stringify to {}
-        errorMessage = `Error (${err.name || 'Unknown'}): Mohon periksa konsol browser (F12) untuk detail teknis.`
       }
 
       // Jika user sudah terdaftar tapi belum konfirmasi, izinkan lanjut ke Step 2
       if (errorMessage.toLowerCase().includes('already registered')) {
         setStep(2)
-        setSuccess('Email ini sudah terdaftar. Silakan masukkan kode verifikasi yang telah dikirim ke email Anda, atau klik "Kirim Ulang Kode".')
+        setSuccess('Email ini sudah terdaftar namun belum dikonfirmasi. Silakan masukkan kode verifikasi yang telah dikirim ke email Anda.')
       } else {
         setError(errorMessage)
       }
@@ -178,84 +178,33 @@ export default function RegisterPage() {
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  <div className="space-y-1">
-                    <label htmlFor="full-name" className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Nama Lengkap</label>
-                    <div className="relative group">
-                      <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
-                        <User size={20} />
-                      </div>
-                      <input
-                        id="full-name"
-                        name="fullName"
-                        type="text"
-                        required
-                        className="block w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-[1.5rem] text-sm font-medium transition-all duration-300 focus:bg-white focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none placeholder:text-gray-400"
-                        placeholder="John Doe"
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                      />
-                    </div>
-                  </div>
+                <div className="pt-6 space-y-6">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLoading(true)
+                      AuthService.signInWithGoogle(role, 'register')
+                    }}
+                    disabled={loading}
+                    className="w-full flex items-center justify-center gap-4 py-5 px-8 bg-white border-2 border-gray-100 rounded-[2rem] text-lg font-bold text-gray-700 hover:bg-gray-50 hover:border-blue-200 hover:text-blue-600 transition-all duration-300 shadow-xl shadow-gray-200/20 group"
+                  >
+                    {loading ? (
+                      <div className="w-6 h-6 border-3 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                    )}
+                    Daftar dengan Google sebagai {role === 'student' ? 'Siswa' : 'Mentor'}
+                  </button>
 
-                  <div className="space-y-1">
-                    <label htmlFor="email-address" className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Email</label>
-                    <div className="relative group">
-                      <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
-                        <Mail size={20} />
-                      </div>
-                      <input
-                        id="email-address"
-                        name="email"
-                        type="email"
-                        required
-                        className="block w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-[1.5rem] text-sm font-medium transition-all duration-300 focus:bg-white focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none placeholder:text-gray-400"
-                        placeholder="name@example.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-1">
-                    <label htmlFor="password" className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Password</label>
-                    <div className="relative group">
-                      <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
-                        <Lock size={20} />
-                      </div>
-                      <input
-                        id="password"
-                        name="password"
-                        type="password"
-                        required
-                        className="block w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-[1.5rem] text-sm font-medium transition-all duration-300 focus:bg-white focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none placeholder:text-gray-400"
-                        placeholder="Minimal 6 karakter"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                      />
-                    </div>
+                  <div className="text-center pt-4">
+                    <p className="text-gray-500 font-medium">
+                      Sudah memiliki akun?{' '}
+                      <Link href="/login" className="font-bold text-blue-600 hover:text-blue-700 underline underline-offset-8 transition-all">
+                        Masuk di sini
+                      </Link>
+                    </p>
                   </div>
                 </div>
-              </div>
-
-              <div className="pt-4">
-                <Button 
-                  type="submit" 
-                  isLoading={loading}
-                  className="w-full py-5 text-lg font-bold rounded-[1.5rem] shadow-xl shadow-blue-500/25"
-                  rightIcon={<ArrowRight size={22} />}
-                >
-                  Buat Akun Sekarang
-                </Button>
-              </div>
-
-              <div className="text-center pt-2">
-                <p className="text-gray-500 font-medium">
-                  Sudah memiliki akun?{' '}
-                  <Link href="/login" className="font-bold text-blue-600 hover:text-blue-700 underline underline-offset-8 transition-all">
-                    Masuk di sini
-                  </Link>
-                </p>
               </div>
             </form>
           </>

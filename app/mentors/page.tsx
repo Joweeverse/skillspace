@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { MentorService } from '@/services/mentorService'
+import { AuthService } from '@/services/authService'
 import { Profile, Portfolio } from '@/types/database'
 import { User, ShieldCheck, Briefcase, ChevronRight, Search, Sparkles, ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -11,21 +12,48 @@ export default function MentorsPage() {
   const [mentors, setMentors] = useState<(Profile & { portfolios: Portfolio[] })[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
+  const [currentUser, setCurrentUser] = useState<any>(null)
+  const [currentProfile, setCurrentProfile] = useState<Profile | null>(null)
   const router = useRouter()
 
   useEffect(() => {
-    async function loadMentors() {
+    async function loadData() {
       try {
-        const data = await MentorService.getAllMentors()
-        setMentors(data)
+        const [mentorsData, session] = await Promise.all([
+          MentorService.getAllMentors(),
+          AuthService.getSession()
+        ])
+        
+        setMentors(mentorsData)
+        
+        if (session?.user) {
+          setCurrentUser(session.user)
+          const profileData = await AuthService.getUserProfile(session.user.id)
+          setCurrentProfile(profileData)
+        }
       } catch (err) {
         console.error('Error loading mentors:', err)
       } finally {
         setLoading(false)
       }
     }
-    loadMentors()
+    loadData()
   }, [])
+
+  const handleUpgradeToMentor = async () => {
+    if (!currentUser || !confirm('Apakah Anda yakin ingin mendaftar sebagai Mentor? Anda akan memiliki akses untuk membuat dan mengelola kursus.')) return
+    
+    setLoading(true)
+    try {
+      await AuthService.upgradeToMentor(currentUser.id)
+      alert('Selamat! Anda sekarang adalah seorang Mentor. Silakan mulai berbagi ilmu.')
+      router.push('/dashboard/mentor')
+      router.refresh()
+    } catch (err: any) {
+      alert('Gagal upgrade role: ' + err.message)
+      setLoading(false)
+    }
+  }
 
   const filteredMentors = mentors.filter(mentor => 
     mentor.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -154,6 +182,33 @@ export default function MentorsPage() {
           </div>
         )}
       </div>
+
+      {currentProfile?.role === 'student' && (
+        <div className="mt-20 bg-gradient-to-r from-blue-600 to-indigo-700 rounded-[3rem] p-10 md:p-16 text-white relative overflow-hidden shadow-2xl shadow-blue-500/30">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-400/20 rounded-full -ml-32 -mb-32 blur-3xl" />
+          
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
+            <div className="text-center md:text-left space-y-4">
+              <div className="inline-flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full backdrop-blur-md border border-white/10">
+                <Sparkles size={16} />
+                <span className="text-xs font-black uppercase tracking-widest">Wujudkan Potensi Anda</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">Jadilah Bagian dari Mentor Kami</h2>
+              <p className="text-blue-100 text-lg font-medium max-w-xl">
+                Daftar sebagai Mentor di SkillSpace dan mulai buat kursus Anda sendiri. Bantu orang lain tumbuh sambil membangun personal brand Anda.
+              </p>
+            </div>
+            <button 
+              onClick={handleUpgradeToMentor}
+              className="bg-white text-blue-700 hover:bg-blue-50 px-10 py-6 rounded-[2rem] font-black shadow-2xl transition-all hover:scale-105 active:scale-95 flex items-center gap-3"
+            >
+              Daftar Sebagai Mentor
+              <ChevronRight size={22} />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

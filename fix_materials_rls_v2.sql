@@ -26,7 +26,8 @@ WITH CHECK (
 
 -- Policy: Allow public to view (download) materials
 DROP POLICY IF EXISTS "Public Access" ON storage.objects;
-CREATE POLICY "Public Access" ON storage.objects
+DROP POLICY IF EXISTS "Public Access Materials" ON storage.objects;
+CREATE POLICY "Public Access Materials" ON storage.objects
 FOR SELECT USING ( bucket_id = 'materials' );
 
 -- Policy: Allow Mentors to upload materials
