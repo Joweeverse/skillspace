@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/Button'
 import { useRouter } from 'next/navigation'
 import { AuthService } from '@/services/authService'
@@ -45,12 +45,17 @@ export default function RegisterPage() {
       
       // Jika email auto-confirm AKTIF di Supabase, session akan langsung ada
       if (data.user) {
-        alert('Pendaftaran berhasil! Akun Anda sudah aktif.')
-        router.push('/login')
+        // Check if verification is needed
+        if (data.session) {
+          alert('Pendaftaran berhasil! Akun Anda sudah aktif.')
+          router.push('/login')
+        } else {
+          setStep(2)
+          setSuccess('Kode verifikasi telah dikirim ke email Anda.')
+        }
         return
       }
 
-      // Fallback jika verifikasi masih aktif di Supabase
       setStep(2)
       setSuccess('Kode verifikasi telah dikirim ke email Anda.')
     } catch (err: any) {
@@ -178,7 +183,79 @@ export default function RegisterPage() {
                   </div>
                 </div>
 
-                <div className="pt-6 space-y-6">
+                <div className="space-y-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Nama Lengkap</label>
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
+                        <User size={20} />
+                      </div>
+                      <input
+                        type="text"
+                        required
+                        className="block w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-[1.5rem] transition-all duration-300 focus:bg-white focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none placeholder:text-gray-300 font-bold"
+                        placeholder="John Doe"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Email</label>
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
+                        <Mail size={20} />
+                      </div>
+                      <input
+                        type="email"
+                        required
+                        className="block w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-[1.5rem] transition-all duration-300 focus:bg-white focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none placeholder:text-gray-300 font-bold"
+                        placeholder="email@contoh.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Password</label>
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
+                        <Lock size={20} />
+                      </div>
+                      <input
+                        type="password"
+                        required
+                        minLength={6}
+                        className="block w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-[1.5rem] transition-all duration-300 focus:bg-white focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none placeholder:text-gray-300 font-bold"
+                        placeholder="••••••••"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <Button 
+                  type="submit" 
+                  isLoading={loading}
+                  className="w-full py-5 text-lg font-bold rounded-[1.5rem] shadow-xl shadow-blue-500/25 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 border-none flex items-center justify-center gap-2 group"
+                >
+                  Daftar Sekarang
+                  <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                </Button>
+
+                <div className="relative py-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-100"></div>
+                  </div>
+                  <div className="relative flex justify-center text-sm uppercase">
+                    <span className="bg-white px-4 text-gray-400 font-black tracking-widest">Atau</span>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
                   <button
                     type="button"
                     onClick={() => {
