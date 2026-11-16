@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" fill="none">
+  <defs>
+    <linearGradient id="read-bg" x1="0" y1="0" x2="800" y2="480" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#EFF6FF"/>
+      <stop offset="60%" stop-color="#DBEAFE"/>
+      <stop offset="100%" stop-color="#BFDBFE"/>
+    </linearGradient>
+    <linearGradient id="read-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <filter id="read-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="14" flood-color="#1E3A8A" flood-opacity="0.13"/>
+    </filter>
+    <filter id="read-sm" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="480" rx="28" fill="url(#read-bg)"/>
+  <circle cx="680" cy="80" r="100" fill="#93C5FD" opacity="0.25"/>
+  <circle cx="100" cy="400" r="80" fill="#60A5FA" opacity="0.15"/>
+
+  <!-- Main reading card -->
+  <g transform="translate(80, 60)" filter="url(#read-shadow)">
+    <rect width="400" height="340" rx="22" fill="#FFFFFF"/>
+    <!-- Header line decoration -->
+    <rect x="0" y="0" width="400" height="6" rx="3" fill="url(#read-blue)"/>
+    <!-- Page lines -->
+    <rect x="32" y="40" width="336" height="12" rx="6" fill="#1E293B"/>
+    <rect x="32" y="64" width="300" height="8" rx="4" fill="#94A3B8"/>
+    <rect x="32" y="84" width="320" height="8" rx="4" fill="#CBD5E1"/>
+    <rect x="32" y="104" width="280" height="8" rx="4" fill="#94A3B8"/>
+    <rect x="32" y="124" width="336" height="8" rx="4" fill="#CBD5E1"/>
+    <rect x="32" y="144" width="260" height="8" rx="4" fill="#94A3B8"/>
+
+    <!-- Divider -->
+    <line x1="32" y1="168" x2="368" y2="168" stroke="#E2E8F0" stroke-width="1.5"/>
+
+    <!-- Second paragraph -->
+    <rect x="32" y="184" width="336" height="8" rx="4" fill="#CBD5E1"/>
+    <rect x="32" y="204" width="310" height="8" rx="4" fill="#94A3B8"/>
+    <rect x="32" y="224" width="290" height="8" rx="4" fill="#CBD5E1"/>
+    <rect x="32" y="244" width="320" height="8" rx="4" fill="#94A3B8"/>
+    <rect x="32" y="264" width="200" height="8" rx="4" fill="#CBD5E1"/>
+
+    <!-- Highlighted note box -->
+    <rect x="32" y="288" width="336" height="38" rx="10" fill="#EFF6FF" stroke="#BFDBFE"/>
+    <rect x="32" y="288" width="4" height="38" rx="2" fill="#3B82F6"/>
+    <rect x="48" y="300" width="200" height="7" rx="3.5" fill="#2563EB" opacity="0.5"/>
+    <rect x="48" y="313" width="150" height="6" rx="3" fill="#93C5FD"/>
+  </g>
+
+  <!-- Student reading character (right side) -->
+  <g transform="translate(530, 100)">
+    <!-- Body -->
+    <path d="M 20 380 C 20 290, 55 250, 95 240 C 115 235, 140 235, 160 240 C 200 250, 230 290, 230 380 Z" fill="#2563EB"/>
+    <!-- Collar detail -->
+    <polygon points="100,240 115,278 130,240" fill="#FFFFFF" opacity="0.9"/>
+    <!-- Head -->
+    <circle cx="115" cy="190" r="52" fill="#FBBF24" opacity="0.9"/>
+    <circle cx="115" cy="190" r="52" fill="#F3A683"/>
+    <!-- Hair -->
+    <path d="M 63 180 C 63 128, 167 128, 167 180 C 155 148, 75 148, 63 180 Z" fill="#374151"/>
+    <!-- Eyes (looking down at book) -->
+    <ellipse cx="97" cy="192" rx="4" ry="5" fill="#0F172A"/>
+    <ellipse cx="133" cy="192" rx="4" ry="5" fill="#0F172A"/>
+    <!-- Smile -->
+    <path d="M 100 212 Q 115 224 130 212" stroke="#0F172A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <!-- Book held in hands -->
+    <rect x="-20" y="270" width="120" height="85" rx="8" fill="#1E40AF" transform="rotate(-8 40 312)" filter="url(#read-sm)"/>
+    <rect x="-14" y="276" width="106" height="73" rx="6" fill="#FFFFFF" transform="rotate(-8 40 312)"/>
+    <rect x="-2" y="286" width="80" height="6" rx="3" fill="#94A3B8" transform="rotate(-8 40 312)"/>
+    <rect x="-2" y="298" width="70" height="5" rx="2.5" fill="#CBD5E1" transform="rotate(-8 40 312)"/>
+    <rect x="-2" y="309" width="75" height="5" rx="2.5" fill="#CBD5E1" transform="rotate(-8 40 312)"/>
+    <rect x="-2" y="320" width="60" height="5" rx="2.5" fill="#CBD5E1" transform="rotate(-8 40 312)"/>
+    <!-- Spine of book -->
+    <rect x="-20" y="270" width="8" height="85" rx="4" fill="#1D4ED8" transform="rotate(-8 40 312)"/>
+  </g>
+
+  <!-- Floating annotation bubbles -->
+  <g transform="translate(500, 40)" filter="url(#read-sm)">
+    <rect width="140" height="46" rx="12" fill="#FFFFFF"/>
+    <circle cx="24" cy="23" r="12" fill="#EFF6FF"/>
+    <text x="24" y="27" font-family="sans-serif" font-size="14" text-anchor="middle">💡</text>
+    <rect x="44" y="14" width="80" height="8" rx="4" fill="#1E293B"/>
+    <rect x="44" y="27" width="60" height="6" rx="3" fill="#94A3B8"/>
+  </g>
+  <g transform="translate(490, 110)" filter="url(#read-sm)">
+    <rect width="120" height="40" rx="10" fill="#EFF6FF" stroke="#DBEAFE"/>
+    <text x="20" y="25" font-family="sans-serif" font-size="11" font-weight="bold" fill="#2563EB">Reading Mode</text>
+    <text x="20" y="37" font-family="sans-serif" font-size="9" fill="#64748B">Focus &amp; Learn</text>
+  </g>
+
+  <!-- Progress indicator bottom-left -->
+  <g transform="translate(80, 420)" filter="url(#read-sm)">
+    <rect width="260" height="38" rx="12" fill="#FFFFFF"/>
+    <rect x="12" y="14" width="140" height="10" rx="5" fill="#E2E8F0"/>
+    <rect x="12" y="14" width="98" height="10" rx="5" fill="url(#read-blue)"/>
+    <text x="162" y="23" font-family="sans-serif" font-size="10" font-weight="bold" fill="#2563EB">70%</text>
+    <text x="190" y="23" font-family="sans-serif" font-size="9" fill="#94A3B8">done</text>
+  </g>
+</svg>

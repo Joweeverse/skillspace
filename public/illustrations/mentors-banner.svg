@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240" fill="none">
+  <!-- Background gradient band -->
+  <rect width="720" height="240" fill="#EFF6FF"/>
+  <rect width="720" height="240" fill="url(#grad)" opacity="0.6"/>
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="720" y2="240" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2563EB" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#6366F1" stop-opacity="0.06"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Decorative blobs -->
+  <circle cx="620" cy="40" r="90" fill="#2563EB" opacity="0.06"/>
+  <circle cx="80"  cy="210" r="70" fill="#6366F1" opacity="0.07"/>
+
+  <!-- Mentor figures (3 silhouettes) -->
+  <!-- Figure 1 (left) -->
+  <circle cx="190" cy="90" r="36" fill="#BFDBFE"/>
+  <circle cx="190" cy="82" r="20" fill="#93C5FD"/>
+  <rect x="168" y="102" width="44" height="52" rx="22" fill="#BFDBFE"/>
+  <!-- Figure 2 (center, taller / highlighted) -->
+  <circle cx="310" cy="78" r="44" fill="#2563EB" opacity="0.15"/>
+  <circle cx="310" cy="78" r="26" fill="#2563EB" opacity="0.5"/>
+  <circle cx="310" cy="68" r="22" fill="#1D4ED8"/>
+  <rect x="284" y="90" width="52" height="60" rx="26" fill="#2563EB"/>
+  <!-- Figure 3 (right) -->
+  <circle cx="430" cy="90" r="36" fill="#C7D2FE"/>
+  <circle cx="430" cy="82" r="20" fill="#A5B4FC"/>
+  <rect x="408" y="102" width="44" height="52" rx="22" fill="#C7D2FE"/>
+
+  <!-- Stars / connection lines between figures -->
+  <line x1="226" y1="100" x2="284" y2="100" stroke="#93C5FD" stroke-width="2" stroke-dasharray="4 3"/>
+  <line x1="336" y1="100" x2="408" y2="100" stroke="#A5B4FC" stroke-width="2" stroke-dasharray="4 3"/>
+
+  <!-- Points badges -->
+  <rect x="166" y="150" width="48" height="20" rx="10" fill="#FBBF24"/>
+  <text x="190" y="164" text-anchor="middle" font-size="9" font-weight="bold" fill="#92400E">✦ 120</text>
+  <rect x="286" y="150" width="48" height="20" rx="10" fill="#FBBF24"/>
+  <text x="310" y="164" text-anchor="middle" font-size="9" font-weight="bold" fill="#92400E">✦ 480</text>
+  <rect x="406" y="150" width="48" height="20" rx="10" fill="#FBBF24"/>
+  <text x="430" y="164" text-anchor="middle" font-size="9" font-weight="bold" fill="#92400E">✦ 240</text>
+
+  <!-- Right side text area -->
+  <text x="568" y="80" text-anchor="middle" font-size="28" font-weight="900" fill="#1E40AF" letter-spacing="-1">Daftar</text>
+  <text x="568" y="112" text-anchor="middle" font-size="28" font-weight="900" fill="#1E40AF" letter-spacing="-1">Mentor</text>
+  <text x="568" y="140" text-anchor="middle" font-size="12" fill="#6B7280">Belajar dari para ahli terbaik</text>
+
+  <!-- Sparkles -->
+  <text x="520" y="60" font-size="16" fill="#93C5FD">✦</text>
+  <text x="630" y="160" font-size="12" fill="#A5B4FC">✦</text>
+  <text x="100" y="80" font-size="14" fill="#BFDBFE">✦</text>
+  <text x="480" y="190" font-size="10" fill="#C7D2FE">✦</text>
+</svg>

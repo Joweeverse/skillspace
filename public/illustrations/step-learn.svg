@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" fill="none">
+  <defs>
+    <linearGradient id="step2-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EFF6FF"/>
+      <stop offset="100%" stop-color="#DBEAFE"/>
+    </linearGradient>
+    <filter id="shadow-md" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#1E3A8A" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect width="600" height="450" rx="24" fill="url(#step2-bg)"/>
+
+  <!-- Main Screen Video Lesson -->
+  <g transform="translate(60, 50)" filter="url(#shadow-md)">
+    <rect width="480" height="280" rx="16" fill="#FFFFFF"/>
+    <rect width="480" height="180" rx="16" fill="#1E293B"/>
+    <rect y="164" width="480" height="16" fill="#1E293B"/>
+
+    <!-- Video Play Button & Wave -->
+    <circle cx="240" cy="90" r="30" fill="#2563EB"/>
+    <polygon points="233,76 255,90 233,104" fill="#FFFFFF"/>
+
+    <!-- Lesson Info -->
+    <text x="24" y="214" font-family="sans-serif" font-size="16" font-weight="bold" fill="#0F172A">Lesson 3: Building Interactive Components</text>
+    <rect x="24" y="228" width="260" height="8" rx="4" fill="#94A3B8"/>
+    <rect x="24" y="244" width="200" height="8" rx="4" fill="#CBD5E1"/>
+
+    <!-- Live Mentor Feedback Badge -->
+    <rect x="330" y="210" width="126" height="34" rx="17" fill="#EFF6FF" stroke="#2563EB"/>
+    <circle cx="348" cy="227" r="10" fill="#10B981"/>
+    <text x="396" y="231" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1E40AF" text-anchor="middle">Mentor Online</text>
+  </g>
+
+  <!-- Student & Mentor Avatars (Bottom Center) -->
+  <g transform="translate(180, 310)" filter="url(#shadow-md)">
+    <rect width="240" height="90" rx="20" fill="#FFFFFF" stroke="#93C5FD"/>
+    <!-- Student Avatar -->
+    <circle cx="50" cy="45" r="24" fill="#DBEAFE"/>
+    <circle cx="50" cy="38" r="12" fill="#2563EB"/>
+    <path d="M 32 60 C 32 50, 40 46, 50 46 C 60 46, 68 50, 68 60 Z" fill="#1D4ED8"/>
+
+    <!-- Connector Arrow -->
+    <path d="M 85 45 L 115 45" stroke="#3B82F6" stroke-width="3" stroke-dasharray="4 4"/>
+    <polygon points="113,40 123,45 113,50" fill="#3B82F6"/>
+
+    <!-- Mentor Avatar -->
+    <circle cx="150" cy="45" r="24" fill="#FEF3C7"/>
+    <circle cx="150" cy="38" r="12" fill="#F59E0B"/>
+    <path d="M 132 60 C 132 50, 140 46, 150 46 C 160 46, 168 50, 168 60 Z" fill="#D97706"/>
+    <!-- Chat Bubble -->
+    <rect x="182" y="25" width="46" height="40" rx="10" fill="#2563EB"/>
+    <text x="205" y="49" font-family="sans-serif" font-size="16" font-weight="bold" fill="#FFFFFF" text-anchor="middle">💬</text>
+  </g>
+</svg>

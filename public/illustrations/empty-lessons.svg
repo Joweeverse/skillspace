@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 280" fill="none">
+  <!-- Background -->
+  <circle cx="200" cy="140" r="110" fill="#F0F9FF" opacity="0.5"/>
+
+  <!-- Empty list lines -->
+  <rect x="80" y="90" width="240" height="16" rx="8" fill="none" stroke="#DBEAFE" stroke-width="2" stroke-dasharray="4 3"/>
+  <rect x="80" y="118" width="240" height="16" rx="8" fill="none" stroke="#DBEAFE" stroke-width="2" stroke-dasharray="4 3"/>
+  <rect x="80" y="146" width="240" height="16" rx="8" fill="none" stroke="#DBEAFE" stroke-width="2" stroke-dasharray="4 3"/>
+  <rect x="80" y="174" width="240" height="16" rx="8" fill="none" stroke="#DBEAFE" stroke-width="2" stroke-dasharray="4 3"/>
+
+  <!-- Number bullets (empty) -->
+  <circle cx="96" cy="98" r="10" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.5"/>
+  <circle cx="96" cy="126" r="10" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.5"/>
+  <circle cx="96" cy="154" r="10" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.5"/>
+  <circle cx="96" cy="182" r="10" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.5"/>
+
+  <!-- Central "add" icon -->
+  <circle cx="200" cy="140" r="36" fill="#EFF6FF" stroke="#93C5FD" stroke-width="2"/>
+  <line x1="200" y1="124" x2="200" y2="156" stroke="#2563EB" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="184" y1="140" x2="216" y2="140" stroke="#2563EB" stroke-width="3.5" stroke-linecap="round"/>
+
+  <!-- Sparkles -->
+  <text x="136" y="72" font-size="12" fill="#93C5FD">✦</text>
+  <text x="318" y="210" font-size="10" fill="#BFDBFE">✦</text>
+  <text x="68" y="210" font-size="14" fill="#DBEAFE">✦</text>
+</svg>

@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" fill="none">
+  <defs>
+    <linearGradient id="step3-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EFF6FF"/>
+      <stop offset="100%" stop-color="#DBEAFE"/>
+    </linearGradient>
+    <filter id="shadow-track" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#1E3A8A" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect width="600" height="450" rx="24" fill="url(#step3-bg)"/>
+
+  <!-- Main Dashboard Card -->
+  <g transform="translate(50, 40)" filter="url(#shadow-track)">
+    <rect width="500" height="310" rx="20" fill="#FFFFFF"/>
+    <!-- Card Header -->
+    <rect width="500" height="52" rx="20" fill="#1E40AF"/>
+    <rect y="32" width="500" height="20" fill="#1E40AF"/>
+    <text x="24" y="32" font-family="sans-serif" font-size="15" font-weight="bold" fill="#FFFFFF">My Learning Progress</text>
+    <circle cx="468" cy="26" r="10" fill="#3B82F6"/>
+    <text x="468" y="30" font-family="sans-serif" font-size="11" font-weight="bold" fill="#FFFFFF" text-anchor="middle">3</text>
+
+    <!-- Progress Bars Section -->
+    <!-- Course 1 -->
+    <text x="24" y="82" font-family="sans-serif" font-size="12" font-weight="bold" fill="#0F172A">Frontend Masterclass</text>
+    <rect x="24" y="92" width="376" height="10" rx="5" fill="#E2E8F0"/>
+    <rect x="24" y="92" width="320" height="10" rx="5" fill="#2563EB"/>
+    <text x="412" y="102" font-family="sans-serif" font-size="11" font-weight="600" fill="#2563EB">85%</text>
+
+    <!-- Course 2 -->
+    <text x="24" y="124" font-family="sans-serif" font-size="12" font-weight="bold" fill="#0F172A">UI/UX Fundamentals</text>
+    <rect x="24" y="134" width="376" height="10" rx="5" fill="#E2E8F0"/>
+    <rect x="24" y="134" width="260" height="10" rx="5" fill="#3B82F6"/>
+    <text x="412" y="144" font-family="sans-serif" font-size="11" font-weight="600" fill="#3B82F6">69%</text>
+
+    <!-- Course 3 -->
+    <text x="24" y="166" font-family="sans-serif" font-size="12" font-weight="bold" fill="#0F172A">Fullstack Next.js</text>
+    <rect x="24" y="176" width="376" height="10" rx="5" fill="#E2E8F0"/>
+    <rect x="24" y="176" width="150" height="10" rx="5" fill="#60A5FA"/>
+    <text x="412" y="186" font-family="sans-serif" font-size="11" font-weight="600" fill="#60A5FA">40%</text>
+
+    <!-- Divider -->
+    <line x1="24" y1="210" x2="476" y2="210" stroke="#E2E8F0" stroke-width="1.5"/>
+
+    <!-- Stats Row -->
+    <text x="24" y="240" font-family="sans-serif" font-size="11" fill="#64748B">Lessons completed</text>
+    <text x="24" y="258" font-family="sans-serif" font-size="22" font-weight="bold" fill="#0F172A">24</text>
+    <text x="24" y="276" font-family="sans-serif" font-size="10" fill="#10B981" font-weight="600">↑ 6 this week</text>
+
+    <text x="192" y="240" font-family="sans-serif" font-size="11" fill="#64748B">Quizzes passed</text>
+    <text x="192" y="258" font-family="sans-serif" font-size="22" font-weight="bold" fill="#0F172A">11</text>
+    <text x="192" y="276" font-family="sans-serif" font-size="10" fill="#10B981" font-weight="600">↑ 3 this week</text>
+
+    <text x="360" y="240" font-family="sans-serif" font-size="11" fill="#64748B">Streak</text>
+    <text x="360" y="258" font-family="sans-serif" font-size="22" font-weight="bold" fill="#F59E0B">7 days</text>
+    <text x="360" y="276" font-family="sans-serif" font-size="10" fill="#F59E0B" font-weight="600">🔥 On fire!</text>
+  </g>
+
+  <!-- Achievement Badge (bottom right) -->
+  <g transform="translate(360, 370)" filter="url(#shadow-track)">
+    <rect width="200" height="60" rx="16" fill="#FFFFFF"/>
+    <circle cx="34" cy="30" r="18" fill="#FEF3C7"/>
+    <text x="34" y="35" font-family="sans-serif" font-size="18" text-anchor="middle">🏆</text>
+    <text x="62" y="24" font-family="sans-serif" font-size="12" font-weight="bold" fill="#0F172A">Top Learner</text>
+    <text x="62" y="40" font-family="sans-serif" font-size="10" fill="#64748B">This month</text>
+  </g>
+
+  <!-- Mini Calendar / Streak Dots (bottom left) -->
+  <g transform="translate(50, 375)" filter="url(#shadow-track)">
+    <rect width="260" height="58" rx="14" fill="#FFFFFF"/>
+    <text x="16" y="22" font-family="sans-serif" font-size="11" font-weight="bold" fill="#64748B">This week</text>
+    <!-- Day dots -->
+    <circle cx="30" cy="42" r="10" fill="#2563EB"/>
+    <text x="30" y="46" font-family="sans-serif" font-size="8" font-weight="bold" fill="#FFFFFF" text-anchor="middle">M</text>
+    <circle cx="62" cy="42" r="10" fill="#2563EB"/>
+    <text x="62" y="46" font-family="sans-serif" font-size="8" font-weight="bold" fill="#FFFFFF" text-anchor="middle">T</text>
+    <circle cx="94" cy="42" r="10" fill="#2563EB"/>
+    <text x="94" y="46" font-family="sans-serif" font-size="8" font-weight="bold" fill="#FFFFFF" text-anchor="middle">W</text>
+    <circle cx="126" cy="42" r="10" fill="#2563EB"/>
+    <text x="126" y="46" font-family="sans-serif" font-size="8" font-weight="bold" fill="#FFFFFF" text-anchor="middle">T</text>
+    <circle cx="158" cy="42" r="10" fill="#DBEAFE"/>
+    <text x="158" y="46" font-family="sans-serif" font-size="8" font-weight="bold" fill="#2563EB" text-anchor="middle">F</text>
+    <circle cx="190" cy="42" r="10" fill="#E2E8F0"/>
+    <text x="190" y="46" font-family="sans-serif" font-size="8" font-weight="bold" fill="#94A3B8" text-anchor="middle">S</text>
+    <circle cx="222" cy="42" r="10" fill="#E2E8F0"/>
+    <text x="222" y="46" font-family="sans-serif" font-size="8" font-weight="bold" fill="#94A3B8" text-anchor="middle">S</text>
+  </g>
+</svg>

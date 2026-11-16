@@ -1,26 +1,104 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Color */
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-600: #2563eb;
+  --color-brand-700: #1d4ed8;
+  --color-brand-900: #1e3a8a;
+  --color-ink: #111827;
+  --color-muted: #4b5563;
+  --color-surface: #ffffff;
+  --color-surface-subtle: #f8fafc;
+  --color-border: #e5e7eb;
+  --color-mentor-points-bg: #fef3c7;
+  --color-mentor-points-text: #92400e;
+
+  /* Typography */
+  --text-heading: 2.5rem;
+  --text-subheading: 1.5rem;
+  --text-body: 1rem;
+  --text-caption: 0.75rem;
+
+  /* Spacing: 8px scale */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-5: 2.5rem;
+  --space-6: 3rem;
+  --space-8: 4rem;
+
+  /* Shape and elevation */
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --shadow-card: 0 10px 30px rgb(37 99 235 / 0.08);
+  --shadow-raised: 0 20px 45px rgb(15 23 42 / 0.12);
+}
+
+.dark,
+[data-theme="dark"] {
+  --background: #090d16;
+  --foreground: #f1f5f9;
+
+  /* Dark mode brand blues — slightly brighter for high contrast on dark surfaces */
+  --color-brand-50: #172554;
+  --color-brand-100: #1e3a8a;
+  --color-brand-600: #3b82f6;
+  --color-brand-700: #60a5fa;
+  --color-brand-900: #93c5fd;
+
+  /* Dark mode neutrals — off-white text and dark gray surfaces (never pure black) */
+  --color-ink: #f8fafc;
+  --color-muted: #94a3b8;
+  --color-surface: #0f172a;
+  --color-surface-subtle: #1e293b;
+  --color-border: #334155;
+
+  /* Warm yellow reserved for mentor points */
+  --color-mentor-points-bg: #451a03;
+  --color-mentor-points-text: #fef08a;
+
+  /* Subtle dark elevations */
+  --shadow-card: 0 10px 30px rgb(0 0 0 / 0.45);
+  --shadow-raised: 0 20px 45px rgb(0 0 0 / 0.65);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-brand-50: var(--color-brand-50);
+  --color-brand-100: var(--color-brand-100);
+  --color-brand-600: var(--color-brand-600);
+  --color-brand-700: var(--color-brand-700);
+  --color-brand-900: var(--color-brand-900);
+  --color-ink: var(--color-ink);
+  --color-muted: var(--color-muted);
+  --color-surface: var(--color-surface);
+  --color-surface-subtle: var(--color-surface-subtle);
+  --color-border: var(--color-border);
+  --color-mentor-points-bg: var(--color-mentor-points-bg);
+  --color-mentor-points-text: var(--color-mentor-points-text);
+  --font-sans: Arial, Helvetica, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Smooth color transitions for theme changes while respecting prefers-reduced-motion */
+@media (prefers-reduced-motion: no-preference) {
+  body, nav, footer, main, section, header, article {
+    transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;
+  }
 }

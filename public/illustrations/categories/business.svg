@@ -1,0 +1,158 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="600" y2="450" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#EFF6FF"/>
+      <stop offset="60%" stop-color="#FEF3C7"/>
+      <stop offset="100%" stop-color="#FFFBEB"/>
+    </linearGradient>
+    <linearGradient id="barGrad1" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+    <linearGradient id="barGrad2" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="barGrad3" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+    <linearGradient id="briefcaseGrad" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="arrowGrad" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#FBBF24"/>
+    </linearGradient>
+    <filter id="chartShadow">
+      <feDropShadow dx="0" dy="10" stdDeviation="18" flood-color="#F59E0B" flood-opacity="0.2"/>
+    </filter>
+    <filter id="shadow2">
+      <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#2563EB" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="450" fill="url(#bgGrad)"/>
+
+  <!-- Background blobs -->
+  <circle cx="520" cy="80" r="110" fill="#FEF3C7" opacity="0.6"/>
+  <circle cx="80" cy="380" r="90" fill="#DBEAFE" opacity="0.4"/>
+  <ellipse cx="300" cy="440" rx="160" ry="40" fill="#FDE68A" opacity="0.3"/>
+
+  <!-- === BAR CHART === -->
+  <g filter="url(#chartShadow)">
+    <!-- Chart background card -->
+    <rect x="80" y="80" width="340" height="250" rx="16" fill="white" stroke="#FDE68A" stroke-width="1.5"/>
+
+    <!-- Chart title -->
+    <text x="100" y="108" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#1F2937">Revenue Growth</text>
+    <rect x="100" y="114" width="60" height="4" rx="2" fill="#F59E0B"/>
+
+    <!-- Y-axis lines (grid) -->
+    <line x1="130" y1="130" x2="400" y2="130" stroke="#F3F4F6" stroke-width="1.5"/>
+    <line x1="130" y1="155" x2="400" y2="155" stroke="#F3F4F6" stroke-width="1.5"/>
+    <line x1="130" y1="180" x2="400" y2="180" stroke="#F3F4F6" stroke-width="1.5"/>
+    <line x1="130" y1="205" x2="400" y2="205" stroke="#F3F4F6" stroke-width="1.5"/>
+    <line x1="130" y1="230" x2="400" y2="230" stroke="#F3F4F6" stroke-width="1.5"/>
+    <line x1="130" y1="255" x2="400" y2="255" stroke="#E5E7EB" stroke-width="1.5"/>
+
+    <!-- Y-axis labels -->
+    <text x="90" y="134" font-family="Arial,sans-serif" font-size="8" fill="#9CA3AF">100K</text>
+    <text x="90" y="159" font-family="Arial,sans-serif" font-size="8" fill="#9CA3AF">75K</text>
+    <text x="90" y="184" font-family="Arial,sans-serif" font-size="8" fill="#9CA3AF">50K</text>
+    <text x="90" y="209" font-family="Arial,sans-serif" font-size="8" fill="#9CA3AF">25K</text>
+
+    <!-- Bars (Q1-Q4 going up) -->
+    <!-- Q1 -->
+    <rect x="150" y="220" width="34" height="35" rx="6" fill="url(#barGrad2)" opacity="0.5"/>
+    <rect x="150" y="220" width="34" height="35" rx="6" fill="url(#barGrad2)" opacity="0.5"/>
+    <text x="162" y="268" font-family="Arial,sans-serif" font-size="8" fill="#6B7280" text-anchor="middle">Q1</text>
+
+    <!-- Q2 -->
+    <rect x="200" y="195" width="34" height="60" rx="6" fill="url(#barGrad1)"/>
+    <text x="212" y="268" font-family="Arial,sans-serif" font-size="8" fill="#6B7280" text-anchor="middle">Q2</text>
+
+    <!-- Q3 -->
+    <rect x="250" y="168" width="34" height="87" rx="6" fill="url(#barGrad2)"/>
+    <text x="262" y="268" font-family="Arial,sans-serif" font-size="8" fill="#6B7280" text-anchor="middle">Q3</text>
+
+    <!-- Q4 (tallest, highlighted) -->
+    <rect x="300" y="135" width="34" height="120" rx="6" fill="url(#barGrad3)"/>
+    <!-- Value label on Q4 -->
+    <rect x="296" y="122" width="42" height="18" rx="9" fill="#F59E0B"/>
+    <text x="317" y="134" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="white" text-anchor="middle">↑ 42%</text>
+    <text x="312" y="268" font-family="Arial,sans-serif" font-size="8" fill="#374151" font-weight="600" text-anchor="middle">Q4</text>
+
+    <!-- Trend line -->
+    <polyline points="167,245 217,218 267,185 317,160" stroke="#F59E0B" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0"/>
+    <!-- Trend dots -->
+    <circle cx="167" cy="245" r="4" fill="#F59E0B"/>
+    <circle cx="217" cy="218" r="4" fill="#F59E0B"/>
+    <circle cx="267" cy="185" r="4" fill="#F59E0B"/>
+    <circle cx="317" cy="160" r="5" fill="#F59E0B" stroke="white" stroke-width="2"/>
+
+    <!-- Legend -->
+    <rect x="358" y="128" width="10" height="10" rx="3" fill="url(#barGrad2)"/>
+    <text x="372" y="137" font-family="Arial,sans-serif" font-size="8" fill="#6B7280">Revenue</text>
+    <rect x="358" y="144" width="10" height="3" rx="1.5" fill="#F59E0B"/>
+    <text x="372" y="150" font-family="Arial,sans-serif" font-size="8" fill="#6B7280">Trend</text>
+  </g>
+
+  <!-- === GROWTH ARROW === -->
+  <g filter="url(#shadow2)" transform="translate(70, 170)">
+    <!-- Arrow shaft -->
+    <path d="M 0 100 L 60 20" stroke="url(#arrowGrad)" stroke-width="8" stroke-linecap="round"/>
+    <!-- Arrow head -->
+    <path d="M 60 20 L 40 22 L 50 38 Z" fill="#FBBF24"/>
+    <!-- Small circle at base -->
+    <circle cx="0" cy="100" r="10" fill="#FDE68A" stroke="#F59E0B" stroke-width="2"/>
+  </g>
+
+  <!-- === BRIEFCASE === -->
+  <g filter="url(#shadow2)" transform="translate(440, 95)">
+    <!-- Handle -->
+    <path d="M 30 20 Q 30 5 50 5 Q 70 5 70 20" stroke="#2563EB" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <!-- Body -->
+    <rect x="10" y="20" width="80" height="65" rx="10" fill="url(#briefcaseGrad)"/>
+    <!-- Center line -->
+    <rect x="10" y="52" width="80" height="5" fill="#1D4ED8"/>
+    <!-- Lock clasp -->
+    <rect x="43" y="45" width="14" height="20" rx="4" fill="#93C5FD"/>
+    <circle cx="50" cy="52" r="4" fill="#2563EB" stroke="#93C5FD" stroke-width="1.5"/>
+    <!-- Briefcase shine -->
+    <rect x="20" y="28" width="30" height="4" rx="2" fill="white" opacity="0.15"/>
+    <!-- Small dollar sign -->
+    <text x="35" y="80" font-family="Arial,sans-serif" font-size="22" font-weight="900" fill="white" opacity="0.4">\$</text>
+  </g>
+
+  <!-- === MINI STAT CARDS === -->
+  <g transform="translate(440, 220)" filter="url(#shadow2)">
+    <rect x="0" y="0" width="120" height="58" rx="10" fill="white" stroke="#FDE68A" stroke-width="1.5"/>
+    <text x="12" y="20" font-family="Arial,sans-serif" font-size="10" fill="#6B7280">Total Revenue</text>
+    <text x="12" y="40" font-family="Arial,sans-serif" font-size="20" font-weight="800" fill="#1F2937">\$84K</text>
+    <rect x="88" y="10" width="22" height="16" rx="8" fill="#D1FAE5"/>
+    <text x="91" y="21" font-family="Arial,sans-serif" font-size="8" fill="#065F46" font-weight="700">+12%</text>
+  </g>
+
+  <g transform="translate(440, 292)" filter="url(#shadow2)">
+    <rect x="0" y="0" width="120" height="58" rx="10" fill="white" stroke="#DBEAFE" stroke-width="1.5"/>
+    <text x="12" y="20" font-family="Arial,sans-serif" font-size="10" fill="#6B7280">New Clients</text>
+    <text x="12" y="40" font-family="Arial,sans-serif" font-size="20" font-weight="800" fill="#1F2937">240</text>
+    <rect x="85" y="10" width="26" height="16" rx="8" fill="#DBEAFE"/>
+    <text x="88" y="21" font-family="Arial,sans-serif" font-size="8" fill="#1D4ED8" font-weight="700">+28%</text>
+  </g>
+
+  <!-- Sparkles -->
+  <text x="490" y="68" font-size="22" fill="#F59E0B" opacity="0.8">✦</text>
+  <text x="460" y="52" font-size="12" fill="#FBBF24" opacity="0.6">★</text>
+  <text x="90" y="100" font-size="18" fill="#FBBF24" opacity="0.6">★</text>
+  <text x="120" y="80" font-size="10" fill="#F59E0B" opacity="0.5">✦</text>
+  <circle cx="430" cy="400" r="10" fill="#FDE68A" opacity="0.5"/>
+  <circle cx="80" cy="310" r="8" fill="#BFDBFE" opacity="0.5"/>
+
+  <!-- Label -->
+  <rect x="195" y="380" width="210" height="38" rx="19" fill="#F59E0B" opacity="0.9"/>
+  <text x="300" y="404" font-family="Arial,sans-serif" font-size="14" font-weight="700" fill="white" text-anchor="middle">Business &amp; Finance</text>
+</svg>

@@ -1,0 +1,229 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="900" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#EFF6FF"/>
+      <stop offset="50%" stop-color="#DBEAFE"/>
+      <stop offset="100%" stop-color="#BFDBFE"/>
+    </linearGradient>
+    <linearGradient id="cardGrad1" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="cardGrad2" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+    <linearGradient id="cardGrad3" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="laptopGrad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#1E40AF"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="screenGrad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#EFF6FF"/>
+      <stop offset="100%" stop-color="#DBEAFE"/>
+    </linearGradient>
+    <linearGradient id="skinGrad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#FDE68A"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#2563EB" flood-opacity="0.15"/>
+    </filter>
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#1D4ED8" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="400" fill="url(#bgGrad)" rx="0"/>
+
+  <!-- Decorative circles background -->
+  <circle cx="820" cy="60" r="90" fill="#BFDBFE" opacity="0.5"/>
+  <circle cx="80" cy="350" r="70" fill="#DBEAFE" opacity="0.5"/>
+  <circle cx="450" cy="380" r="50" fill="#BFDBFE" opacity="0.3"/>
+
+  <!-- Floating dots -->
+  <circle cx="30" cy="80" r="6" fill="#3B82F6" opacity="0.4"/>
+  <circle cx="60" cy="130" r="4" fill="#2563EB" opacity="0.3"/>
+  <circle cx="860" cy="300" r="8" fill="#3B82F6" opacity="0.3"/>
+  <circle cx="830" cy="350" r="5" fill="#2563EB" opacity="0.4"/>
+  <circle cx="400" cy="30" r="6" fill="#3B82F6" opacity="0.3"/>
+  <circle cx="430" cy="15" r="4" fill="#2563EB" opacity="0.25"/>
+
+  <!-- === LAPTOP === -->
+  <g filter="url(#shadow)">
+    <!-- Laptop screen back -->
+    <rect x="200" y="90" width="380" height="230" rx="14" fill="#1E3A8A"/>
+    <!-- Laptop screen bezel -->
+    <rect x="210" y="100" width="360" height="210" rx="10" fill="#1D4ED8"/>
+    <!-- Laptop screen content (light) -->
+    <rect x="218" y="108" width="344" height="194" rx="7" fill="url(#screenGrad)"/>
+
+    <!-- Screen content: mini course cards grid -->
+    <!-- Row 1 -->
+    <rect x="232" y="118" width="100" height="60" rx="6" fill="#2563EB"/>
+    <rect x="232" y="118" width="100" height="22" rx="6" fill="#1D4ED8"/>
+    <rect x="236" y="124" width="50" height="4" rx="2" fill="white" opacity="0.9"/>
+    <rect x="236" y="131" width="35" height="4" rx="2" fill="white" opacity="0.6"/>
+    <rect x="236" y="150" width="80" height="4" rx="2" fill="white" opacity="0.4"/>
+    <rect x="236" y="158" width="60" height="4" rx="2" fill="white" opacity="0.3"/>
+    <rect x="236" y="168" width="40" height="8" rx="4" fill="#93C5FD"/>
+
+    <rect x="344" y="118" width="100" height="60" rx="6" fill="#7C3AED"/>
+    <rect x="344" y="118" width="100" height="22" rx="6" fill="#6D28D9"/>
+    <rect x="348" y="124" width="50" height="4" rx="2" fill="white" opacity="0.9"/>
+    <rect x="348" y="131" width="35" height="4" rx="2" fill="white" opacity="0.6"/>
+    <rect x="348" y="150" width="80" height="4" rx="2" fill="white" opacity="0.4"/>
+    <rect x="348" y="158" width="60" height="4" rx="2" fill="white" opacity="0.3"/>
+    <rect x="348" y="168" width="40" height="8" rx="4" fill="#C4B5FD"/>
+
+    <rect x="456" y="118" width="92" height="60" rx="6" fill="#059669"/>
+    <rect x="456" y="118" width="92" height="22" rx="6" fill="#047857"/>
+    <rect x="460" y="124" width="50" height="4" rx="2" fill="white" opacity="0.9"/>
+    <rect x="460" y="131" width="35" height="4" rx="2" fill="white" opacity="0.6"/>
+    <rect x="460" y="150" width="72" height="4" rx="2" fill="white" opacity="0.4"/>
+    <rect x="460" y="158" width="52" height="4" rx="2" fill="white" opacity="0.3"/>
+    <rect x="460" y="168" width="40" height="8" rx="4" fill="#6EE7B7"/>
+
+    <!-- Row 2 -->
+    <rect x="232" y="192" width="316" height="40" rx="6" fill="white" opacity="0.6"/>
+    <rect x="242" y="200" width="80" height="6" rx="3" fill="#2563EB" opacity="0.7"/>
+    <rect x="242" y="212" width="120" height="4" rx="2" fill="#93C5FD" opacity="0.8"/>
+    <rect x="430" y="200" width="50" height="6" rx="3" fill="#10B981" opacity="0.7"/>
+    <rect x="490" y="198" width="50" height="10" rx="5" fill="#2563EB"/>
+    <rect x="492" y="200" width="46" height="6" rx="3" fill="#93C5FD" opacity="0.5"/>
+
+    <!-- Row 3: progress bar -->
+    <rect x="232" y="244" width="316" height="22" rx="5" fill="white" opacity="0.4"/>
+    <rect x="242" y="250" width="200" height="4" rx="2" fill="#BFDBFE"/>
+    <rect x="242" y="250" width="130" height="4" rx="2" fill="#2563EB"/>
+    <circle cx="372" cy="252" r="5" fill="#2563EB"/>
+    <rect x="242" y="258" width="60" height="3" rx="1.5" fill="#93C5FD" opacity="0.6"/>
+    <rect x="490" y="248" width="50" height="10" rx="5" fill="#DBEAFE"/>
+    <rect x="494" y="250" width="42" height="6" rx="3" fill="#93C5FD"/>
+
+    <!-- Laptop base -->
+    <rect x="180" y="320" width="420" height="18" rx="6" fill="#1E3A8A"/>
+    <rect x="330" y="336" width="120" height="10" rx="5" fill="#1D4ED8"/>
+  </g>
+
+  <!-- === FLOATING COURSE CARDS (left side) === -->
+
+  <!-- Card 1: Design -->
+  <g filter="url(#cardShadow)" transform="translate(28, 90)">
+    <rect width="148" height="90" rx="14" fill="white"/>
+    <rect width="148" height="34" rx="14" fill="#8B5CF6"/>
+    <rect y="20" width="148" height="14" fill="#8B5CF6"/>
+    <text x="10" y="22" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="white">🎨 Design</text>
+    <rect x="10" y="42" width="80" height="5" rx="2.5" fill="#6B7280"/>
+    <rect x="10" y="52" width="110" height="4" rx="2" fill="#D1D5DB"/>
+    <rect x="10" y="60" width="90" height="4" rx="2" fill="#D1D5DB"/>
+    <rect x="10" y="72" width="50" height="10" rx="5" fill="#EDE9FE"/>
+    <text x="13" y="80" font-family="Arial,sans-serif" font-size="8" fill="#7C3AED" font-weight="600">Enroll Now</text>
+    <rect x="110" y="72" width="28" height="10" rx="5" fill="#F3F4F6"/>
+    <text x="113" y="80" font-family="Arial,sans-serif" font-size="8" fill="#374151">4.9 ★</text>
+  </g>
+
+  <!-- Card 2: Coding -->
+  <g filter="url(#cardShadow)" transform="translate(28, 200)">
+    <rect width="148" height="90" rx="14" fill="white"/>
+    <rect width="148" height="34" rx="14" fill="#059669"/>
+    <rect y="20" width="148" height="14" fill="#059669"/>
+    <text x="10" y="22" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="white">💻 Coding</text>
+    <rect x="10" y="42" width="80" height="5" rx="2.5" fill="#6B7280"/>
+    <rect x="10" y="52" width="110" height="4" rx="2" fill="#D1D5DB"/>
+    <rect x="10" y="60" width="90" height="4" rx="2" fill="#D1D5DB"/>
+    <rect x="10" y="72" width="50" height="10" rx="5" fill="#D1FAE5"/>
+    <text x="13" y="80" font-family="Arial,sans-serif" font-size="8" fill="#065F46" font-weight="600">Enroll Now</text>
+    <rect x="110" y="72" width="28" height="10" rx="5" fill="#F3F4F6"/>
+    <text x="113" y="80" font-family="Arial,sans-serif" font-size="8" fill="#374151">4.8 ★</text>
+  </g>
+
+  <!-- Card 3: AI -->
+  <g filter="url(#cardShadow)" transform="translate(28, 310)">
+    <rect width="148" height="66" rx="14" fill="white"/>
+    <rect width="148" height="30" rx="14" fill="#2563EB"/>
+    <rect y="16" width="148" height="14" fill="#2563EB"/>
+    <text x="10" y="20" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="white">🤖 AI &amp; ML</text>
+    <rect x="10" y="38" width="80" height="5" rx="2.5" fill="#6B7280"/>
+    <rect x="10" y="48" width="110" height="4" rx="2" fill="#D1D5DB"/>
+    <rect x="10" y="56" width="50" height="7" rx="3.5" fill="#DBEAFE"/>
+    <text x="13" y="62" font-family="Arial,sans-serif" font-size="7.5" fill="#1D4ED8" font-weight="600">Enroll Now</text>
+  </g>
+
+  <!-- === STUDENT CHARACTER (right side) === -->
+  <g transform="translate(680, 50)">
+    <!-- Chair/seat suggestion -->
+    <ellipse cx="100" cy="345" rx="70" ry="12" fill="#BFDBFE" opacity="0.5"/>
+
+    <!-- Body: shirt -->
+    <rect x="62" y="210" width="76" height="110" rx="20" fill="#2563EB"/>
+    <!-- Collar -->
+    <path d="M 90 210 Q 100 225 110 210" stroke="white" stroke-width="2" fill="none"/>
+
+    <!-- Left arm (pointing/leaning toward laptop side) -->
+    <rect x="30" y="215" width="38" height="22" rx="11" fill="#2563EB" transform="rotate(-20, 50, 220)"/>
+    <!-- Left hand -->
+    <ellipse cx="22" cy="240" rx="12" ry="10" fill="#FDE68A" transform="rotate(-20,22,240)"/>
+
+    <!-- Right arm (resting) -->
+    <rect x="132" y="215" width="38" height="22" rx="11" fill="#2563EB" transform="rotate(15, 150, 220)"/>
+    <!-- Right hand -->
+    <ellipse cx="174" cy="240" rx="12" ry="10" fill="#FDE68A" transform="rotate(15,174,240)"/>
+
+    <!-- Neck -->
+    <rect x="90" y="190" width="22" height="25" rx="8" fill="#FDE68A"/>
+
+    <!-- Head -->
+    <ellipse cx="101" cy="165" rx="45" ry="48" fill="#FDE68A"/>
+
+    <!-- Hair -->
+    <path d="M 58 148 Q 65 100 101 108 Q 137 100 144 148 Q 130 125 101 128 Q 72 125 58 148 Z" fill="#1F2937"/>
+    <!-- Side hair -->
+    <path d="M 58 148 Q 54 165 60 180" stroke="#1F2937" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+    <!-- Eyes (looking left toward laptop) -->
+    <ellipse cx="86" cy="162" rx="8" ry="9" fill="white"/>
+    <ellipse cx="116" cy="162" rx="8" ry="9" fill="white"/>
+    <!-- Pupils shifted left -->
+    <circle cx="83" cy="163" r="5" fill="#1F2937"/>
+    <circle cx="113" cy="163" r="5" fill="#1F2937"/>
+    <!-- Eye shine -->
+    <circle cx="82" cy="161" r="2" fill="white"/>
+    <circle cx="112" cy="161" r="2" fill="white"/>
+
+    <!-- Eyebrows (engaged/interested look) -->
+    <path d="M 78 150 Q 86 146 94 150" stroke="#1F2937" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M 108 150 Q 116 146 124 150" stroke="#1F2937" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+    <!-- Nose -->
+    <ellipse cx="101" cy="174" rx="4" ry="3" fill="#F59E0B" opacity="0.5"/>
+
+    <!-- Smile -->
+    <path d="M 88 185 Q 101 196 114 185" stroke="#92400E" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+    <!-- Cheeks -->
+    <ellipse cx="72" cy="180" rx="10" ry="7" fill="#FCA5A5" opacity="0.4"/>
+    <ellipse cx="130" cy="180" rx="10" ry="7" fill="#FCA5A5" opacity="0.4"/>
+
+    <!-- Legs -->
+    <rect x="72" y="315" width="26" height="50" rx="13" fill="#374151"/>
+    <rect x="104" y="315" width="26" height="50" rx="13" fill="#374151"/>
+    <!-- Shoes -->
+    <ellipse cx="85" cy="362" rx="16" ry="10" fill="#1F2937"/>
+    <ellipse cx="117" cy="362" rx="16" ry="10" fill="#1F2937"/>
+
+    <!-- Floating sparkles near student -->
+    <text x="150" y="120" font-size="20" fill="#FBBF24">✦</text>
+    <text x="20" y="120" font-size="14" fill="#93C5FD">✦</text>
+    <text x="170" y="200" font-size="10" fill="#A78BFA">●</text>
+  </g>
+
+  <!-- Stars / sparkles scattered -->
+  <text x="620" y="70" font-size="18" fill="#FBBF24" opacity="0.8">★</text>
+  <text x="655" y="50" font-size="12" fill="#A78BFA" opacity="0.7">★</text>
+  <text x="170" y="380" font-size="14" fill="#FBBF24" opacity="0.6">★</text>
+</svg>

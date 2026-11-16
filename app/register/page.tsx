@@ -7,6 +7,7 @@ import { AuthService } from '@/services/authService'
 import { UserRole } from '@/types/database'
 import Link from 'next/link'
 import { Mail, Lock, User, UserPlus, ArrowRight, GraduationCap, Presentation, ShieldCheck, RefreshCw } from 'lucide-react'
+import { ImageSlot } from '@/components/ui/ImageSlot'
 
 export default function RegisterPage() {
   const [step, setStep] = useState(1) // 1: Register details, 2: Verification code
@@ -130,13 +131,18 @@ export default function RegisterPage() {
         {step === 1 ? (
           <>
             <div className="text-center">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-[2rem] mb-8 shadow-xl shadow-blue-500/30 transform hover:rotate-6 transition-transform duration-300">
-                <UserPlus size={40} />
+              <div className="w-48 mx-auto mb-4">
+                <ImageSlot
+                  src="/illustrations/auth-register.svg"
+                  alt="Bergabung dengan komunitas SkillSpace"
+                  aspectRatio="16/9"
+                  priority
+                />
               </div>
-              <h2 className="text-4xl font-black text-gray-900 tracking-tight mb-3">
+              <h2 className="text-3xl font-black text-gray-900 tracking-tight mb-2">
                 Bergabung Sekarang
               </h2>
-              <p className="text-gray-500 font-medium text-lg">
+              <p className="text-gray-600 font-medium text-sm">
                 Mulai perjalanan belajar atau mengajar Anda di SkillSpace.
               </p>
             </div>

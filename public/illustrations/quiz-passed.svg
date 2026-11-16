@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 440" fill="none">
+  <defs>
+    <linearGradient id="qp-bg" x1="0" y1="0" x2="600" y2="440" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F0FDF4"/>
+      <stop offset="100%" stop-color="#DCFCE7"/>
+    </linearGradient>
+    <linearGradient id="qp-green" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22C55E"/>
+      <stop offset="100%" stop-color="#16A34A"/>
+    </linearGradient>
+    <linearGradient id="qp-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+    <filter id="qp-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#16A34A" flood-opacity="0.18"/>
+    </filter>
+    <filter id="qp-sm" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="7" flood-color="#000" flood-opacity="0.09"/>
+    </filter>
+  </defs>
+
+  <rect width="600" height="440" rx="24" fill="url(#qp-bg)"/>
+  <circle cx="80" cy="80" r="80" fill="#86EFAC" opacity="0.35"/>
+  <circle cx="540" cy="380" r="90" fill="#4ADE80" opacity="0.2"/>
+
+  <!-- Confetti dots -->
+  <circle cx="120" cy="140" r="6" fill="#FBBF24"/>
+  <circle cx="490" cy="100" r="5" fill="#3B82F6"/>
+  <circle cx="60" cy="300" r="4" fill="#EC4899"/>
+  <circle cx="550" cy="200" r="6" fill="#FBBF24"/>
+  <circle cx="400" cy="40" r="5" fill="#22C55E"/>
+  <circle cx="160" cy="400" r="4" fill="#A78BFA"/>
+  <circle cx="520" cy="310" r="5" fill="#F97316"/>
+  <rect x="440" y="60" width="8" height="8" rx="2" fill="#EC4899" transform="rotate(30 444 64)"/>
+  <rect x="100" y="380" width="8" height="8" rx="2" fill="#3B82F6" transform="rotate(-20 104 384)"/>
+  <rect x="560" y="140" width="6" height="6" rx="1" fill="#FBBF24" transform="rotate(45 563 143)"/>
+
+  <!-- Trophy / celebration illustration -->
+  <g transform="translate(185, 50)" filter="url(#qp-shadow)">
+    <!-- Trophy cup -->
+    <path d="M 115 20 L 115 20 Q 60 20 60 80 Q 60 140 115 155 Q 170 140 170 80 Q 170 20 115 20 Z" fill="url(#qp-gold)"/>
+    <!-- Trophy handles -->
+    <path d="M 60 50 Q 25 50 25 90 Q 25 120 60 110" stroke="#F59E0B" stroke-width="16" fill="none" stroke-linecap="round"/>
+    <path d="M 170 50 Q 205 50 205 90 Q 205 120 170 110" stroke="#F59E0B" stroke-width="16" fill="none" stroke-linecap="round"/>
+    <!-- Trophy stem -->
+    <rect x="100" y="155" width="30" height="40" rx="4" fill="#F59E0B"/>
+    <!-- Trophy base -->
+    <rect x="70" y="195" width="90" height="20" rx="10" fill="#F59E0B"/>
+    <!-- Star in trophy -->
+    <path d="M 115 65 L 123 86 L 146 86 L 128 99 L 135 120 L 115 107 L 95 120 L 102 99 L 84 86 L 107 86 Z" fill="#FFFFFF" opacity="0.9"/>
+  </g>
+
+  <!-- Score badge -->
+  <g transform="translate(390, 80)" filter="url(#qp-sm)">
+    <rect width="150" height="90" rx="20" fill="#FFFFFF"/>
+    <text x="75" y="30" font-family="sans-serif" font-size="11" font-weight="bold" fill="#16A34A" text-anchor="middle">YOUR SCORE</text>
+    <text x="75" y="68" font-family="sans-serif" font-size="38" font-weight="bold" fill="#15803D" text-anchor="middle">92%</text>
+    <text x="75" y="84" font-family="sans-serif" font-size="10" fill="#86EFAC" text-anchor="middle">Excellent!</text>
+  </g>
+
+  <!-- Success banner -->
+  <g transform="translate(60, 310)" filter="url(#qp-sm)">
+    <rect width="480" height="88" rx="20" fill="#FFFFFF"/>
+    <!-- Green check circle -->
+    <circle cx="52" cy="44" r="28" fill="url(#qp-green)"/>
+    <path d="M 40 44 L 50 54 L 68 36" stroke="#FFFFFF" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Text -->
+    <text x="96" y="36" font-family="sans-serif" font-size="17" font-weight="bold" fill="#0F172A">Quiz Passed! 🎉</text>
+    <text x="96" y="56" font-family="sans-serif" font-size="12" fill="#64748B">You cleared this lesson. Ready for the next one?</text>
+    <!-- Next button -->
+    <rect x="316" y="58" width="140" height="20" rx="8" fill="url(#qp-green)"/>
+    <text x="386" y="72" font-family="sans-serif" font-size="10" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Next Lesson →</text>
+  </g>
+</svg>

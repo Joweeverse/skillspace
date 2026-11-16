@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 440" fill="none">
+  <defs>
+    <linearGradient id="qr-bg" x1="0" y1="0" x2="600" y2="440" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#EFF6FF"/>
+      <stop offset="100%" stop-color="#DBEAFE"/>
+    </linearGradient>
+    <linearGradient id="qr-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <filter id="qr-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#1E3A8A" flood-opacity="0.14"/>
+    </filter>
+    <filter id="qr-sm" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#000" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <rect width="600" height="440" rx="24" fill="url(#qr-bg)"/>
+  <circle cx="520" cy="80" r="80" fill="#93C5FD" opacity="0.3"/>
+  <circle cx="80" cy="380" r="60" fill="#60A5FA" opacity="0.2"/>
+
+  <!-- Ready badge at top -->
+  <g transform="translate(210, 24)" filter="url(#qr-sm)">
+    <rect width="180" height="40" rx="20" fill="url(#qr-blue)"/>
+    <circle cx="22" cy="20" r="10" fill="#FFFFFF" opacity="0.3"/>
+    <text x="22" y="24" font-family="sans-serif" font-size="14" text-anchor="middle">⚡</text>
+    <text x="96" y="25" font-family="sans-serif" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Quiz Ready!</text>
+  </g>
+
+  <!-- Quiz card mockup -->
+  <g transform="translate(70, 76)" filter="url(#qr-shadow)">
+    <rect width="460" height="300" rx="20" fill="#FFFFFF"/>
+    <!-- Progress bar at top -->
+    <rect width="460" height="6" rx="3" fill="#E2E8F0"/>
+    <rect width="230" height="6" rx="3" fill="url(#qr-blue)"/>
+    <!-- Question label -->
+    <text x="24" y="38" font-family="sans-serif" font-size="11" font-weight="bold" fill="#2563EB">QUESTION 1 OF 4</text>
+    <!-- Question text -->
+    <rect x="24" y="52" width="400" height="14" rx="7" fill="#1E293B"/>
+    <rect x="24" y="74" width="300" height="10" rx="5" fill="#94A3B8"/>
+
+    <!-- Answer options -->
+    <rect x="24" y="104" width="412" height="44" rx="12" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+    <circle cx="52" cy="126" r="12" fill="#2563EB"/>
+    <text x="52" y="130" font-family="sans-serif" font-size="11" font-weight="bold" fill="#FFFFFF" text-anchor="middle">A</text>
+    <rect x="76" y="121" width="200" height="10" rx="5" fill="#1E293B"/>
+
+    <rect x="24" y="158" width="412" height="44" rx="12" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="2"/>
+    <circle cx="52" cy="180" r="12" fill="#E2E8F0"/>
+    <text x="52" y="184" font-family="sans-serif" font-size="11" font-weight="bold" fill="#94A3B8" text-anchor="middle">B</text>
+    <rect x="76" y="175" width="180" height="10" rx="5" fill="#CBD5E1"/>
+
+    <rect x="24" y="212" width="412" height="44" rx="12" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="2"/>
+    <circle cx="52" cy="234" r="12" fill="#E2E8F0"/>
+    <text x="52" y="238" font-family="sans-serif" font-size="11" font-weight="bold" fill="#94A3B8" text-anchor="middle">C</text>
+    <rect x="76" y="229" width="220" height="10" rx="5" fill="#CBD5E1"/>
+
+    <!-- Next button -->
+    <rect x="334" y="262" width="102" height="28" rx="12" fill="url(#qr-blue)"/>
+    <text x="385" y="281" font-family="sans-serif" font-size="11" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Next →</text>
+  </g>
+
+  <!-- Sparkle accents -->
+  <circle cx="66" cy="100" r="5" fill="#3B82F6" opacity="0.5"/>
+  <circle cx="548" cy="300" r="6" fill="#60A5FA" opacity="0.4"/>
+  <circle cx="540" cy="160" r="4" fill="#93C5FD" opacity="0.6"/>
+  <path d="M 530 200 L 536 190 L 542 200 L 536 210 Z" fill="#FBBF24" opacity="0.7"/>
+
+  <!-- Call-to-action text -->
+  <text x="300" y="406" font-family="sans-serif" font-size="14" font-weight="bold" fill="#2563EB" text-anchor="middle">Test your understanding — take the quiz</text>
+  <text x="300" y="426" font-family="sans-serif" font-size="12" fill="#64748B" text-anchor="middle">Score ≥ 50% to mark this lesson complete</text>
+</svg>

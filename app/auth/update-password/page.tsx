@@ -1,10 +1,11 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { AuthService } from '@/services/authService'
 import { useRouter } from 'next/navigation'
 import { Lock, CheckCircle, AlertCircle } from 'lucide-react'
+import { ImageSlot } from '@/components/ui/ImageSlot'
 
 export default function UpdatePasswordPage() {
   const [password, setPassword] = useState('')
@@ -41,13 +42,18 @@ export default function UpdatePasswordPage() {
     <div className="min-h-[80vh] flex items-center justify-center bg-gray-50/50 py-16 px-4">
       <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-[2.5rem] shadow-2xl shadow-blue-500/5 border border-gray-100">
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl mb-6">
-            <Lock size={32} />
+          <div className="w-44 mx-auto mb-3">
+            <ImageSlot
+              src="/illustrations/auth-password.svg"
+              alt="Atur ulang kata sandi"
+              aspectRatio="16/9"
+              priority
+            />
           </div>
-          <h2 className="text-3xl font-black text-gray-900 tracking-tight mb-3">
+          <h2 className="text-2xl font-black text-gray-900 tracking-tight mb-2">
             Atur Ulang Kata Sandi
           </h2>
-          <p className="text-gray-500 font-medium">
+          <p className="text-gray-600 font-medium text-sm">
             Masukkan kata sandi baru Anda di bawah ini.
           </p>
         </div>

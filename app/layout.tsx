@@ -1,17 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/ui/Navbar";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { ToastProvider } from "@/components/ui/Toast";
+import { ThemeProvider } from "@/components/ui/ThemeProvider";
 
 export const metadata: Metadata = {
   title: "SkillSpace - Learning Platform",
@@ -26,18 +17,29 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className="h-full antialiased"
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-gray-50">
-        <Navbar />
-        <main className="flex-grow">
-          {children}
-        </main>
-        <footer className="bg-white border-t border-gray-200 py-8">
-          <div className="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
-            &copy; <span suppressHydrationWarning>{new Date().getFullYear()}</span> SkillSpace Learning Platform. All rights reserved.
-          </div>
-        </footer>
+      <body className="min-h-full flex flex-col bg-gray-50 text-gray-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange={false}
+          storageKey="skillspace-theme"
+        >
+          <ToastProvider>
+            <Navbar />
+            <main className="flex-grow">
+              {children}
+            </main>
+            <footer className="bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 py-8 transition-colors duration-200">
+              <div className="max-w-7xl mx-auto px-4 text-center text-gray-500 dark:text-slate-400 text-sm">
+                &copy; <span suppressHydrationWarning>{new Date().getFullYear()}</span> SkillSpace Learning Platform. All rights reserved.
+              </div>
+            </footer>
+          </ToastProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

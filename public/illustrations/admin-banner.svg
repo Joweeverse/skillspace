@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" fill="none">
+  <!-- Background gradient banner -->
+  <rect width="600" height="200" rx="24" fill="#EFF6FF"/>
+  <rect width="600" height="200" rx="24" fill="url(#admin-grad)" opacity="0.6"/>
+  <defs>
+    <linearGradient id="admin-grad" x1="0" y1="0" x2="600" y2="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2563EB" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#4F46E5" stop-opacity="0.08"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Left: Admin shield & checkmark -->
+  <circle cx="100" cy="100" r="50" fill="#DBEAFE"/>
+  <path d="M100 66 L130 80 V110 C130 130 100 144 100 144 C100 144 70 130 70 110 V80 Z" fill="#2563EB"/>
+  <path d="M88 102 L96 110 L114 92" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Center-right: Verification checklist cards -->
+  <rect x="180" y="50" width="220" height="32" rx="10" fill="white" stroke="#BFDBFE" stroke-width="1.5"/>
+  <circle cx="200" cy="66" r="8" fill="#10B981"/>
+  <path d="M197 66 L199 68 L203 64" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <rect x="216" y="62" width="100" height="8" rx="4" fill="#E2E8F0"/>
+  <rect x="330" y="62" width="50" height="8" rx="4" fill="#DBEAFE"/>
+
+  <rect x="180" y="92" width="220" height="32" rx="10" fill="white" stroke="#BFDBFE" stroke-width="1.5"/>
+  <circle cx="200" cy="108" r="8" fill="#F59E0B"/>
+  <rect x="196" y="107" width="8" height="2" rx="1" fill="white"/>
+  <rect x="216" y="104" width="120" height="8" rx="4" fill="#E2E8F0"/>
+
+  <rect x="180" y="134" width="220" height="32" rx="10" fill="white" stroke="#BFDBFE" stroke-width="1.5"/>
+  <circle cx="200" cy="150" r="8" fill="#10B981"/>
+  <path d="M197 150 L199 152 L203 148" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <rect x="216" y="146" width="90" height="8" rx="4" fill="#E2E8F0"/>
+
+  <!-- Right: decorative sparkles & badge -->
+  <circle cx="480" cy="100" r="38" fill="#FEF3C7"/>
+  <text x="480" y="108" text-anchor="middle" font-size="28">🛡️</text>
+  <text x="540" y="70" font-size="14" fill="#FBBF24">✦</text>
+  <text x="440" y="60" font-size="12" fill="#93C5FD">✦</text>
+  <text x="530" y="150" font-size="16" fill="#60A5FA">✦</text>
+</svg>

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 320" fill="none">
+  <!-- Background -->
+  <circle cx="460" cy="80" r="100" fill="#EFF6FF" opacity="0.7"/>
+  <circle cx="100" cy="250" r="70" fill="#EFF6FF" opacity="0.5"/>
+
+  <!-- Whiteboard / presentation board -->
+  <rect x="100" y="80" width="260" height="180" rx="16" fill="white" stroke="#DBEAFE" stroke-width="3"/>
+  <rect x="100" y="80" width="260" height="32" rx="16" fill="#2563EB"/>
+  <rect x="100" y="96" width="260" height="16" fill="#2563EB"/>
+  <!-- Board content - bar chart -->
+  <rect x="136" y="184" width="28" height="56" rx="4" fill="#DBEAFE"/>
+  <rect x="176" y="156" width="28" height="84" rx="4" fill="#93C5FD"/>
+  <rect x="216" y="136" width="28" height="104" rx="4" fill="#3B82F6"/>
+  <rect x="256" y="152" width="28" height="88" rx="4" fill="#60A5FA"/>
+  <rect x="296" y="168" width="28" height="72" rx="4" fill="#BFDBFE"/>
+  <!-- Chart baseline -->
+  <rect x="128" y="240" width="216" height="3" rx="1.5" fill="#E2E8F0"/>
+  <!-- Board title -->
+  <text x="230" y="104" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Kursus Saya</text>
+
+  <!-- Mentor character -->
+  <!-- Body -->
+  <rect x="388" y="170" width="56" height="80" rx="28" fill="#A78BFA"/>
+  <!-- Shirt/jacket -->
+  <rect x="380" y="210" width="72" height="60" rx="18" fill="#4F46E5"/>
+  <!-- Head -->
+  <circle cx="416" cy="148" r="32" fill="#FBBF24"/>
+  <!-- Hair -->
+  <path d="M388 134 Q416 110 444 134" stroke="#6B4226" stroke-width="10" fill="none" stroke-linecap="round"/>
+  <!-- Eyes -->
+  <circle cx="406" cy="146" r="4" fill="#1E40AF"/>
+  <circle cx="427" cy="146" r="4" fill="#1E40AF"/>
+  <!-- Smile -->
+  <path d="M408 160 Q416 168 424 160" stroke="#6B4226" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- Pointer arm toward board -->
+  <path d="M382 220 Q350 210 320 220" stroke="#FBBF24" stroke-width="13" stroke-linecap="round" fill="none"/>
+  <circle cx="314" cy="222" r="9" fill="#FBBF24"/>
+
+  <!-- Points badge floating -->
+  <rect x="434" y="90" width="88" height="36" rx="18" fill="#FBBF24"/>
+  <text x="478" y="113" text-anchor="middle" font-size="12" font-weight="bold" fill="#92400E">✦ 240 Poin</text>
+
+  <!-- Sparkles -->
+  <text x="96" y="120" font-size="16" fill="#93C5FD">✦</text>
+  <text x="468" y="260" font-size="12" fill="#A78BFA">✦</text>
+  <text x="468" y="150" font-size="10" fill="#2563EB">✦</text>
+</svg>

@@ -1,0 +1,182 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="600" y2="450" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="60%" stop-color="#1E3A8A"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="editorGrad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#1E293B"/>
+    </linearGradient>
+    <linearGradient id="termGrad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#0A0E1A"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+    <linearGradient id="bracketGrad" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#34D399"/>
+    </linearGradient>
+    <filter id="editorShadow">
+      <feDropShadow dx="0" dy="12" stdDeviation="24" flood-color="#10B981" flood-opacity="0.15"/>
+    </filter>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="450" fill="url(#bgGrad)"/>
+
+  <!-- Background glow circles -->
+  <circle cx="500" cy="80" r="120" fill="#10B981" opacity="0.06"/>
+  <circle cx="100" cy="380" r="100" fill="#2563EB" opacity="0.12"/>
+  <circle cx="300" cy="420" r="80" fill="#10B981" opacity="0.06"/>
+
+  <!-- Decorative grid dots -->
+  <circle cx="50" cy="50" r="2" fill="#10B981" opacity="0.3"/>
+  <circle cx="100" cy="50" r="2" fill="#10B981" opacity="0.2"/>
+  <circle cx="150" cy="50" r="2" fill="#10B981" opacity="0.3"/>
+  <circle cx="50" cy="100" r="2" fill="#10B981" opacity="0.2"/>
+  <circle cx="100" cy="100" r="2" fill="#10B981" opacity="0.15"/>
+  <circle cx="550" cy="400" r="2" fill="#10B981" opacity="0.3"/>
+  <circle cx="500" cy="400" r="2" fill="#10B981" opacity="0.2"/>
+
+  <!-- === MAIN CODE EDITOR WINDOW === -->
+  <g filter="url(#editorShadow)">
+    <rect x="80" y="60" width="400" height="260" rx="12" fill="url(#editorGrad)" stroke="#1E40AF" stroke-width="1.5"/>
+
+    <!-- Title bar -->
+    <rect x="80" y="60" width="400" height="32" rx="12" fill="#0F172A"/>
+    <rect x="80" y="78" width="400" height="14" fill="#0F172A"/>
+    <!-- Window buttons -->
+    <circle cx="102" cy="76" r="6" fill="#EF4444" opacity="0.8"/>
+    <circle cx="122" cy="76" r="6" fill="#FBBF24" opacity="0.8"/>
+    <circle cx="142" cy="76" r="6" fill="#10B981" opacity="0.8"/>
+    <!-- File tab -->
+    <rect x="168" y="66" width="80" height="20" rx="4" fill="#1E293B"/>
+    <text x="178" y="80" font-family="monospace" font-size="9" fill="#94A3B8">index.js</text>
+    <rect x="254" y="66" width="70" height="20" rx="4" fill="#0F172A" opacity="0.5"/>
+    <text x="264" y="80" font-family="monospace" font-size="9" fill="#475569">utils.js</text>
+
+    <!-- Line numbers column -->
+    <rect x="80" y="92" width="36" height="228" fill="#0A0E1A" opacity="0.6"/>
+
+    <!-- Code lines -->
+    <!-- Line 1 -->
+    <text x="88" y="112" font-family="monospace" font-size="9" fill="#475569">01</text>
+    <text x="124" y="112" font-family="monospace" font-size="10" fill="#7C3AED">const</text>
+    <text x="162" y="112" font-family="monospace" font-size="10" fill="#38BDF8">greet</text>
+    <text x="202" y="112" font-family="monospace" font-size="10" fill="#94A3B8">=</text>
+    <text x="214" y="112" font-family="monospace" font-size="10" fill="#7C3AED">(</text>
+    <text x="222" y="112" font-family="monospace" font-size="10" fill="#FB923C">name</text>
+    <text x="258" y="112" font-family="monospace" font-size="10" fill="#7C3AED">)</text>
+    <text x="266" y="112" font-family="monospace" font-size="10" fill="#94A3B8">=&gt;</text>
+    <text x="286" y="112" font-family="monospace" font-size="10" fill="#7C3AED">{</text>
+
+    <!-- Line 2 -->
+    <text x="88" y="130" font-family="monospace" font-size="9" fill="#475569">02</text>
+    <text x="140" y="130" font-family="monospace" font-size="10" fill="#7C3AED">return</text>
+    <text x="186" y="130" font-family="monospace" font-size="10" fill="#10B981">`Hello,</text>
+    <text x="236" y="130" font-family="monospace" font-size="10" fill="#34D399">${name}</text>
+    <text x="284" y="130" font-family="monospace" font-size="10" fill="#10B981">!`</text>
+    <text x="302" y="130" font-family="monospace" font-size="10" fill="#94A3B8">;</text>
+
+    <!-- Line 3 -->
+    <text x="88" y="148" font-family="monospace" font-size="9" fill="#475569">03</text>
+    <text x="124" y="148" font-family="monospace" font-size="10" fill="#7C3AED">}</text>
+    <text x="132" y="148" font-family="monospace" font-size="10" fill="#94A3B8">;</text>
+
+    <!-- Line 4 (blank) -->
+    <text x="88" y="166" font-family="monospace" font-size="9" fill="#334155">04</text>
+
+    <!-- Line 5 -->
+    <text x="88" y="184" font-family="monospace" font-size="9" fill="#475569">05</text>
+    <text x="124" y="184" font-family="monospace" font-size="10" fill="#7C3AED">function</text>
+    <text x="182" y="184" font-family="monospace" font-size="10" fill="#38BDF8">buildApp</text>
+    <text x="244" y="184" font-family="monospace" font-size="10" fill="#94A3B8">(</text>
+    <text x="252" y="184" font-family="monospace" font-size="10" fill="#FB923C">config</text>
+    <text x="294" y="184" font-family="monospace" font-size="10" fill="#94A3B8">) {</text>
+
+    <!-- Line 6 -->
+    <text x="88" y="202" font-family="monospace" font-size="9" fill="#475569">06</text>
+    <!-- Active line highlight -->
+    <rect x="116" y="193" width="344" height="14" rx="2" fill="#10B981" opacity="0.08"/>
+    <text x="140" y="204" font-family="monospace" font-size="10" fill="#7C3AED">const</text>
+    <text x="178" y="204" font-family="monospace" font-size="10" fill="#38BDF8">result</text>
+    <text x="218" y="204" font-family="monospace" font-size="10" fill="#94A3B8">=</text>
+    <text x="230" y="204" font-family="monospace" font-size="10" fill="#38BDF8">process</text>
+    <text x="284" y="204" font-family="monospace" font-size="10" fill="#94A3B8">(</text>
+    <text x="292" y="204" font-family="monospace" font-size="10" fill="#FB923C">config</text>
+    <text x="334" y="204" font-family="monospace" font-size="10" fill="#94A3B8">);</text>
+    <!-- Cursor -->
+    <rect x="354" y="195" width="2" height="12" rx="1" fill="#10B981" opacity="0.9"/>
+
+    <!-- Line 7 -->
+    <text x="88" y="222" font-family="monospace" font-size="9" fill="#475569">07</text>
+    <text x="140" y="222" font-family="monospace" font-size="10" fill="#7C3AED">return</text>
+    <text x="186" y="222" font-family="monospace" font-size="10" fill="#38BDF8">result</text>
+    <text x="222" y="222" font-family="monospace" font-size="10" fill="#94A3B8">;</text>
+
+    <!-- Line 8 -->
+    <text x="88" y="240" font-family="monospace" font-size="9" fill="#475569">08</text>
+    <text x="124" y="240" font-family="monospace" font-size="10" fill="#94A3B8">}</text>
+
+    <!-- Bottom: status bar -->
+    <rect x="80" y="307" width="400" height="13" rx="0" fill="#1D4ED8" opacity="0.5"/>
+    <text x="88" y="317" font-family="monospace" font-size="8" fill="#93C5FD">JavaScript  UTF-8  Ln 6, Col 32  ✓</text>
+  </g>
+
+  <!-- === TERMINAL WINDOW === -->
+  <g filter="url(#editorShadow)" transform="translate(360, 220)">
+    <rect x="0" y="0" width="200" height="130" rx="10" fill="url(#termGrad)" stroke="#10B981" stroke-width="1" opacity="0.8"/>
+    <!-- Terminal header -->
+    <rect x="0" y="0" width="200" height="26" rx="10" fill="#0A0E1A"/>
+    <rect x="0" y="14" width="200" height="12" fill="#0A0E1A"/>
+    <circle cx="16" cy="13" r="5" fill="#EF4444" opacity="0.8"/>
+    <circle cx="30" cy="13" r="5" fill="#FBBF24" opacity="0.8"/>
+    <circle cx="44" cy="13" r="5" fill="#10B981" opacity="0.8"/>
+    <text x="70" y="17" font-family="monospace" font-size="8" fill="#475569">Terminal</text>
+    <!-- Terminal lines -->
+    <text x="12" y="44" font-family="monospace" font-size="9" fill="#10B981">$</text>
+    <text x="22" y="44" font-family="monospace" font-size="9" fill="#E2E8F0">npm run dev</text>
+    <text x="12" y="58" font-family="monospace" font-size="9" fill="#34D399">✓</text>
+    <text x="22" y="58" font-family="monospace" font-size="9" fill="#64748B">Compiled successfully</text>
+    <text x="12" y="72" font-family="monospace" font-size="9" fill="#64748B">  Local: http://localhost:3000</text>
+    <text x="12" y="86" font-family="monospace" font-size="9" fill="#64748B">  Network: http://192.168.1.1</text>
+    <text x="12" y="100" font-family="monospace" font-size="9" fill="#10B981">$</text>
+    <text x="22" y="100" font-family="monospace" font-size="9" fill="#E2E8F0">node test.js</text>
+    <text x="12" y="114" font-family="monospace" font-size="9" fill="#34D399">Hello, SkillSpace!</text>
+    <!-- Blinking cursor -->
+    <rect x="12" y="122" width="7" height="9" rx="1" fill="#10B981" opacity="0.8"/>
+  </g>
+
+  <!-- === BIG &lt;/&gt; brackets === -->
+  <g filter="url(#glow)" opacity="0.8">
+    <text x="30" y="310" font-family="monospace" font-size="80" font-weight="900" fill="url(#bracketGrad)" opacity="0.15">&lt;/&gt;</text>
+  </g>
+
+  <!-- Floating code snippets -->
+  <g transform="translate(490, 50)" opacity="0.7">
+    <rect x="0" y="0" width="80" height="40" rx="8" fill="#0F172A" stroke="#10B981" stroke-width="1"/>
+    <text x="8" y="14" font-family="monospace" font-size="8" fill="#10B981">if (learn)</text>
+    <text x="8" y="26" font-family="monospace" font-size="8" fill="#38BDF8">  success();</text>
+    <text x="8" y="38" font-family="monospace" font-size="8" fill="#7C3AED">}</text>
+  </g>
+
+  <g transform="translate(30, 140)" opacity="0.6">
+    <rect x="0" y="0" width="40" height="30" rx="6" fill="#0F172A" stroke="#1E40AF" stroke-width="1"/>
+    <text x="6" y="13" font-family="monospace" font-size="8" fill="#38BDF8">[ ]</text>
+    <text x="6" y="25" font-family="monospace" font-size="8" fill="#94A3B8">{ }</text>
+  </g>
+
+  <!-- Orbiting dots -->
+  <circle cx="510" cy="170" r="8" fill="#10B981" opacity="0.5"/>
+  <circle cx="530" cy="190" r="5" fill="#34D399" opacity="0.4"/>
+  <circle cx="60" cy="390" r="7" fill="#10B981" opacity="0.4"/>
+
+  <!-- Label -->
+  <rect x="190" y="385" width="220" height="38" rx="19" fill="#10B981" opacity="0.9"/>
+  <text x="300" y="409" font-family="Arial,sans-serif" font-size="14" font-weight="700" fill="white" text-anchor="middle">Programming &amp; Dev</text>
+</svg>

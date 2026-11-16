@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 280" fill="none">
+  <!-- Certificate background -->
+  <rect width="400" height="280" rx="16" fill="white"/>
+  <rect width="400" height="280" rx="16" fill="none" stroke="#2563EB" stroke-width="3" opacity="0.2"/>
+  <!-- Inner border -->
+  <rect x="12" y="12" width="376" height="256" rx="10" fill="none" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="6 3" opacity="0.3"/>
+
+  <!-- Top ornamental band -->
+  <rect x="0" y="0" width="400" height="48" rx="16" fill="#1E40AF"/>
+  <rect x="0" y="32" width="400" height="16" fill="#1E40AF"/>
+
+  <!-- Award icon -->
+  <circle cx="200" cy="88" r="28" fill="#FEF3C7" stroke="#FBBF24" stroke-width="2.5"/>
+  <text x="200" y="97" text-anchor="middle" font-size="22" fill="#D97706">🏆</text>
+
+  <!-- Certificate text -->
+  <text x="200" y="140" text-anchor="middle" font-size="18" font-weight="bold" fill="#1E40AF" letter-spacing="2">SERTIFIKAT</text>
+  <text x="200" y="160" text-anchor="middle" font-size="10" fill="#6B7280" letter-spacing="1">KELULUSAN</text>
+
+  <!-- Name line -->
+  <text x="200" y="192" text-anchor="middle" font-size="20" font-style="italic" fill="#1E293B" font-family="Georgia, serif">Nama Siswa</text>
+  <line x1="100" y1="200" x2="300" y2="200" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- Course name -->
+  <text x="200" y="220" text-anchor="middle" font-size="10" fill="#6B7280">Telah menyelesaikan kursus</text>
+  <text x="200" y="236" text-anchor="middle" font-size="12" font-weight="bold" fill="#1E40AF">"Nama Kursus"</text>
+
+  <!-- Bottom ornament -->
+  <rect x="0" y="260" width="400" height="20" rx="0" fill="#1E40AF" opacity="0.05"/>
+  <rect x="0" y="264" width="400" height="16" rx="16" fill="#1E40AF" opacity="0.08"/>
+
+  <!-- Signature lines -->
+  <line x1="60" y1="258" x2="140" y2="258" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="100" y="270" text-anchor="middle" font-size="7" fill="#9CA3AF">Mentor</text>
+  <line x1="260" y1="258" x2="340" y2="258" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="300" y="270" text-anchor="middle" font-size="7" fill="#9CA3AF">SkillSpace</text>
+
+  <!-- Sparkles on corners -->
+  <text x="30" y="40" font-size="14" fill="white" opacity="0.4">✦</text>
+  <text x="354" y="40" font-size="14" fill="white" opacity="0.4">✦</text>
+  <text x="20" y="270" font-size="12" fill="#BFDBFE">✦</text>
+  <text x="368" y="270" font-size="12" fill="#BFDBFE">✦</text>
+</svg>

@@ -27,6 +27,7 @@ export interface Course {
   title: string;
   mentor_id: string;
   category: string;
+  cover_url?: string;
   created_at?: string;
   profiles?: {
     full_name: string;

@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <defs>
+    <linearGradient id="hero-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EFF6FF"/>
+      <stop offset="50%" stop-color="#DBEAFE"/>
+      <stop offset="100%" stop-color="#BFDBFE"/>
+    </linearGradient>
+    <linearGradient id="primary-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="accent-yellow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#1E3A8A" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="800" height="500" rx="32" fill="url(#hero-bg)"/>
+
+  <!-- Decorative Background Elements -->
+  <circle cx="120" cy="90" r="70" fill="#93C5FD" opacity="0.3"/>
+  <circle cx="700" cy="400" r="100" fill="#60A5FA" opacity="0.2"/>
+  <path d="M0 400 C 200 350, 400 480, 800 420 L 800 500 L 0 500 Z" fill="#93C5FD" opacity="0.25"/>
+
+  <!-- Main Floating UI Workspace Card (Center-Left) -->
+  <g filter="url(#shadow)">
+    <rect x="60" y="80" width="340" height="230" rx="20" fill="#FFFFFF"/>
+    <!-- Card Header Bar -->
+    <rect x="60" y="80" width="340" height="44" rx="20" fill="#1E40AF"/>
+    <rect x="60" y="104" width="340" height="20" fill="#1E40AF"/>
+    <!-- Window controls -->
+    <circle cx="84" cy="102" r="5" fill="#EF4444"/>
+    <circle cx="98" cy="102" r="5" fill="#F59E0B"/>
+    <circle cx="112" cy="102" r="5" fill="#10B981"/>
+    <rect x="135" y="94" width="180" height="16" rx="8" fill="#3B82F6" opacity="0.4"/>
+
+    <!-- Player / Content inside Card -->
+    <rect x="80" y="140" width="170" height="100" rx="12" fill="#DBEAFE"/>
+    <polygon points="155,175 180,190 155,205" fill="#1D4ED8"/>
+    <!-- Text Lines -->
+    <rect x="265" y="142" width="115" height="12" rx="6" fill="#1E293B"/>
+    <rect x="265" y="162" width="90" height="8" rx="4" fill="#64748B"/>
+    <rect x="265" y="178" width="105" height="8" rx="4" fill="#94A3B8"/>
+
+    <!-- Active Badge -->
+    <rect x="265" y="200" width="85" height="24" rx="12" fill="url(#primary-grad)"/>
+    <text x="307" y="216" font-family="sans-serif" font-size="11" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Live Session</text>
+  </g>
+
+  <!-- Floating Achievement Badge -->
+  <g filter="url(#shadow)">
+    <rect x="80" y="330" width="220" height="70" rx="16" fill="#FFFFFF"/>
+    <circle cx="115" cy="365" r="20" fill="url(#accent-yellow)"/>
+    <!-- Star icon -->
+    <polygon points="115,353 118,361 126,361 120,366 122,374 115,369 108,374 110,366 104,361 112,361" fill="#FFFFFF"/>
+    <text x="145" y="360" font-family="sans-serif" font-size="13" font-weight="bold" fill="#0F172A">Course Progress</text>
+    <text x="145" y="378" font-family="sans-serif" font-size="12" font-weight="600" fill="#2563EB">95% Completed</text>
+  </g>
+
+  <!-- MENTOR CHARACTER (Right Side, gaze & gesture pointing LEFT toward CTA) -->
+  <g id="mentor-character">
+    <!-- Mentor Body / Outfit -->
+    <path d="M 470 480 C 470 380, 500 340, 540 330 C 560 325, 590 325, 610 330 C 650 340, 680 380, 680 480 Z" fill="#1E40AF"/>
+    <!-- Collar / Shirt Detail -->
+    <polygon points="560,330 575,370 590,330" fill="#FFFFFF"/>
+    <polygon points="570,370 580,370 575,440" fill="#2563EB"/>
+
+    <!-- Mentor Head & Face (Tilted facing Left) -->
+    <circle cx="575" cy="270" r="45" fill="#FBA585"/> <!-- Skin tone -->
+    <!-- Hair -->
+    <path d="M 530 260 C 530 215, 620 215, 620 260 C 610 230, 540 230, 530 260 Z" fill="#334155"/>
+    <path d="M 530 250 Q 550 220 590 225 Q 620 235 625 265 C 610 240, 550 235, 530 250 Z" fill="#1E293B"/>
+
+    <!-- Glasses -->
+    <rect x="545" y="255" width="24" height="16" rx="4" fill="none" stroke="#0F172A" stroke-width="3"/>
+    <rect x="575" y="255" width="24" height="16" rx="4" fill="none" stroke="#0F172A" stroke-width="3"/>
+    <line x1="569" y1="263" x2="575" y2="263" stroke="#0F172A" stroke-width="3"/>
+
+    <!-- Eyes looking Left -->
+    <circle cx="553" cy="263" r="3" fill="#0F172A"/>
+    <circle cx="583" cy="263" r="3" fill="#0F172A"/>
+
+    <!-- Friendly Smile -->
+    <path d="M 558 288 Q 568 298 578 288" stroke="#0F172A" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+    <!-- Extended Arm & Hand pointing LEFT toward CTA / Dashboard -->
+    <path d="M 510 360 Q 430 330 380 320" stroke="#1E40AF" stroke-width="26" stroke-linecap="round" fill="none"/>
+    <path d="M 510 360 Q 430 330 380 320" stroke="#FBA585" stroke-width="16" stroke-linecap="round" fill="none"/>
+    <!-- Hand / Pointing Finger pointing left -->
+    <circle cx="370" cy="320" r="12" fill="#FBA585"/>
+    <path d="M 370 320 L 340 315" stroke="#FBA585" stroke-width="8" stroke-linecap="round"/>
+  </g>
+
+  <!-- STUDENT CHARACTER (Far Right/Center, gaze & gesture pointing LEFT) -->
+  <g id="student-character">
+    <!-- Student Body -->
+    <path d="M 640 500 C 640 420, 670 390, 710 380 C 730 375, 750 375, 770 380 C 800 390, 820 420, 820 500 Z" fill="#2563EB"/>
+    <!-- Student Head -->
+    <circle cx="740" cy="320" r="38" fill="#F3A683"/>
+    <!-- Student Hair -->
+    <path d="M 700 320 C 700 270, 780 270, 780 320 Q 770 280, 740 280 Q 710 280 700 320 Z" fill="#475569"/>
+    <path d="M 700 320 Q 690 350 705 370" stroke="#475569" stroke-width="12" stroke-linecap="round" fill="none"/>
+
+    <!-- Eyes looking Left -->
+    <circle cx="722" cy="318" r="3" fill="#0F172A"/>
+    <circle cx="748" cy="318" r="3" fill="#0F172A"/>
+    <!-- Smile -->
+    <path d="M 726 338 Q 736 346 746 338" stroke="#0F172A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+    <!-- Student Holding Tablet/Laptop gestured toward Left -->
+    <rect x="630" y="380" width="100" height="70" rx="8" fill="#0F172A" transform="rotate(-12 680 415)" filter="url(#shadow)"/>
+    <rect x="636" y="386" width="88" height="58" rx="4" fill="#38BDF8" transform="rotate(-12 680 415)"/>
+
+    <!-- Arm holding tablet pointing left -->
+    <path d="M 710 410 Q 660 410 640 400" stroke="#F3A683" stroke-width="14" stroke-linecap="round" fill="none"/>
+  </g>
+
+  <!-- Directional Motion Arrows / Sparkles pointing Left -->
+  <g fill="#2563EB" opacity="0.7">
+    <path d="M 330 315 L 310 305 L 310 325 Z"/>
+    <path d="M 350 275 L 335 267 L 335 283 Z" fill="#F59E0B"/>
+    <circle cx="340" cy="140" r="4" fill="#3B82F6"/>
+    <circle cx="440" cy="180" r="6" fill="#F59E0B"/>
+    <circle cx="480" cy="110" r="5" fill="#10B981"/>
+  </g>
+</svg>

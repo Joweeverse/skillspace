@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 280" fill="none">
+  <!-- Background circle -->
+  <circle cx="250" cy="140" r="120" fill="#F0FDF4" opacity="0.8"/>
+  <circle cx="380" cy="70" r="40" fill="#EFF6FF" opacity="0.6"/>
+
+  <!-- Character receiving mentor/student badge -->
+  <circle cx="200" cy="110" r="26" fill="#FBBF24"/>
+  <!-- Hair -->
+  <path d="M178 98 Q200 78 222 98" stroke="#92400E" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <!-- Body -->
+  <rect x="176" y="140" width="48" height="64" rx="18" fill="#2563EB"/>
+
+  <!-- Arms pointing or holding ribbon -->
+  <path d="M214 154 Q250 140 278 148" stroke="#FBBF24" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <circle cx="282" cy="150" r="6" fill="#FBBF24"/>
+
+  <!-- Graduation cap floating -->
+  <g transform="translate(198, 62)">
+    <polygon points="0,-12 32,0 0,12 -32,0" fill="#1E3A8A"/>
+    <rect x="-14" y="6" width="28" height="12" rx="4" fill="#1E40AF"/>
+    <line x1="18" y1="2" x2="22" y2="18" stroke="#FBBF24" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="22" cy="20" r="2.5" fill="#FBBF24"/>
+  </g>
+
+  <!-- Big verification / welcome badge -->
+  <circle cx="310" cy="140" r="44" fill="#DCFCE7" stroke="#86EFAC" stroke-width="3"/>
+  <circle cx="310" cy="140" r="32" fill="#16A34A"/>
+  <!-- Checkmark -->
+  <path d="M298 140 L306 148 L324 130" stroke="white" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Floating ribbon under badge -->
+  <path d="M296 172 L288 200 L310 188 L332 200 L324 172" fill="#15803D"/>
+
+  <!-- Stars -->
+  <text x="130" y="80" font-size="16" fill="#86EFAC">✦</text>
+  <text x="390" y="130" font-size="16" fill="#FBBF24">✦</text>
+  <text x="140" y="210" font-size="12" fill="#60A5FA">✦</text>
+  <text x="360" y="210" font-size="14" fill="#86EFAC">✦</text>
+</svg>

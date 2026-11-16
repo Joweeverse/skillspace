@@ -6,9 +6,13 @@ import { CourseService } from '@/services/courseService'
 import { Profile } from '@/types/database'
 import { Button } from '@/components/ui/Button'
 import { useRouter } from 'next/navigation'
-import { User, Camera, Mail, Shield, Save, ArrowLeft, Sparkles, ShieldCheck, BookOpen, CheckCircle2, ExternalLink } from 'lucide-react'
+import { User, Camera, Mail, Shield, Save, ArrowLeft, Sparkles, ShieldCheck, BookOpen, CheckCircle2, Palette } from 'lucide-react'
+import { ImageSlot } from '@/components/ui/ImageSlot'
+import { useToast } from '@/components/ui/Toast'
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
 
 export default function ProfilePage() {
+  const { showToast } = useToast()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [email, setEmail] = useState<string>('')
   const [loading, setLoading] = useState(true)
@@ -66,10 +70,10 @@ export default function ProfilePage() {
         full_name: fullName,
         avatar_url: avatarUrl || undefined
       })
-      alert('Profil berhasil diperbarui!')
+      showToast('Profil berhasil diperbarui!', 'success')
       router.refresh()
     } catch (err: any) {
-      alert(`Gagal memperbarui profil: ${err.message}`)
+      showToast(`Gagal memperbarui profil: ${err.message}`, 'error')
     } finally {
       setSaving(false)
     }
@@ -81,11 +85,11 @@ export default function ProfilePage() {
     setSaving(true)
     try {
       await AuthService.upgradeToMentor(profile.id)
-      alert('Selamat! Anda sekarang adalah seorang Mentor. Silakan mulai berbagi ilmu.')
+      showToast('Selamat! Anda sekarang adalah seorang Mentor.', 'success')
       router.push('/dashboard/mentor')
       router.refresh()
     } catch (err: any) {
-      alert('Gagal upgrade role: ' + err.message)
+      showToast('Gagal upgrade role: ' + err.message, 'error')
       setSaving(false)
     }
   }
@@ -99,9 +103,9 @@ export default function ProfilePage() {
       const publicUrl = await AuthService.uploadAvatar(profile.id, file)
       setAvatarUrl(publicUrl)
       await AuthService.updateProfile(profile.id, { avatar_url: publicUrl })
-      alert('Foto profil berhasil diperbarui!')
+      showToast('Foto profil berhasil diperbarui!', 'success')
     } catch (err: any) {
-      alert(`Gagal mengunggah foto: ${err.message}`)
+      showToast(`Gagal mengunggah foto: ${err.message}`, 'error')
     } finally {
       setSaving(false)
     }
@@ -127,25 +131,36 @@ export default function ProfilePage() {
       </button>
 
       <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-blue-500/5 border border-gray-100 overflow-hidden">
-        <div className="h-48 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 relative overflow-hidden">
-          <div className="absolute inset-0 bg-white/10 backdrop-blur-[2px]" />
-          <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
-          <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-blue-400/20 rounded-full blur-3xl" />
+        {/* Cover banner using ImageSlot */}
+        <div className="h-48 relative overflow-hidden">
+          <ImageSlot
+            src="/illustrations/profile-cover.svg"
+            alt="Profile cover"
+            aspectRatio="6/2"
+            rounded={false}
+            priority
+          />
         </div>
         
         <div className="px-10 pb-12">
           <div className="relative -mt-20 mb-12 flex flex-col md:flex-row items-center md:items-end gap-8">
             <div className="relative group">
-              <div className="w-40 h-40 rounded-[2rem] bg-white p-1.5 shadow-2xl overflow-hidden border-4 border-white">
+              <div className="w-32 h-32 rounded-[2rem] bg-white p-1.5 shadow-2xl overflow-hidden border-4 border-white">
                 {avatarUrl ? (
-                  <img 
-                    src={avatarUrl} 
-                    alt="Profile" 
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={avatarUrl}
+                    alt="Profile"
+                    width={128}
+                    height={128}
                     className="w-full h-full object-cover rounded-[1.5rem]"
                   />
                 ) : (
-                  <div className="w-full h-full bg-blue-50 flex items-center justify-center text-blue-600 rounded-[1.5rem]">
-                    <User size={64} />
+                  <div className="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-700 flex items-center justify-center text-white text-4xl font-black rounded-[1.5rem] select-none">
+                    {profile?.full_name
+                      ? profile.full_name.split(' ').filter(Boolean).slice(0, 2).map((n: string) => n[0].toUpperCase()).join('')
+                      : <User size={48} />
+                    }
                   </div>
                 )}
               </div>

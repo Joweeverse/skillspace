@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { AuthService } from '@/services/authService'
 import Link from 'next/link'
 import { LogIn } from 'lucide-react'
+import { ImageSlot } from '@/components/ui/ImageSlot'
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false)
@@ -22,48 +23,57 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-[90vh] flex items-center justify-center bg-gray-50/50 py-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-10 bg-white p-12 rounded-[2.5rem] shadow-2xl shadow-blue-500/5 border border-gray-100 relative overflow-hidden">
+    <div className="min-h-[85vh] flex items-center justify-center bg-gray-50/50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-6 bg-white p-8 sm:p-10 rounded-[2.5rem] shadow-2xl shadow-blue-500/5 border border-gray-100 relative overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-50 rounded-full blur-3xl opacity-50" />
         <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-indigo-50 rounded-full blur-3xl opacity-50" />
 
+        {/* Visual Illustration */}
+        <div className="w-48 mx-auto relative z-10">
+          <ImageSlot
+            src="/illustrations/auth-login.svg"
+            alt="Ilustrasi masuk akun belajar SkillSpace"
+            aspectRatio="16/9"
+            priority
+          />
+        </div>
+
         <div className="text-center relative z-10">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-[2rem] mb-8 shadow-xl shadow-blue-500/30">
-            <LogIn size={40} />
-          </div>
-          <h2 className="text-4xl font-black text-gray-900 tracking-tight mb-3">
+          <h2 className="text-3xl font-black text-gray-900 tracking-tight mb-2">
             Selamat Datang!
           </h2>
-          <p className="text-gray-500 font-medium text-lg leading-relaxed">
+          <p className="text-gray-600 font-medium text-sm leading-relaxed">
             Masuk ke akun SkillSpace Anda dan mulai kembangkan keahlian baru.
           </p>
         </div>
 
-        <div className="mt-8 space-y-6 relative z-10 text-center">
+        <div className="space-y-4 relative z-10 text-center">
           <button
             onClick={handleGoogleLogin}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-4 py-5 px-8 bg-white border-2 border-gray-100 rounded-[2rem] text-lg font-bold text-gray-700 hover:bg-gray-50 hover:border-blue-200 hover:text-blue-600 transition-all duration-300 shadow-xl shadow-gray-200/20 group"
+            className="w-full flex items-center justify-center gap-3.5 py-4 px-6 bg-white border-2 border-gray-100 rounded-[1.75rem] text-base font-bold text-gray-700 hover:bg-gray-50 hover:border-blue-200 hover:text-blue-600 transition-all duration-300 shadow-md shadow-gray-200/20 group min-h-12 focus-visible:outline-2 focus-visible:outline-blue-600 disabled:opacity-50"
+            aria-label="Lanjutkan login dengan Google"
           >
             {loading ? (
-              <div className="w-6 h-6 border-3 border-blue-600 border-t-transparent rounded-full animate-spin" />
+              <div className="w-5 h-5 border-3 border-blue-600 border-t-transparent rounded-full animate-spin" />
             ) : (
-              <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-6 h-6 group-hover:scale-110 transition-transform" />
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5 group-hover:scale-110 transition-transform" />
             )}
             Lanjutkan dengan Google
           </button>
 
           {error && (
-            <div className="bg-red-50 text-red-500 p-5 rounded-2xl text-sm font-semibold border border-red-100 animate-in fade-in slide-in-from-top-2 duration-300">
+            <div className="bg-red-50 text-red-600 p-4 rounded-2xl text-xs font-semibold border border-red-100 animate-in fade-in slide-in-from-top-2 duration-300" role="alert">
               {error}
             </div>
           )}
 
-          <div className="pt-4">
-            <p className="text-gray-500 font-medium">
+          <div className="pt-2">
+            <p className="text-gray-500 font-medium text-sm">
               Belum memiliki akun?{' '}
-              <Link href="/register" className="font-bold text-blue-600 hover:text-blue-700 underline underline-offset-8 transition-all">
+              <Link href="/register" className="font-bold text-blue-600 hover:text-blue-700 underline underline-offset-4 transition-all focus-visible:outline-2 focus-visible:outline-blue-600 rounded">
                 Daftar Sekarang
               </Link>
             </p>

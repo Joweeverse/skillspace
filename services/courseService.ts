@@ -62,7 +62,7 @@ export const CourseService = {
     // We use an explicit join syntax to ensure Supabase matches the foreign key correctly
     const { data, error } = await supabase
       .from('courses')
-      .select('*, profiles!courses_mentor_id_fkey(full_name, points)')
+      .select('*, profiles!courses_mentor_id_fkey(full_name, points, avatar_url), lessons(id)')
     
     if (error) {
       console.error('Supabase error in getAvailableCourses:', error)
@@ -123,7 +123,7 @@ export const CourseService = {
   async getCourseById(id: string) {
     const { data, error } = await supabase
       .from('courses')
-      .select('*, profiles!courses_mentor_id_fkey(full_name, points)')
+      .select('*, profiles!courses_mentor_id_fkey(full_name, points, avatar_url), lessons(id)')
       .eq('id', id)
       .single()
     
@@ -180,6 +180,51 @@ export const CourseService = {
     
     if (error) throw error
     return data as Course[]
+  },
+
+  /**
+   * Upload a course cover image to Supabase Storage.
+   * - Validates type (jpeg/png/webp) and size (max 2 MB).
+   * - Uploads to course-covers/{userId}/{uuid}.{ext}
+   * - Best-effort deletes the previous cover if it was a Supabase storage URL.
+   * - Returns the public URL of the new image.
+   */
+  async uploadCourseCover(
+    userId: string,
+    file: File,
+    previousUrl?: string
+  ): Promise<string> {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp']
+    if (!allowedTypes.includes(file.type)) {
+      throw new Error('Hanya file JPEG, PNG, atau WebP yang diizinkan.')
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      throw new Error('Ukuran file maksimal 2 MB.')
+    }
+
+    const ext = file.type === 'image/jpeg' ? 'jpg' : file.type.split('/')[1]
+    const uuid = crypto.randomUUID()
+    const path = `${userId}/${uuid}.${ext}`
+
+    const { error } = await supabase.storage
+      .from('course-covers')
+      .upload(path, file, { upsert: false, contentType: file.type })
+
+    if (error) throw error
+
+    const { data } = supabase.storage
+      .from('course-covers')
+      .getPublicUrl(path)
+
+    // Best-effort: delete previous cover if it was stored in course-covers
+    if (previousUrl?.includes('/course-covers/')) {
+      const prevPath = previousUrl.split('/course-covers/')[1]?.split('?')[0]
+      if (prevPath) {
+        supabase.storage.from('course-covers').remove([prevPath]).catch(() => {})
+      }
+    }
+
+    return data.publicUrl
   },
 
   async uploadMaterial(courseId: string, lessonId: string, file: File) {

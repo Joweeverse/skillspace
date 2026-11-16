@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 280" fill="none">
+  <!-- Background -->
+  <circle cx="200" cy="140" r="120" fill="#F0F9FF" opacity="0.5"/>
+
+  <!-- Monitor frame (empty portfolio) -->
+  <rect x="100" y="80" width="200" height="130" rx="12" fill="white" stroke="#DBEAFE" stroke-width="2.5"/>
+  <rect x="100" y="80" width="200" height="28" rx="12" fill="#DBEAFE"/>
+  <rect x="100" y="94" width="200" height="14" fill="#DBEAFE"/>
+  <!-- Traffic lights -->
+  <circle cx="118" cy="94" r="5" fill="#FCA5A5"/>
+  <circle cx="132" cy="94" r="5" fill="#FDE68A"/>
+  <circle cx="146" cy="94" r="5" fill="#86EFAC"/>
+
+  <!-- Empty content area -->
+  <rect x="120" y="124" width="160" height="12" rx="6" fill="#EFF6FF"/>
+  <rect x="120" y="144" width="120" height="12" rx="6" fill="#EFF6FF"/>
+  <rect x="120" y="164" width="80"  height="12" rx="6" fill="#EFF6FF"/>
+
+  <!-- Image placeholder icon in monitor -->
+  <rect x="232" y="118" width="52" height="52" rx="8" fill="#DBEAFE" stroke="#93C5FD" stroke-width="1.5" stroke-dasharray="3 2"/>
+  <text x="258" y="150" text-anchor="middle" font-size="20" fill="#2563EB" opacity="0.5">🖼</text>
+
+  <!-- Monitor stand -->
+  <rect x="186" y="210" width="28" height="14" rx="4" fill="#CBD5E1"/>
+  <rect x="168" y="224" width="64" height="8" rx="4" fill="#E2E8F0"/>
+
+  <!-- Briefcase icon floating -->
+  <circle cx="310" cy="90" r="30" fill="#EFF6FF" stroke="#93C5FD" stroke-width="2"/>
+  <text x="310" y="98" text-anchor="middle" font-size="20" fill="#2563EB">💼</text>
+
+  <!-- Stars -->
+  <text x="100" y="78" font-size="12" fill="#93C5FD">✦</text>
+  <text x="334" y="140" font-size="10" fill="#BFDBFE">✦</text>
+  <text x="68"  y="180" font-size="14" fill="#DBEAFE">✦</text>
+</svg>

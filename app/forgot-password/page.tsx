@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button'
 import { AuthService } from '@/services/authService'
 import Link from 'next/link'
 import { Mail, ArrowLeft, Send } from 'lucide-react'
+import { ImageSlot } from '@/components/ui/ImageSlot'
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
@@ -50,15 +51,23 @@ export default function ForgotPasswordPage() {
     <div className="min-h-[80vh] flex items-center justify-center bg-gray-50/50 py-16 px-4">
       <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-[2.5rem] shadow-2xl shadow-blue-500/5 border border-gray-100">
         <div className="text-center">
-          <Link href="/login" className="inline-flex items-center text-sm font-bold text-gray-400 hover:text-blue-600 transition-colors mb-6 group">
+          <Link href="/login" className="inline-flex items-center text-sm font-bold text-gray-500 hover:text-blue-600 transition-colors mb-4 group focus-visible:outline-2 focus-visible:outline-blue-600 rounded">
             <ArrowLeft size={16} className="mr-2 transition-transform group-hover:-translate-x-1" />
             Kembali ke Login
           </Link>
-          <h2 className="text-3xl font-black text-gray-900 tracking-tight mb-3">
+          <div className="w-44 mx-auto mb-3">
+            <ImageSlot
+              src="/illustrations/auth-password.svg"
+              alt="Ilustrasi pemulihan kata sandi"
+              aspectRatio="16/9"
+              priority
+            />
+          </div>
+          <h2 className="text-2xl font-black text-gray-900 tracking-tight mb-2">
             Lupa Kata Sandi?
           </h2>
-          <p className="text-gray-500 font-medium">
-            Jangan khawatir! Masukkan email Anda dan kami akan mengirimkan link untuk mengatur ulang kata sandi Anda.
+          <p className="text-gray-600 font-medium text-sm leading-relaxed">
+            Masukkan email Anda dan kami akan mengirimkan link untuk mengatur ulang kata sandi.
           </p>
         </div>
 

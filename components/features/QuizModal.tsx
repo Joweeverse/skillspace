@@ -2,18 +2,20 @@
 
 import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/Button'
-import { Quiz, Question } from '@/types/database'
+import { Question } from '@/types/database'
 import { QuizService } from '@/services/quizService'
 import { AuthService } from '@/services/authService'
 import { HelpCircle, ChevronLeft, ChevronRight, CheckCircle2, XCircle, Trophy, Sparkles } from 'lucide-react'
+import { useToast } from '@/components/ui/Toast'
 
 interface QuizModalProps {
   lessonId: string
   onClose: () => void
-  onComplete: () => void
+  onComplete: (score?: number) => void
 }
 
 export const QuizModal = ({ lessonId, onClose, onComplete }: QuizModalProps) => {
+  const { showToast } = useToast()
   const [questions, setQuestions] = useState<Question[]>([])
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({})
@@ -59,11 +61,17 @@ export const QuizModal = ({ lessonId, onClose, onComplete }: QuizModalProps) => 
     setScore(finalScore)
     setIsSubmitted(true)
 
+    if (finalScore >= 50) {
+      showToast(`Kuis diserahkan! Anda lulus dengan skor ${finalScore}%.`, 'success')
+    } else {
+      showToast(`Kuis diserahkan. Skor Anda ${finalScore}%. Minimal 50% untuk lulus.`, 'error')
+    }
+
     try {
       const session = await AuthService.getSession()
       if (session?.user && finalScore >= 50) {
         await QuizService.markLessonAsCompleted(session.user.id, lessonId)
-        onComplete()
+        onComplete(finalScore)
       }
     } catch (err: any) {
       console.error('Failed to mark lesson as completed:', {
@@ -78,21 +86,21 @@ export const QuizModal = ({ lessonId, onClose, onComplete }: QuizModalProps) => 
 
   if (loading) return (
     <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white p-8 rounded-2xl shadow-2xl flex flex-col items-center gap-4">
+      <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 p-8 rounded-2xl shadow-2xl flex flex-col items-center gap-4">
         <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-        <p className="font-semibold text-gray-600">Menyiapkan Kuis...</p>
+        <p className="font-semibold text-gray-600 dark:text-slate-300">Menyiapkan Kuis...</p>
       </div>
     </div>
   )
 
   if (error) return (
     <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-8 text-center">
-        <div className="bg-red-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+      <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 w-full max-w-md rounded-2xl shadow-2xl p-8 text-center">
+        <div className="bg-red-50 dark:bg-red-950/60 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
           <HelpCircle size={40} className="text-red-500" />
         </div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">Oops!</h3>
-        <p className="text-gray-600 mb-8">{error}</p>
+        <h3 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-2">Oops!</h3>
+        <p className="text-gray-600 dark:text-slate-400 mb-8">{error}</p>
         <Button onClick={onClose} variant="outline" className="w-full">Tutup</Button>
       </div>
     </div>
@@ -102,7 +110,7 @@ export const QuizModal = ({ lessonId, onClose, onComplete }: QuizModalProps) => 
 
   return (
     <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden border border-white/20">
+      <div className="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden border border-white/20 dark:border-slate-800">
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white flex justify-between items-center">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-white/20 rounded-lg">
@@ -115,7 +123,8 @@ export const QuizModal = ({ lessonId, onClose, onComplete }: QuizModalProps) => 
           </div>
           <button 
             onClick={onClose} 
-            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors text-white"
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors text-white focus-visible:outline-2 focus-visible:outline-white"
+            aria-label="Tutup kuis"
           >
             ✕
           </button>
@@ -126,19 +135,19 @@ export const QuizModal = ({ lessonId, onClose, onComplete }: QuizModalProps) => 
             <>
               <div className="mb-8">
                 <div className="flex justify-between items-end mb-4">
-                  <span className="text-sm font-bold text-blue-600 tracking-tight">PERTANYAAN {currentQuestionIndex + 1} DARI {questions.length}</span>
+                  <span className="text-sm font-bold text-blue-600 dark:text-blue-400 tracking-tight">PERTANYAAN {currentQuestionIndex + 1} DARI {questions.length}</span>
                   <div className="flex gap-1">
                     {questions.map((_, idx) => (
                       <div 
                         key={idx} 
                         className={`h-1.5 rounded-full transition-all duration-300 ${
-                          idx === currentQuestionIndex ? 'w-8 bg-blue-600' : 'w-2 bg-gray-200'
+                          idx === currentQuestionIndex ? 'w-8 bg-blue-600 dark:bg-blue-500' : 'w-2 bg-gray-200 dark:bg-slate-700'
                         }`} 
                       />
                     ))}
                   </div>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 leading-tight">{currentQuestion?.question_text}</h3>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-slate-100 leading-tight">{currentQuestion?.question_text}</h3>
               </div>
 
               <div className="grid gap-3 mb-10">
@@ -150,17 +159,17 @@ export const QuizModal = ({ lessonId, onClose, onComplete }: QuizModalProps) => 
                       onClick={() => handleSelectAnswer(currentQuestion.id, option)}
                       className={`group w-full text-left p-5 rounded-xl border-2 transition-all duration-200 flex items-center gap-4 ${
                         isSelected
-                        ? 'border-blue-600 bg-blue-50/50 text-blue-800 shadow-md shadow-blue-500/10'
-                        : 'border-gray-100 bg-gray-50/30 hover:border-gray-300 hover:bg-white text-gray-700'
+                        ? 'border-blue-600 bg-blue-50/50 text-blue-800 dark:border-blue-500 dark:bg-blue-950/60 dark:text-blue-300 shadow-md shadow-blue-500/10'
+                        : 'border-gray-100 dark:border-slate-800 bg-gray-50/30 dark:bg-slate-800/40 hover:border-gray-300 dark:hover:border-slate-700 hover:bg-white dark:hover:bg-slate-800 text-gray-700 dark:text-slate-200'
                       }`}
                     >
                       <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-lg transition-colors ${
-                        isSelected ? 'bg-blue-600 text-white' : 'bg-white border border-gray-200 text-gray-400 group-hover:border-gray-300 group-hover:text-gray-600'
+                        isSelected ? 'bg-blue-600 text-white' : 'bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-400 dark:text-slate-400 group-hover:border-gray-300 dark:group-hover:border-slate-600 group-hover:text-gray-600 dark:group-hover:text-slate-200'
                       }`}>
                         {['A', 'B', 'C', 'D'][idx]}
                       </div>
                       <span className="flex-1 font-medium">{option}</span>
-                      {isSelected && <CheckCircle2 size={20} className="text-blue-600 animate-in zoom-in" />}
+                      {isSelected && <CheckCircle2 size={20} className="text-blue-600 dark:text-blue-400 animate-in zoom-in" />}
                     </button>
                   )
                 })}
@@ -199,8 +208,8 @@ export const QuizModal = ({ lessonId, onClose, onComplete }: QuizModalProps) => 
           ) : (
             <div className="text-center py-6">
               <div className="relative inline-block mb-8">
-                <div className={`w-32 h-32 rounded-full flex items-center justify-center mx-auto ring-8 ring-offset-4 ${
-                  score >= 50 ? 'bg-emerald-50 ring-emerald-100 text-emerald-600' : 'bg-red-50 ring-red-100 text-red-600'
+                <div className={`w-32 h-32 rounded-full flex items-center justify-center mx-auto ring-8 ring-offset-4 dark:ring-offset-slate-900 ${
+                  score >= 50 ? 'bg-emerald-50 dark:bg-emerald-950/70 ring-emerald-100 dark:ring-emerald-900 text-emerald-600 dark:text-emerald-400' : 'bg-red-50 dark:bg-red-950/70 ring-red-100 dark:ring-red-900 text-red-600 dark:text-red-400'
                 }`}>
                   {score >= 50 ? <Trophy size={64} /> : <XCircle size={64} />}
                 </div>
@@ -211,15 +220,15 @@ export const QuizModal = ({ lessonId, onClose, onComplete }: QuizModalProps) => 
                 )}
               </div>
               
-              <div className={`text-6xl font-black mb-4 tracking-tighter ${score >= 50 ? 'text-emerald-600' : 'text-red-600'}`}>
+              <div className={`text-6xl font-black mb-4 tracking-tighter ${score >= 50 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`}>
                 {score}%
               </div>
               
-              <h3 className="text-3xl font-bold text-gray-900 mb-3">
+              <h3 className="text-3xl font-bold text-gray-900 dark:text-slate-100 mb-3">
                 {score >= 50 ? 'Luar Biasa!' : 'Terus Berusaha!'}
               </h3>
               
-              <p className="text-gray-500 max-w-xs mx-auto mb-10 leading-relaxed text-lg">
+              <p className="text-gray-500 dark:text-slate-400 max-w-xs mx-auto mb-10 leading-relaxed text-lg">
                 {score >= 50 
                   ? 'Selamat! Anda telah menguasai materi ini dengan sangat baik.' 
                   : 'Anda membutuhkan setidaknya 50% untuk lulus. Silakan pelajari kembali materinya.'}

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 440" fill="none">
+  <defs>
+    <linearGradient id="ql-bg" x1="0" y1="0" x2="600" y2="440" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#F1F5F9"/>
+    </linearGradient>
+    <filter id="ql-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000" flood-opacity="0.09"/>
+    </filter>
+  </defs>
+
+  <rect width="600" height="440" rx="24" fill="url(#ql-bg)"/>
+
+  <!-- Large lock icon -->
+  <g transform="translate(220, 70)" filter="url(#ql-shadow)">
+    <!-- Lock body -->
+    <rect x="20" y="80" width="120" height="100" rx="20" fill="#CBD5E1"/>
+    <!-- Lock shackle -->
+    <path d="M 40 80 L 40 50 Q 40 15 80 15 Q 120 15 120 50 L 120 80" stroke="#94A3B8" stroke-width="20" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Keyhole -->
+    <circle cx="80" cy="128" r="16" fill="#94A3B8"/>
+    <rect x="73" y="140" width="14" height="22" rx="4" fill="#94A3B8"/>
+  </g>
+
+  <!-- Quiz card behind / blurred -->
+  <g transform="translate(80, 80)" opacity="0.35" filter="url(#ql-shadow)">
+    <rect width="200" height="260" rx="16" fill="#FFFFFF"/>
+    <rect x="16" y="20" width="168" height="12" rx="6" fill="#CBD5E1"/>
+    <rect x="16" y="44" width="140" height="8" rx="4" fill="#E2E8F0"/>
+    <rect x="16" y="80" width="168" height="40" rx="10" fill="#F1F5F9" stroke="#E2E8F0"/>
+    <rect x="16" y="130" width="168" height="40" rx="10" fill="#F1F5F9" stroke="#E2E8F0"/>
+    <rect x="16" y="180" width="168" height="40" rx="10" fill="#F1F5F9" stroke="#E2E8F0"/>
+    <rect x="16" y="230" width="168" height="20" rx="8" fill="#DBEAFE"/>
+  </g>
+  <g transform="translate(320, 100)" opacity="0.35" filter="url(#ql-shadow)">
+    <rect width="200" height="240" rx="16" fill="#FFFFFF"/>
+    <rect x="16" y="20" width="168" height="12" rx="6" fill="#CBD5E1"/>
+    <rect x="16" y="80" width="168" height="40" rx="10" fill="#F1F5F9" stroke="#E2E8F0"/>
+    <rect x="16" y="130" width="168" height="40" rx="10" fill="#F1F5F9" stroke="#E2E8F0"/>
+    <rect x="16" y="180" width="168" height="30" rx="8" fill="#DBEAFE"/>
+  </g>
+
+  <!-- Message text -->
+  <text x="300" y="296" font-family="sans-serif" font-size="18" font-weight="bold" fill="#475569" text-anchor="middle">Complete the lesson first</text>
+  <text x="300" y="320" font-family="sans-serif" font-size="13" fill="#94A3B8" text-anchor="middle">The quiz unlocks after you read</text>
+  <text x="300" y="338" font-family="sans-serif" font-size="13" fill="#94A3B8" text-anchor="middle">and finish all the material above.</text>
+
+  <!-- Dotted border hint -->
+  <rect x="60" y="360" width="480" height="52" rx="14" fill="none" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="300" y="392" font-family="sans-serif" font-size="12" font-weight="bold" fill="#CBD5E1" text-anchor="middle">QUIZ LOCKED</text>
+</svg>
