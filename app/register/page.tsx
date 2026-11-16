@@ -126,8 +126,8 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-[95vh] flex items-center justify-center bg-gray-50/50 py-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-xl w-full space-y-10 bg-white p-10 md:p-14 rounded-[2.5rem] shadow-2xl shadow-blue-500/5 border border-gray-100">
+    <div className="min-h-[95vh] flex items-center justify-center bg-gray-50/50 dark:bg-slate-950 py-16 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-xl w-full space-y-10 bg-white dark:bg-slate-900 p-10 md:p-14 rounded-[2.5rem] shadow-2xl shadow-blue-500/5 dark:shadow-none border border-gray-100 dark:border-slate-800">
         {step === 1 ? (
           <>
             <div className="text-center">
@@ -139,35 +139,35 @@ export default function RegisterPage() {
                   priority
                 />
               </div>
-              <h2 className="text-3xl font-black text-gray-900 tracking-tight mb-2">
+              <h2 className="text-3xl font-black text-gray-900 dark:text-slate-100 tracking-tight mb-2">
                 Bergabung Sekarang
               </h2>
-              <p className="text-gray-600 font-medium text-sm">
+              <p className="text-gray-600 dark:text-slate-300 font-medium text-sm">
                 Mulai perjalanan belajar atau mengajar Anda di SkillSpace.
               </p>
             </div>
 
             <form className="space-y-8" onSubmit={handleRegister}>
               {error && (
-                <div className="bg-red-50 text-red-500 p-5 rounded-2xl text-sm font-semibold border border-red-100 animate-in fade-in zoom-in duration-300">
+                <div className="bg-red-50 dark:bg-red-950/40 text-red-500 dark:text-red-300 p-5 rounded-2xl text-sm font-semibold border border-red-100 dark:border-red-900/60 animate-in fade-in zoom-in duration-300">
                   {error}
                 </div>
               )}
               
               <div className="space-y-6">
                 <div className="space-y-3">
-                  <label className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Pilih Peran Anda</label>
+                  <label className="text-xs font-black text-gray-400 dark:text-slate-400 uppercase tracking-[0.2em] ml-1">Pilih Peran Anda</label>
                   <div className="grid grid-cols-2 gap-4">
                     <button
                       type="button"
                       onClick={() => setRole('student')}
                       className={`flex flex-col items-center p-6 rounded-3xl border-2 transition-all duration-300 gap-3 group ${
                         role === 'student'
-                        ? 'border-blue-600 bg-blue-50/50 text-blue-700 shadow-md shadow-blue-500/10'
-                        : 'border-gray-100 bg-gray-50 text-gray-400 hover:border-gray-200 hover:bg-white'
+                        ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 shadow-md shadow-blue-500/10'
+                        : 'border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800/60 text-gray-400 dark:text-slate-400 hover:border-gray-200 dark:hover:border-slate-700 hover:bg-white dark:hover:bg-slate-800'
                       }`}
                     >
-                      <div className={`p-3 rounded-2xl transition-colors ${role === 'student' ? 'bg-blue-600 text-white' : 'bg-white text-gray-400 group-hover:text-gray-600'}`}>
+                      <div className={`p-3 rounded-2xl transition-colors ${role === 'student' ? 'bg-blue-600 text-white' : 'bg-white dark:bg-slate-700 text-gray-400 dark:text-slate-400 group-hover:text-gray-600 dark:group-hover:text-slate-200'}`}>
                         <GraduationCap size={24} />
                       </div>
                       <span className="font-bold text-sm">Siswa</span>
@@ -177,11 +177,11 @@ export default function RegisterPage() {
                       onClick={() => setRole('mentor')}
                       className={`flex flex-col items-center p-6 rounded-3xl border-2 transition-all duration-300 gap-3 group ${
                         role === 'mentor'
-                        ? 'border-blue-600 bg-blue-50/50 text-blue-700 shadow-md shadow-blue-500/10'
-                        : 'border-gray-100 bg-gray-50 text-gray-400 hover:border-gray-200 hover:bg-white'
+                        ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 shadow-md shadow-blue-500/10'
+                        : 'border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800/60 text-gray-400 dark:text-slate-400 hover:border-gray-200 dark:hover:border-slate-700 hover:bg-white dark:hover:bg-slate-800'
                       }`}
                     >
-                      <div className={`p-3 rounded-2xl transition-colors ${role === 'mentor' ? 'bg-blue-600 text-white' : 'bg-white text-gray-400 group-hover:text-gray-600'}`}>
+                      <div className={`p-3 rounded-2xl transition-colors ${role === 'mentor' ? 'bg-blue-600 text-white' : 'bg-white dark:bg-slate-700 text-gray-400 dark:text-slate-400 group-hover:text-gray-600 dark:group-hover:text-slate-200'}`}>
                         <Presentation size={24} />
                       </div>
                       <span className="font-bold text-sm">Mentor</span>
@@ -191,15 +191,15 @@ export default function RegisterPage() {
 
                 <div className="space-y-4">
                   <div className="space-y-1">
-                    <label className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Nama Lengkap</label>
+                    <label className="text-xs font-black text-gray-400 dark:text-slate-400 uppercase tracking-[0.2em] ml-1">Nama Lengkap</label>
                     <div className="relative group">
-                      <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
+                      <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 dark:text-slate-500 group-focus-within:text-blue-500 transition-colors">
                         <User size={20} />
                       </div>
                       <input
                         type="text"
                         required
-                        className="block w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-[1.5rem] transition-all duration-300 focus:bg-white focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none placeholder:text-gray-300 font-bold"
+                        className="block w-full pl-14 pr-6 py-4 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-[1.5rem] text-gray-900 dark:text-slate-100 transition-all duration-300 focus:bg-white dark:focus:bg-slate-800 focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none placeholder:text-gray-300 dark:placeholder:text-slate-500 font-bold"
                         placeholder="John Doe"
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
@@ -208,15 +208,15 @@ export default function RegisterPage() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Email</label>
+                    <label className="text-xs font-black text-gray-400 dark:text-slate-400 uppercase tracking-[0.2em] ml-1">Email</label>
                     <div className="relative group">
-                      <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
+                      <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 dark:text-slate-500 group-focus-within:text-blue-500 transition-colors">
                         <Mail size={20} />
                       </div>
                       <input
                         type="email"
                         required
-                        className="block w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-[1.5rem] transition-all duration-300 focus:bg-white focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none placeholder:text-gray-300 font-bold"
+                        className="block w-full pl-14 pr-6 py-4 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-[1.5rem] text-gray-900 dark:text-slate-100 transition-all duration-300 focus:bg-white dark:focus:bg-slate-800 focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none placeholder:text-gray-300 dark:placeholder:text-slate-500 font-bold"
                         placeholder="email@contoh.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -225,16 +225,16 @@ export default function RegisterPage() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Password</label>
+                    <label className="text-xs font-black text-gray-400 dark:text-slate-400 uppercase tracking-[0.2em] ml-1">Password</label>
                     <div className="relative group">
-                      <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
+                      <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 dark:text-slate-500 group-focus-within:text-blue-500 transition-colors">
                         <Lock size={20} />
                       </div>
                       <input
                         type="password"
                         required
                         minLength={6}
-                        className="block w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-[1.5rem] transition-all duration-300 focus:bg-white focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none placeholder:text-gray-300 font-bold"
+                        className="block w-full pl-14 pr-6 py-4 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-[1.5rem] text-gray-900 dark:text-slate-100 transition-all duration-300 focus:bg-white dark:focus:bg-slate-800 focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none placeholder:text-gray-300 dark:placeholder:text-slate-500 font-bold"
                         placeholder="••••••••"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
@@ -254,10 +254,10 @@ export default function RegisterPage() {
 
                 <div className="relative py-4">
                   <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-100"></div>
+                    <div className="w-full border-t border-gray-100 dark:border-slate-800"></div>
                   </div>
                   <div className="relative flex justify-center text-sm uppercase">
-                    <span className="bg-white px-4 text-gray-400 font-black tracking-widest">Atau</span>
+                    <span className="bg-white dark:bg-slate-900 px-4 text-gray-400 dark:text-slate-500 font-black tracking-widest">Atau</span>
                   </div>
                 </div>
 
@@ -269,7 +269,7 @@ export default function RegisterPage() {
                       AuthService.signInWithGoogle(role, 'register')
                     }}
                     disabled={loading}
-                    className="w-full flex items-center justify-center gap-4 py-5 px-8 bg-white border-2 border-gray-100 rounded-[2rem] text-lg font-bold text-gray-700 hover:bg-gray-50 hover:border-blue-200 hover:text-blue-600 transition-all duration-300 shadow-xl shadow-gray-200/20 group"
+                    className="w-full flex items-center justify-center gap-4 py-5 px-8 bg-white dark:bg-slate-800 border-2 border-gray-100 dark:border-slate-700 rounded-[2rem] text-lg font-bold text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-750 hover:border-blue-200 dark:hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 shadow-xl shadow-gray-200/20 dark:shadow-none group"
                   >
                     {loading ? (
                       <div className="w-6 h-6 border-3 border-blue-600 border-t-transparent rounded-full animate-spin" />
@@ -280,9 +280,9 @@ export default function RegisterPage() {
                   </button>
 
                   <div className="text-center pt-4">
-                    <p className="text-gray-500 font-medium">
+                    <p className="text-gray-500 dark:text-slate-400 font-medium">
                       Sudah memiliki akun?{' '}
-                      <Link href="/login" className="font-bold text-blue-600 hover:text-blue-700 underline underline-offset-8 transition-all">
+                      <Link href="/login" className="font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline underline-offset-8 transition-all">
                         Masuk di sini
                       </Link>
                     </p>
@@ -297,32 +297,32 @@ export default function RegisterPage() {
               <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-tr from-green-500 to-emerald-600 text-white rounded-[2rem] mb-8 shadow-xl shadow-green-500/30 transform hover:rotate-6 transition-transform duration-300">
                 <ShieldCheck size={40} />
               </div>
-              <h2 className="text-4xl font-black text-gray-900 tracking-tight mb-3">
+              <h2 className="text-4xl font-black text-gray-900 dark:text-slate-100 tracking-tight mb-3">
                 Verifikasi Email
               </h2>
-              <p className="text-gray-500 font-medium text-lg">
-                Masukkan 6 digit kode yang kami kirimkan ke <span className="text-gray-900 font-bold">{email}</span>.
+              <p className="text-gray-500 dark:text-slate-400 font-medium text-lg">
+                Masukkan 6 digit kode yang kami kirimkan ke <span className="text-gray-900 dark:text-slate-100 font-bold">{email}</span>.
               </p>
             </div>
 
             <form className="space-y-8" onSubmit={handleVerify}>
               {error && (
-                <div className="bg-red-50 text-red-500 p-5 rounded-2xl text-sm font-semibold border border-red-100 animate-in fade-in zoom-in duration-300">
+                <div className="bg-red-50 dark:bg-red-950/40 text-red-500 dark:text-red-300 p-5 rounded-2xl text-sm font-semibold border border-red-100 dark:border-red-900/60 animate-in fade-in zoom-in duration-300">
                   {error}
                 </div>
               )}
 
               {success && (
-                <div className="bg-green-50 text-green-600 p-5 rounded-2xl text-sm font-semibold border border-green-100 animate-in fade-in zoom-in duration-300">
+                <div className="bg-green-50 dark:bg-emerald-950/40 text-green-600 dark:text-emerald-300 p-5 rounded-2xl text-sm font-semibold border border-green-100 dark:border-emerald-900/60 animate-in fade-in zoom-in duration-300">
                   {success}
                 </div>
               )}
               
               <div className="space-y-6">
                 <div className="space-y-1">
-                  <label htmlFor="otp-code" className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Kode Verifikasi</label>
+                  <label htmlFor="otp-code" className="text-xs font-black text-gray-400 dark:text-slate-400 uppercase tracking-[0.2em] ml-1">Kode Verifikasi</label>
                   <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
+                    <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 dark:text-slate-500 group-focus-within:text-blue-500 transition-colors">
                       <ShieldCheck size={20} />
                     </div>
                     <input
@@ -331,7 +331,7 @@ export default function RegisterPage() {
                       type="text"
                       required
                       maxLength={6}
-                      className="block w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-[1.5rem] text-center text-2xl font-black tracking-[0.5em] transition-all duration-300 focus:bg-white focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none placeholder:text-gray-300"
+                      className="block w-full pl-14 pr-6 py-4 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-[1.5rem] text-center text-2xl font-black tracking-[0.5em] text-gray-900 dark:text-slate-100 transition-all duration-300 focus:bg-white dark:focus:bg-slate-800 focus:ring-[6px] focus:ring-blue-500/10 focus:border-blue-500 outline-none placeholder:text-gray-300 dark:placeholder:text-slate-500"
                       placeholder="000000"
                       value={otpCode}
                       onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
@@ -353,7 +353,7 @@ export default function RegisterPage() {
                   type="button"
                   onClick={handleResendCode}
                   disabled={resending}
-                  className="w-full py-4 text-sm font-bold text-gray-500 hover:text-blue-600 transition-colors flex items-center justify-center gap-2 group disabled:opacity-50"
+                  className="w-full py-4 text-sm font-bold text-gray-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center justify-center gap-2 group disabled:opacity-50"
                 >
                   <RefreshCw size={18} className={`transition-transform duration-500 ${resending ? 'animate-spin' : 'group-hover:rotate-180'}`} />
                   {resending ? 'Mengirim Ulang...' : 'Kirim Ulang Kode'}
@@ -362,7 +362,7 @@ export default function RegisterPage() {
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="w-full text-sm font-bold text-gray-400 hover:text-gray-600 transition-colors"
+                  className="w-full text-sm font-bold text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 transition-colors"
                 >
                   Kembali ke Pendaftaran
                 </button>

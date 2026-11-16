@@ -41,8 +41,8 @@ const CATEGORIES = [
 /* ─── Skeleton card ───────────────────────────────────────────── */
 function CourseCardSkeleton() {
   return (
-    <div className="flex flex-col overflow-hidden rounded-3xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm" aria-hidden="true">
-      <Skeleton variant="card" className="h-48 rounded-none" />
+    <div className="flex flex-col overflow-hidden rounded-3xl border border-gray-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm" aria-hidden="true">
+      <Skeleton variant="card" className="aspect-[16/9] w-full rounded-none" />
       <div className="flex flex-col gap-3 p-5 sm:p-6">
         <Skeleton className="h-3 w-20 rounded-full" />
         <Skeleton className="h-5 w-full rounded-lg" />
@@ -51,7 +51,7 @@ function CourseCardSkeleton() {
           <Skeleton variant="circle" className="size-6" />
           <Skeleton className="h-3 w-28 rounded-full" />
         </div>
-        <div className="mt-2 border-t border-gray-100 dark:border-slate-800 pt-4">
+        <div className="mt-4 border-t border-gray-100 dark:border-slate-800 pt-4">
           <Skeleton className="h-9 w-full rounded-xl" />
         </div>
       </div>
@@ -159,43 +159,51 @@ export default function CourseCatalog() {
   const isFiltering = searchQuery !== '' || activeCategory !== ''
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 text-gray-900 dark:text-slate-100 transition-colors duration-200">
 
-      {/* ─── BANNER ─────────────────────────────────────────────── */}
-      <section className="bg-white border-b border-gray-100">
-        <Container className="py-10 sm:py-14">
+      {/* ─── BANNER / HERO ───────────────────────────────────────── */}
+      <section className="bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 transition-colors duration-200">
+        <Container className="py-8 sm:py-10">
           <div className="grid items-center gap-6 lg:grid-cols-[1fr_auto] lg:gap-10">
             {/* Text */}
             <div>
-              <p className="text-sm font-bold uppercase tracking-[0.16em] text-blue-600">Course Catalog</p>
-              <h1 className="mt-2 text-4xl font-extrabold tracking-tight text-gray-950 sm:text-5xl">
-                Find Your Next Skill
-              </h1>
-              <p className="mt-3 max-w-xl text-base leading-7 text-gray-600">
-                Learn from experienced mentors across design, development, business, and beyond.
+              <div className="flex flex-wrap items-center gap-2.5">
+                <span className="text-xs font-bold uppercase tracking-[0.16em] text-blue-600 dark:text-blue-400">
+                  Course Catalog
+                </span>
                 {!loading && (
-                  <span className="ml-2 font-semibold text-blue-600">
-                    {courses.length} {courses.length === 1 ? 'course' : 'courses'} available.
+                  <span className="inline-flex items-center rounded-full bg-blue-50 dark:bg-blue-950/70 px-2.5 py-0.5 text-xs font-bold text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/50">
+                    {courses.length} {courses.length === 1 ? 'course' : 'courses'} available
                   </span>
                 )}
+              </div>
+              <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-gray-950 dark:text-slate-100 sm:text-4xl lg:text-5xl">
+                Find Your Next Skill
+              </h1>
+              <p className="mt-2.5 max-w-xl text-sm sm:text-base leading-relaxed text-gray-600 dark:text-slate-300">
+                Learn from experienced mentors across design, development, business, and beyond.
               </p>
             </div>
 
-            {/* Banner illustration */}
-            <div className="hidden w-72 lg:block xl:w-80">
-              <ImageSlot
-                src="/illustrations/courses-banner.svg"
-                alt="Student browsing courses on a screen"
-                aspectRatio="9 / 5"
-                priority
-              />
+            {/* Banner illustration (responsive: stacked on mobile, centered on desktop) */}
+            <div className="w-full max-w-xs sm:max-w-sm lg:w-80 xl:w-96 mx-auto lg:mx-0 shrink-0">
+              <div className="overflow-hidden rounded-2xl bg-blue-50/60 dark:bg-slate-800/60 p-2 sm:p-3 border border-blue-100/60 dark:border-slate-700/60">
+                <ImageSlot
+                  src="/illustrations/courses-banner.svg"
+                  alt="Student browsing courses on a screen"
+                  aspectRatio="9 / 4"
+                  priority
+                  rounded={false}
+                  className="rounded-xl"
+                />
+              </div>
             </div>
           </div>
         </Container>
       </section>
 
       {/* ─── FILTERS ─────────────────────────────────────────────── */}
-      <section className="sticky top-0 z-20 border-b border-gray-200 bg-white/95 backdrop-blur-sm shadow-sm">
+      <section className="sticky top-0 z-20 border-b border-gray-200/80 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-2xs transition-colors duration-200">
         <Container className="py-3">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
 
@@ -211,10 +219,11 @@ export default function CourseCatalog() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by title, category, or mentor…"
                 aria-label="Search courses"
-                className="w-full rounded-xl border border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-900 py-2.5 pl-9 pr-9 text-sm text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
+                className="w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900/90 py-2.5 pl-9 pr-9 text-sm text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none shadow-2xs transition"
               />
               {searchQuery && (
                 <button
+                  type="button"
                   onClick={() => setSearchQuery('')}
                   aria-label="Clear search"
                   className="absolute right-2 top-1/2 -translate-y-1/2 min-h-10 min-w-10 flex items-center justify-center text-gray-400 dark:text-slate-400 hover:text-gray-600 dark:hover:text-slate-200 focus-visible:outline-2 focus-visible:outline-blue-600 rounded-lg"
@@ -235,12 +244,13 @@ export default function CourseCatalog() {
                 return (
                   <button
                     key={cat.value}
+                    type="button"
                     onClick={() => setActiveCategory(isActive ? '' : cat.value)}
                     aria-pressed={isActive}
                     className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 min-h-10 text-xs font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 ${
                       isActive
-                        ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/30'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
+                        ? 'bg-blue-600 border border-blue-600 text-white shadow-sm shadow-blue-500/20'
+                        : 'bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600 shadow-2xs'
                     }`}
                   >
                     {cat.icon}
@@ -259,17 +269,18 @@ export default function CourseCatalog() {
 
           {/* Result count */}
           {!loading && isFiltering && (
-            <p className="mb-6 text-sm text-gray-500">
+            <p className="mb-6 text-sm text-gray-500 dark:text-slate-400">
               {filteredCourses.length === 0
                 ? 'No courses match your search.'
                 : `${filteredCourses.length} ${filteredCourses.length === 1 ? 'course' : 'courses'} found`}
               {searchQuery && (
-                <> for <span className="font-semibold text-gray-900">&ldquo;{searchQuery}&rdquo;</span></>
+                <> for <span className="font-semibold text-gray-900 dark:text-slate-100">&ldquo;{searchQuery}&rdquo;</span></>
               )}
               {' '}
               <button
+                type="button"
                 onClick={() => { setSearchQuery(''); setActiveCategory('') }}
-                className="font-semibold text-blue-600 hover:underline"
+                className="font-semibold text-blue-600 dark:text-blue-400 hover:underline"
               >
                 Clear filters
               </button>
@@ -308,21 +319,22 @@ export default function CourseCatalog() {
                 <ImageSlot
                   src="/illustrations/empty-search.svg"
                   alt="No courses found illustration"
-                  aspectRatio="5 / 4"
+                  aspectRatio="4 / 3"
                 />
               </div>
-              <h2 className="mt-6 text-xl font-bold text-gray-950">
+              <h2 className="mt-6 text-xl font-bold text-gray-950 dark:text-slate-100">
                 {isFiltering ? 'No results found' : 'Catalog is empty'}
               </h2>
-              <p className="mt-2 text-sm leading-6 text-gray-500">
+              <p className="mt-2 text-sm leading-6 text-gray-500 dark:text-slate-400">
                 {isFiltering
                   ? 'Try a different search term or remove some filters.'
                   : 'No courses are available yet. Check back soon.'}
               </p>
               {isFiltering && (
                 <button
+                  type="button"
                   onClick={() => { setSearchQuery(''); setActiveCategory('') }}
-                  className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition"
+                  className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition shadow-sm shadow-blue-500/20"
                 >
                   <X className="size-4" aria-hidden="true" />
                   Clear filters
@@ -336,7 +348,7 @@ export default function CourseCatalog() {
       {/* ─── PREVIEW MODAL ───────────────────────────────────────── */}
       {(selectedPreview || previewLoading) && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-gray-950/70 p-4 backdrop-blur-sm"
           role="dialog"
           aria-modal="true"
           aria-label={selectedPreview?.title ?? 'Loading preview'}
@@ -368,6 +380,7 @@ export default function CourseCatalog() {
                     </div>
                   </div>
                   <button
+                    type="button"
                     onClick={() => setSelectedPreview(null)}
                     aria-label="Close preview"
                     className="shrink-0 rounded-lg p-2 text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-700 dark:hover:text-slate-200 focus-visible:outline-2 focus-visible:outline-blue-600 transition"
@@ -414,7 +427,7 @@ export default function CourseCatalog() {
                       {/* Mentor card */}
                       <div className="rounded-3xl bg-gray-50 dark:bg-slate-800/60 p-6 text-center space-y-3 border border-gray-100 dark:border-slate-800">
                         <p className="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-slate-400">Mentor</p>
-                        <div className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-white dark:bg-slate-800 shadow border border-gray-100 dark:border-slate-700 text-gray-300">
+                        <div className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-gray-100 dark:border-slate-700 text-gray-300">
                           {selectedPreview.profiles?.avatar_url ? (
                             // eslint-disable-next-line @next/next/no-img-element
                             <img src={selectedPreview.profiles.avatar_url} alt="" className="size-full rounded-2xl object-cover dark:brightness-95" />
@@ -475,6 +488,7 @@ export default function CourseCatalog() {
                     ))}
                   </div>
                   <button
+                    type="button"
                     onClick={() => setSelectedPreview(null)}
                     className="text-xs font-semibold text-gray-400 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 focus-visible:outline-2 focus-visible:outline-blue-600 transition"
                   >

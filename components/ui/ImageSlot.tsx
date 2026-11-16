@@ -13,6 +13,7 @@ interface ImageSlotProps {
   priority?: boolean
   rounded?: boolean
   className?: string
+  objectFit?: 'contain' | 'cover'
 }
 
 export function ImageSlot({
@@ -23,6 +24,7 @@ export function ImageSlot({
   priority = false,
   rounded = true,
   className = '',
+  objectFit = 'contain',
 }: ImageSlotProps) {
   const [isMissing, setIsMissing] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -52,19 +54,21 @@ export function ImageSlot({
 
   return (
     <div
-      className={`relative isolate w-full overflow-hidden bg-blue-50/80 dark:bg-slate-900/90 dark:border dark:border-slate-800/80 transition-colors duration-200 ${
+      className={`relative isolate w-full overflow-hidden bg-slate-50/70 dark:bg-slate-900/60 dark:border dark:border-slate-800/80 transition-colors duration-200 ${
         rounded ? 'rounded-3xl' : ''
       } ${className}`}
       style={{ aspectRatio: normalizedAspectRatio }}
     >
       {isMissing ? (
         <div
-          className="flex size-full flex-col items-center justify-center gap-3 border border-dashed border-blue-200 bg-blue-50 px-6 text-center text-blue-800 dark:border-slate-700 dark:bg-slate-900 dark:text-blue-300"
+          className="flex size-full flex-col items-center justify-center gap-2.5 bg-gradient-to-br from-blue-50/50 via-slate-50/50 to-indigo-50/40 dark:from-slate-800/40 dark:via-slate-900/60 dark:to-slate-800/40 px-6 text-center text-slate-500 dark:text-slate-400"
           role="img"
           aria-label={`Ilustrasi yang dibutuhkan: ${alt}`}
         >
-          <ImageIcon className="size-7" aria-hidden="true" />
-          <span className="text-xs font-semibold">{filename}</span>
+          <div className="flex size-10 items-center justify-center rounded-2xl bg-white/80 dark:bg-slate-800/80 shadow-sm border border-slate-200/50 dark:border-slate-700/60">
+            <ImageIcon className="size-5 text-blue-500 dark:text-blue-400" aria-hidden="true" />
+          </div>
+          <span className="text-xs font-medium text-slate-600 dark:text-slate-300">{filename}</span>
         </div>
       ) : (
         <Image
@@ -74,7 +78,9 @@ export function ImageSlot({
           preload={priority}
           loading={priority ? undefined : 'lazy'}
           sizes="(min-width: 1024px) 50vw, 100vw"
-          className={`object-contain transition-all duration-300 ${
+          className={`${
+            objectFit === 'cover' ? 'object-cover' : 'object-contain'
+          } transition-all duration-300 ${
             isExternalOrPhoto ? 'dark:brightness-95' : ''
           }`}
           onError={() => setIsMissing(true)}
