@@ -17,6 +17,7 @@ export default function RegisterPage() {
   const [role, setRole] = useState<UserRole>('student')
   const [otpCode, setOtpCode] = useState('')
   const [loading, setLoading] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
   const [resending, setResending] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
@@ -84,6 +85,19 @@ export default function RegisterPage() {
       }
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleGoogleRegister = async () => {
+    try {
+      setGoogleLoading(true)
+      setError(null)
+      await AuthService.signInWithGoogle(role, 'register')
+    } catch (err: unknown) {
+      console.error('Google register error:', err)
+      const authErr = err as { message?: string }
+      setError(authErr.message || 'Gagal mendaftar dengan Google. Silakan coba lagi.')
+      setGoogleLoading(false)
     }
   }
 
@@ -246,50 +260,49 @@ export default function RegisterPage() {
                 <Button 
                   type="submit" 
                   isLoading={loading}
-                  className="w-full py-5 text-lg font-bold rounded-[1.5rem] shadow-xl shadow-blue-500/25 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 border-none flex items-center justify-center gap-2 group"
+                  disabled={loading || googleLoading}
+                  className="w-full py-5 text-lg font-bold rounded-[1.5rem] shadow-xl shadow-blue-500/25 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 border-none flex items-center justify-center gap-2 group min-h-[48px]"
                 >
                   Daftar Sekarang
                   <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                 </Button>
-
-                <div className="relative py-4">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-100 dark:border-slate-800"></div>
-                  </div>
-                  <div className="relative flex justify-center text-sm uppercase">
-                    <span className="bg-white dark:bg-slate-900 px-4 text-gray-400 dark:text-slate-500 font-black tracking-widest">Atau</span>
-                  </div>
-                </div>
-
-                <div className="space-y-6">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setLoading(true)
-                      AuthService.signInWithGoogle(role, 'register')
-                    }}
-                    disabled={loading}
-                    className="w-full flex items-center justify-center gap-4 py-5 px-8 bg-white dark:bg-slate-800 border-2 border-gray-100 dark:border-slate-700 rounded-[2rem] text-lg font-bold text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-750 hover:border-blue-200 dark:hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 shadow-xl shadow-gray-200/20 dark:shadow-none group"
-                  >
-                    {loading ? (
-                      <div className="w-6 h-6 border-3 border-blue-600 border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-6 h-6 group-hover:scale-110 transition-transform" />
-                    )}
-                    Daftar dengan Google sebagai {role === 'student' ? 'Siswa' : 'Mentor'}
-                  </button>
-
-                  <div className="text-center pt-4">
-                    <p className="text-gray-500 dark:text-slate-400 font-medium">
-                      Sudah memiliki akun?{' '}
-                      <Link href="/login" className="font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline underline-offset-8 transition-all">
-                        Masuk di sini
-                      </Link>
-                    </p>
-                  </div>
-                </div>
               </div>
             </form>
+
+            <div className="relative py-2">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-100 dark:border-slate-800"></div>
+              </div>
+              <div className="relative flex justify-center text-sm uppercase">
+                <span className="bg-white dark:bg-slate-900 px-4 text-gray-400 dark:text-slate-500 font-black tracking-widest">Atau</span>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <button
+                type="button"
+                onClick={handleGoogleRegister}
+                disabled={loading || googleLoading}
+                className="w-full flex items-center justify-center gap-4 py-5 px-8 bg-white dark:bg-slate-800 border-2 border-gray-100 dark:border-slate-700 rounded-[2rem] text-lg font-bold text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-750 hover:border-blue-200 dark:hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 shadow-xl shadow-gray-200/20 dark:shadow-none group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px] focus-visible:outline-2 focus-visible:outline-blue-600"
+                aria-label={`Daftar dengan Google sebagai ${role === 'student' ? 'Siswa' : 'Mentor'}`}
+              >
+                {googleLoading ? (
+                  <div className="w-6 h-6 border-3 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                )}
+                Daftar dengan Google sebagai {role === 'student' ? 'Siswa' : 'Mentor'}
+              </button>
+
+              <div className="text-center pt-2">
+                <p className="text-gray-500 dark:text-slate-400 font-medium">
+                  Sudah memiliki akun?{' '}
+                  <Link href="/login" className="font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline underline-offset-8 transition-all">
+                    Masuk di sini
+                  </Link>
+                </p>
+              </div>
+            </div>
           </>
         ) : (
           <>

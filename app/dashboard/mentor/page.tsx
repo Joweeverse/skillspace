@@ -15,6 +15,7 @@ import { ImageSlot } from '@/components/ui/ImageSlot'
 import { ImageUploader } from '@/components/ui/ImageUploader'
 import { useToast } from '@/components/ui/Toast'
 import Image from 'next/image'
+import { createClient } from '@/lib/supabase'
 
 export default function MentorDashboard() {
   const { showToast } = useToast()
@@ -30,6 +31,8 @@ export default function MentorDashboard() {
   
   // Modal States
   const [showAddCourseModal, setShowAddCourseModal] = useState(false)
+  const [courseToDelete, setCourseToDelete] = useState<Course | null>(null)
+  const [isDeletingCourse, setIsDeletingCourse] = useState(false)
   const [showPortfolioModal, setShowPortfolioModal] = useState(false)
   const [showMaterialModal, setShowMaterialModal] = useState(false)
   const [showQuizModal, setShowQuizModal] = useState(false)
@@ -215,15 +218,41 @@ export default function MentorDashboard() {
     }
   }
 
-  const handleDeleteCourse = async (e: React.MouseEvent, courseId: string) => {
+  const handleOpenDeleteModal = (e: React.MouseEvent, course: Course) => {
+    e.preventDefault()
     e.stopPropagation()
-    if (!confirm('Hapus kursus ini beserta seluruh materi di dalamnya?')) return
+    setCourseToDelete(course)
+  }
+
+  const handleConfirmDeleteCourse = async () => {
+    if (!courseToDelete) return
+    setIsDeletingCourse(true)
+    const courseId = courseToDelete.id
     try {
-      await CourseService.deleteCourse(courseId)
-      setMyCourses(myCourses.filter(c => c.id !== courseId))
-      showToast('Kursus berhasil dihapus.', 'info')
-    } catch (err: any) {
-      showToast(`Gagal: ${err.message}`, 'error')
+      // 1. Hapus kursus dan seluruh materi terkait melalui API route dengan hak akses server
+      const res = await fetch(`/api/courses/${courseId}`, {
+        method: 'DELETE',
+      })
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}))
+        throw new Error(errorData.error || 'Gagal menghapus kursus dari server.')
+      }
+
+      // 2. Update local state
+      setMyCourses((prev) => prev.filter((c) => c.id !== courseId))
+      if (selectedCourse?.id === courseId) {
+        setSelectedCourse(null)
+      }
+
+      setCourseToDelete(null)
+      showToast('Kursus dan seluruh materi berhasil dihapus.', 'info')
+    } catch (err: unknown) {
+      console.error('Failed to delete course:', err)
+      const errorMsg = err instanceof Error ? err.message : String(err)
+      showToast(`Gagal menghapus kursus: ${errorMsg}`, 'error')
+    } finally {
+      setIsDeletingCourse(false)
     }
   }
 
@@ -543,12 +572,13 @@ export default function MentorDashboard() {
                       </span>
                       {/* Delete button */}
                       <button
-                        onClick={(e) => handleDeleteCourse(e, course.id)}
-                        className="absolute top-3 right-3 p-2 bg-white/90 dark:bg-slate-800/90 hover:bg-red-50 dark:hover:bg-red-950/60 text-gray-400 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 rounded-xl transition-all duration-300 shadow z-10 focus-visible:outline-2 focus-visible:outline-red-500 min-h-9 min-w-9 flex items-center justify-center"
+                        type="button"
+                        onClick={(e) => handleOpenDeleteModal(e, course)}
+                        className="absolute top-3 right-3 p-2 bg-white/95 dark:bg-slate-800/95 hover:bg-red-50 dark:hover:bg-red-950/60 text-gray-500 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 rounded-xl transition-all duration-300 shadow z-10 focus-visible:outline-2 focus-visible:outline-red-500 min-h-11 min-w-11 flex items-center justify-center"
                         title="Hapus Kursus"
-                        aria-label="Hapus kursus"
+                        aria-label={`Hapus kursus ${course.title}`}
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={18} />
                       </button>
                     </div>
 
@@ -630,13 +660,25 @@ export default function MentorDashboard() {
                       </span>
                       <h2 className="text-4xl font-black text-gray-900 dark:text-slate-100 tracking-tight">{selectedCourse.title}</h2>
                     </div>
-                    <Button 
-                      onClick={() => handleOpenMaterialModal()} 
-                      className="flex items-center gap-2 px-8 py-4 rounded-2xl shadow-xl shadow-blue-500/20 font-black text-sm"
-                      leftIcon={<Plus size={20} />}
-                    >
-                      Tambah Materi
-                    </Button>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <Button 
+                        type="button"
+                        variant="danger"
+                        onClick={(e) => handleOpenDeleteModal(e, selectedCourse)}
+                        className="flex items-center gap-2 px-6 py-4 rounded-2xl shadow-sm font-bold text-sm min-h-11"
+                        leftIcon={<Trash2 size={18} />}
+                      >
+                        Hapus Kursus
+                      </Button>
+                      <Button 
+                        type="button"
+                        onClick={() => handleOpenMaterialModal()} 
+                        className="flex items-center gap-2 px-8 py-4 rounded-2xl shadow-xl shadow-blue-500/20 font-black text-sm min-h-11"
+                        leftIcon={<Plus size={20} />}
+                      >
+                        Tambah Materi
+                      </Button>
+                    </div>
                   </div>
                 </div>
 
@@ -878,6 +920,52 @@ export default function MentorDashboard() {
       )}
 
       {/* MODALS */}
+      {/* Modal Konfirmasi Hapus Kursus */}
+      {courseToDelete && (
+        <div
+          className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-300"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delete-course-modal-title"
+        >
+          <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] w-full max-w-md shadow-2xl overflow-hidden border border-white/20 dark:border-slate-800 p-8 text-center space-y-6">
+            <div className="mx-auto w-16 h-16 rounded-2xl bg-red-50 dark:bg-red-950/60 text-red-600 dark:text-red-400 flex items-center justify-center shadow-inner">
+              <Trash2 size={32} />
+            </div>
+
+            <div className="space-y-2">
+              <h3 id="delete-course-modal-title" className="text-2xl font-black text-gray-900 dark:text-slate-100 tracking-tight">
+                Hapus Kursus?
+              </h3>
+              <p className="text-sm font-medium text-gray-600 dark:text-slate-300 leading-relaxed">
+                Apakah Anda yakin ingin menghapus kursus <span className="font-bold text-gray-900 dark:text-slate-100">&ldquo;{courseToDelete.title}&rdquo;</span>? Seluruh materi, kuis, dan data terkait kursus ini akan dihapus secara permanen.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full py-4 text-sm font-bold rounded-2xl min-h-11"
+                disabled={isDeletingCourse}
+                onClick={() => setCourseToDelete(null)}
+              >
+                Batal
+              </Button>
+              <Button
+                type="button"
+                variant="danger"
+                isLoading={isDeletingCourse}
+                className="w-full py-4 text-sm font-bold rounded-2xl min-h-11 shadow-lg shadow-red-500/20"
+                onClick={handleConfirmDeleteCourse}
+              >
+                Hapus Kursus
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {showAddCourseModal && (
         <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-300">
           <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] w-full max-w-md shadow-2xl overflow-hidden border border-white/20 dark:border-slate-800">
@@ -1423,7 +1511,7 @@ export default function MentorDashboard() {
                       
                       <div className="text-gray-500 text-sm font-medium mb-12 max-w-sm leading-relaxed">
                         Telah berhasil menyelesaikan seluruh kurikulum dan evaluasi pada kursus
-                        <span className="block font-black text-gray-800 mt-1">"{selectedCourse?.title}"</span>
+                        <span className="block font-black text-gray-800 mt-1">&ldquo;{selectedCourse?.title}&rdquo;</span>
                       </div>
                       
                       <div className="mt-auto flex justify-between w-full items-end px-12">
