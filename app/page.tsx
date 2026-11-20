@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button'
 import { Container } from '@/components/ui/Container'
 import { ImageSlot } from '@/components/ui/ImageSlot'
 import { AnimateIn } from '@/components/ui/AnimateIn'
+import { VideoShowcase } from '@/components/home/VideoShowcase'
 import { AuthService } from '@/services/authService'
 import { CourseService } from '@/services/courseService'
 import { MentorService } from '@/services/mentorService'
@@ -209,6 +210,9 @@ export default function Home() {
         </Container>
       </section>
 
+      {/* ─── VIDEO SHOWCASE ─────────────────────────────────────────────── */}
+      <VideoShowcase />
+
       {/* ─── HOW IT WORKS ──────────────────────────────────────────────── */}
       <section className="py-16 sm:py-24">
         <Container>
@@ -238,7 +242,7 @@ export default function Home() {
                   <div className="mx-auto max-w-xs overflow-hidden rounded-3xl bg-blue-50 dark:bg-slate-900 shadow-md">
                     <ImageSlot src={step.image} alt={step.alt} aspectRatio="4 / 3" />
                   </div>
-                  <div className="mx-auto -mt-5 flex size-10 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white shadow-lg shadow-blue-500/40 ring-4 ring-white dark:ring-slate-950">
+                  <div className="relative z-10 mx-auto -mt-5 flex size-10 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white shadow-lg shadow-blue-500/40 ring-4 ring-white dark:ring-slate-950">
                     {step.number}
                   </div>
                   <h3 className="mt-4 text-xl font-bold text-gray-950 dark:text-slate-100">{step.title}</h3>
